@@ -1,0 +1,40 @@
+﻿@model List<TrainingApp.Models.Reports>
+
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a shared layout, or you can remove this line if not applicable
+}
+
+<h2>Reports</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Report ID</th>
+            <th>Report Name</th>
+            <th>Report Title</th>
+            <th>Report Description</th>
+            <th>Report Date</th>
+            <th>Owner ID</th>
+            <th>Supervisor ID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ReportId</td>
+                <td>@item.ReportName</td>
+                <td>@item.ReportTitle</td>
+                <td>@item.ReportDescription</td>
+                <td>@item.ReportDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@item.OwnerId</td>
+                <td>@item.SupervisorID</td>
+                <td>
+                    @Html.ActionLink("Details", "GetReportDetails", new { ReportID = item.ReportId }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

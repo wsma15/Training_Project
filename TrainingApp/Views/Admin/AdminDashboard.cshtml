@@ -1,0 +1,62 @@
+﻿@model TrainingApp.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a shared layout, or you can remove this line if not applicable
+}
+
+<h2>Admin Dashboard</h2>
+
+<div>
+    <h3>Students</h3>
+    <p>
+        @Html.ActionLink("Add Student", "AddStudent", "Admin")
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Supervisor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model.Students)
+            {
+                <tr>
+                    <td>@student.StudentID</td>
+                    <td>@student.StudentName</td>
+                    <td>@student.StudentEmail</td>
+                    <td>@student.Supervisor?.SupervisorName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h3>Supervisors</h3>
+    <p>
+        @Html.ActionLink("Add Supervisor", "AddSupervisor", "Admin")
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Supervisor ID</th>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var supervisor in Model.Supervisors)
+            {
+                <tr>
+                    <td>@supervisor.SupervisorID</td>
+                    <td>@supervisor.SupervisorName</td>
+                    <td>@supervisor.SupervisorEmail</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
