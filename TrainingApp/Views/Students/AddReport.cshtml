@@ -1,0 +1,36 @@
+﻿@model TrainingApp.Models.Reports
+
+@{
+    ViewBag.Title = "Add Report";
+}
+
+<h2>Add Report</h2>
+
+@using (Html.BeginForm("AddReport", "Students", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ReportTitle)
+        @Html.TextBoxFor(model => model.ReportTitle, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.ReportTitle, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ReportDescription)
+        @Html.TextAreaFor(model => model.ReportDescription, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.ReportDescription, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ReportDateCreated)
+        @Html.TextBoxFor(model => model.ReportDateCreated, new { @class = "form-control", @readonly = "readonly" })
+        @Html.ValidationMessageFor(model => model.ReportDateCreated, "", new { @class = "text-danger" })
+    </div>
+
+    @* Hidden fields for OwnerId and SupervisorID *@
+    @Html.HiddenFor(model => model.OwnerId)
+    @Html.HiddenFor(model => model.SupervisorID)
+
+    <button type="submit" class="btn btn-primary">Submit Report</button>
+}

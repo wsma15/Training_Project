@@ -7,8 +7,8 @@
         <tr>
             <th>Report ID</th>
             <th>Title</th>
-            <th>Content</th>
             <th>Date Created</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -17,12 +17,38 @@
             <tr>
                 <td>@(report.ReportId)</td>
                 <td>@(report.ReportTitle)</td>
-                <td>@(report.ReportDescription)</td>
                 <td>@(report.ReportDateCreated.ToShortDateString())</td>
+                <td>
+                    <button class="btn btn-info" onclick="toggleContent(@report.ReportId)">Show Content</button>
+                    <button class="btn btn-danger" onclick="deleteReport(@report.ReportId)">Delete</button>
+                </td>
+            </tr>
+            <tr id="content-@report.ReportId" style="display:none;">
+                <td colspan="4">@Html.Raw(report.ReportDescription)</td>
             </tr>
         }
-      
     </tbody>
 </table>
 
-<a href="@Url.Action("AddReport", "Student")" class="btn btn-primary">Add Report</a>
+<a href="@Url.Action("AddReport", "Students")" class="btn btn-primary">Add Report</a>
+
+<script>
+    function toggleContent(reportId) {
+        var contentRow = document.getElementById("content-" + reportId);
+        var button = contentRow.previousElementSibling.querySelector("button.btn-info");
+
+        if (contentRow.style.display === "none") {
+            contentRow.style.display = "";
+            button.textContent = "Hide Content";
+        } else {
+            contentRow.style.display = "none";
+            button.textContent = "Show Content";
+        }
+    }
+
+    function deleteReport(reportId) {
+        if (confirm("Are you sure you want to delete this report?")) {
+            window.location.href = '@Url.Action("DeleteReport", "Students")/' + reportId;
+        }
+    }
+</script>

@@ -6,16 +6,14 @@ namespace TrainingApp.Models
 {
     public class Reports
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
-        public string ReportId { get; set; }
+        public int ReportId { get; set; }
 
-        [Required]
-        public string ReportName { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "Report Title is required")]
         public string ReportTitle { get; set; }
 
+        [Required(ErrorMessage = "Report Description is required")]
         public string ReportDescription { get; set; }
 
         [Required]
@@ -26,7 +24,5 @@ namespace TrainingApp.Models
 
         [Required]
         public string SupervisorID { get; set; }
-
-
     }
 }
