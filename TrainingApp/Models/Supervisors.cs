@@ -6,7 +6,7 @@ namespace TrainingApp.Models
 {
     public class Supervisor
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
         [Key]
         public string SupervisorID { get; set; }

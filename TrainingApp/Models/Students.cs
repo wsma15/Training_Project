@@ -5,7 +5,7 @@ namespace TrainingApp.Models
 {
     public class Student
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
         [Key]
         public string StudentID { get; set; }

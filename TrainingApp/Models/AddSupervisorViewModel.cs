@@ -8,9 +8,11 @@ namespace TrainingApp.ViewModels
         public string SupervisorName { get; set; }
 
         [Required]
+        [EmailAddress]
         public string SupervisorEmail { get; set; }
 
         [Required]
+        [DataType(DataType.Password)]
         public string SupervisorPassword { get; set; }
     }
 }

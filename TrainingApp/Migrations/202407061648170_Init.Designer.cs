@@ -13,7 +13,7 @@ namespace TrainingApp.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202407051542181_Init"; }
+            get { return "202407061648170_Init"; }
         }
         
         string IMigrationMetadata.Source

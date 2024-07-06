@@ -28,7 +28,8 @@
                     <td>@student.StudentID</td>
                     <td>@student.StudentName</td>
                     <td>@student.StudentEmail</td>
-                    <td>@student.Supervisor?.SupervisorName</td>
+                    
+                    <td>@(Model.GetSupervisorName(student.SupervisorID))</td>
                 </tr>
             }
         </tbody>
