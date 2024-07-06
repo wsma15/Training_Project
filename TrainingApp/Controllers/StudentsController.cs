@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Mvc;
@@ -18,6 +19,40 @@ namespace TrainingApp.Controllers
 
             return View();
         }
+
+        private int GetCurrentStudentId()
+        {
+            var studentIdString = User.Identity.Name; // Get student ID from authentication cookie (stored as string)
+
+            // Convert to int or guid as needed
+            if (int.TryParse(studentIdString, out int studentId))
+            {
+                return studentId;
+            }
+
+            return -1; // Handle if conversion fails
+        }
+        string CurrentId; public ActionResult StudentDashboard()
+        {
+            // Get current student's ID from claims
+            var studentId = User.Identity.GetUserId();
+
+            // Ensure studentId is not null or empty
+            if (string.IsNullOrEmpty(studentId))
+            {
+                // Handle the case where studentId is not available (optional)
+                // You might redirect to a login page or handle it based on your application logic
+                // For simplicity, you can return an empty view or a message indicating an error
+
+                return View((new List<Reports>())); // Return an empty list of reports
+            }
+
+            // Retrieve student's reports from database based on studentId
+            var reports = MyDB.Reports.Where(r => r.OwnerId == studentId).ToList();
+
+            return View(reports);
+        }
+
         public ActionResult GetStudents()
         {
             List<Student> StudentsList = new List<Student>();

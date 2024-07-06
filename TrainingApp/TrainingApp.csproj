@@ -171,9 +171,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407061648170_Init.cs" />
-    <Compile Include="Migrations\202407061648170_Init.Designer.cs">
-      <DependentUpon>202407061648170_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202407061719309_Init.cs" />
+    <Compile Include="Migrations\202407061719309_Init.Designer.cs">
+      <DependentUpon>202407061719309_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -269,6 +269,7 @@
     <Content Include="Views\Admin\AddStudent.cshtml" />
     <Content Include="Views\Admin\AddSupervisor.cshtml" />
     <Content Include="Views\Admin\AdminDashboard.cshtml" />
+    <Content Include="Views\Students\StudentDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -302,8 +303,8 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202407061648170_Init.resx">
-      <DependentUpon>202407061648170_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407061719309_Init.resx">
+      <DependentUpon>202407061719309_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

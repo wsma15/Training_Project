@@ -19,12 +19,14 @@ namespace TrainingApp.Models
         public string ReportDescription { get; set; }
 
         [Required]
-        public DateTime ReportDateTime { get; set; }
+        public DateTime ReportDateCreated { get; set; }
 
         [Required]
         public string OwnerId { get; set; }
 
         [Required]
         public string SupervisorID { get; set; }
+
+
     }
 }

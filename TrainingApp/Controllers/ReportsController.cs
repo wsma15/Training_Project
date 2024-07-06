@@ -61,7 +61,7 @@ namespace TrainingApp.Controllers
         {
             Reports report = new Reports()
             {
-                ReportDateTime = Time,
+                ReportDateCreated = Time,
                 ReportTitle = Title,
                 ReportName = Name,
                 ReportId = OID,

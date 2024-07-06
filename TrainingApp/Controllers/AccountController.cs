@@ -68,59 +68,78 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-
                 using (var context = new TrainingAppDBContext())
                 {
+                    // Check if login credentials belong to an admin
                     var admin = context.Admins.FirstOrDefault(a => a.AdminId.ToString() == model.UserId && a.AdminPassword == model.Password);
                     if (admin != null)
                     {
-                        // Set authentication cookie
-                        var identity = new ClaimsIdentity(new[] {
-                    new Claim(ClaimTypes.Name, admin.AdminName),
-                    new Claim(ClaimTypes.NameIdentifier, admin.AdminId.ToString())
-                }, DefaultAuthenticationTypes.ApplicationCookie);
-
-                        var ctx = Request.GetOwinContext();
-                        var authManager = ctx.Authentication;
-                        authManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe }, identity);
-
-                        // Log successful login
-                        Trace.TraceInformation($"Admin {admin.AdminName} logged in successfully.");
-
-                        // Check if returnUrl is valid and local
-                        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                        {
-                            Trace.TraceInformation($"Redirecting to returnUrl: {returnUrl}");
-                            return Redirect(returnUrl);
-                        }
-
-                        // Log redirection to dashboard
-                        Trace.TraceInformation("Redirecting to AdminDashboard.");
-                        // Redirect to the admin dashboard
-                        return RedirectToAction("AdminDashboard", "Admin");
+                        await SignInAdmin(admin, model.RememberMe);
+                        return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
                     }
 
+                    // Check if login credentials belong to a student
+                    var student = context.Students.FirstOrDefault(s => s.StudentID.ToString() == model.UserId && s.StudentPassword == model.Password);
+                    if (student != null)
+                    {
+                        await SignInStudent(student, model.RememberMe);
+                        return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
+                    }
                 }
 
-                // Log failed login attempt
-                Trace.TraceWarning("Invalid login attempt.");
                 ModelState.AddModelError("", "Invalid login attempt.");
             }
             catch (Exception ex)
             {
                 // Log the error and provide a user-friendly message
-                Trace.TraceError("Cannot login {0}", ex.ToString());
-                Response.AppendToLog(ex.ToString());
+                Trace.TraceError("Error occurred during login: {0}", ex.ToString());
                 ModelState.AddModelError("", "An error occurred while logging in. Please try again.");
             }
 
             return View(model);
+        }
+
+        private async Task SignInAdmin(Admin admin, bool rememberMe)
+        {
+            var identity = new ClaimsIdentity(new[] {
+        new Claim(ClaimTypes.Name, admin.AdminName),
+        new Claim(ClaimTypes.NameIdentifier, admin.AdminId.ToString())
+    }, DefaultAuthenticationTypes.ApplicationCookie);
+
+            await SignInAsync(identity, rememberMe);
+        }
+
+        private async Task SignInStudent(Student student, bool rememberMe)
+        {
+            var identity = new ClaimsIdentity(new[] {
+        new Claim(ClaimTypes.Name, student.StudentName),
+        new Claim(ClaimTypes.NameIdentifier, student.StudentID.ToString())
+    }, DefaultAuthenticationTypes.ApplicationCookie);
+
+            await SignInAsync(identity, rememberMe);
+        }
+
+        private async Task SignInAsync(ClaimsIdentity identity, bool rememberMe)
+        {
+            var ctx = Request.GetOwinContext();
+            var authManager = ctx.Authentication;
+            authManager.SignIn(new AuthenticationProperties { IsPersistent = rememberMe }, identity);
+        }
+
+        private ActionResult RedirectToLocal(string returnUrl, string actionName, string controllerName)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction(actionName, controllerName);
         }
         private ActionResult RedirectToLocal(string returnUrl)
         {
