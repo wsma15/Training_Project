@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
@@ -24,8 +23,10 @@ namespace TrainingApp.Controllers
         [HttpGet]
         public ActionResult AddReport()
         {
-            var model = new Reports();
-            model.ReportDateCreated = DateTime.Now;
+            var model = new Reports
+            {
+                ReportDateCreated = DateTime.Now
+            };
             return View(model);
         }
         public ActionResult DeleteReport(int id)
@@ -78,9 +79,9 @@ namespace TrainingApp.Controllers
         private int GenerateNewReportId()
         {
             int latestReportId = MyDB.Reports.Any()
-                ? MyDB.Reports.OrderByDescending(m => m.ReportId).First().ReportId
+                ? ++MyDB.Reports.OrderByDescending(m => m.ReportId).First().ReportId
                 : 0;
-            return ++latestReportId;
+            return latestReportId;
         }
 
         public ActionResult StudentDashboard()
@@ -93,60 +94,5 @@ namespace TrainingApp.Controllers
             var reports = MyDB.Reports.Where(r => r.OwnerId == studentId).ToList();
             return View(reports);
         }
-
-        public ActionResult GetStudents()
-        {
-            List<Student> StudentsList = new List<Student>();
-            StudentsList = (from obj in MyDB.Students select obj).ToList();
-            return View();
-        }
-
-        public ActionResult GetStudentDetails(string StudentId)
-        {
-            Student student = new Student();
-            student = (from obj in MyDB.Students
-                       where obj.StudentID == StudentId
-                       select obj).FirstOrDefault();
-            return View();
-        }
-        public ActionResult DeleteStudent(string StudentId)
-        {
-            Student student = new Student();
-            student = (from obj in MyDB.Students
-                       where obj.StudentID == StudentId
-                       select obj).FirstOrDefault();
-            MyDB.Students.Remove(student);
-            MyDB.SaveChanges();
-
-            return View("GetStudents");
-        }
-        public ActionResult UpdateStudent(string StudentId)
-        {
-            Student student = new Student();
-            student = (from obj in MyDB.Students
-                       where obj.StudentID == StudentId
-                       select obj).FirstOrDefault();
-            MyDB.Students.AddOrUpdate(student);
-            MyDB.SaveChanges();
-
-            return View("GetStudents");
-        }
-        public ActionResult InsertStudent(string super, string pass, string Name, string ID, string Email)
-        {
-
-            Student student = new Student()
-            {
-                SupervisorID = super,
-                StudentPassword = pass,
-                StudentName = Name,
-                StudentID = ID,
-                StudentEmail = Email
-            };
-            MyDB.Students.Add(student);
-            MyDB.SaveChanges();
-            return View("GetStudents");
-
-        }
-
     }
 }
