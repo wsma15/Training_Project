@@ -66,6 +66,17 @@ namespace TrainingApp.Controllers
                 : 1;
         }
 
+        public ActionResult DeleteReport(int id)
+        {
+            var report = MyDB.Reports.Find(id);
+            if (report != null)
+            {
+                MyDB.Reports.Remove(report);
+                MyDB.SaveChanges();
+            }
+            return RedirectToAction("StudentDashboard");
+        }
+
         public ActionResult StudentDashboard()
         {
             var studentId = User.Identity.GetUserId();

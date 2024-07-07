@@ -1,0 +1,19 @@
+﻿@model TrainingApp.Models.ReportFile
+
+@{
+    ViewBag.Title = "Upload Report";
+}
+
+<h2>Upload Report</h2>
+
+@using (Html.BeginForm("Upload", "Reports", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FileName, "Select File")
+        <input type="file" name="file" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
+}
