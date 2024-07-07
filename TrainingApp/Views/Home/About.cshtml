@@ -1,9 +1,20 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "Contact";
+    ViewBag.Message = "Get in touch with us.";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<main aria-labelledby="title" class="container mt-5">
+    <h2 id="title">@ViewBag.Title</h2>
     <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
+    <address>
+        One University Avenue<br />
+        University Town, UT 12345<br />
+        <abbr title="Phone">P:</abbr>
+        123.456.7890
+    </address>
+
+    <address>
+        <strong>Email Support:</strong>   <a href="mailto:support@example.com">support@example.com</a><br />
+        <strong>Email Marketing:</strong> <a href="mailto:marketing@example.com">marketing@example.com</a>
+    </address>
 </main>

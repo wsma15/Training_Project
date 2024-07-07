@@ -2,14 +2,33 @@
     ViewBag.Title = "Home Page";
 }
 
-<main>
-    <section class="row" aria-labelledby="appTitle">
-        <h1 id="title">Training Management System</h1>
-        <p class="lead">Welcome to the Training Management System, designed to streamline and enhance the efficiency of organizing and tracking training activities at your university.</p>
-        <div class="btn-group mt-3" role="group" aria-label="Main Actions">
-            <a href="~/Account/Login" class="btn btn-primary btn-md">Login</a>
-            <a href="~/Home/About" class="btn btn-outline-dark btn-md">About Project</a>
-            <a href="~/Home/Contact" class="btn btn-outline-dark btn-md">Contact</a>
+<main class="container mt-5">
+    <section class="text-center" aria-labelledby="appTitle">
+        <h1 id="title" class="display-4">Training Management System</h1>
+        <p class="lead">Welcome to the Training Management System, designed to streamline and enhance the efficiency of organizing and tracking training activities.</p>
+        <div class="btn-group mt-4" role="group" aria-label="Main Actions">
+            <a href="~/Account/Login" class="btn btn-primary btn-lg">Login</a>
+            <a href="~/Home/About" class="btn btn-outline-secondary btn-lg">About Project</a>
+            <a href="~/Home/Contact" class="btn btn-outline-secondary btn-lg">Contact</a>
         </div>
     </section>
 </main>
+
+<!-- Styles -->
+<style>
+    main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 70vh;
+    }
+
+    .lead {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .btn-group .btn {
+        min-width: 150px;
+    }
+</style>

@@ -261,8 +261,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Students\GetStudents.cshtml" />
-    <Content Include="Views\Students\GetStudentDetails.cshtml" />
     <Content Include="Views\Reports\ReportDetails.cshtml" />
     <Content Include="Views\Reports\GetReportDetails.cshtml" />
     <Content Include="Views\Reports\Index.cshtml" />
