@@ -265,11 +265,12 @@
     <Content Include="Views\Admin\AdminDashboard.cshtml" />
     <Content Include="Views\Students\StudentDashboard.cshtml" />
     <Content Include="Views\Students\AddReport.cshtml" />
+    <Content Include="Views\Supervisor\Dashboard.cshtml" />
+    <Content Include="Views\Supervisor\StudentReports.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Reports\" />
-    <Folder Include="Views\Supervisor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

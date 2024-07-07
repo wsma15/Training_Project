@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
@@ -12,14 +11,6 @@ namespace TrainingApp.Controllers
     {
         TrainingAppDBContext MyDB = new TrainingAppDBContext();
 
-        // GET: Students
-        public ActionResult Index()
-        {
-            List<Student> studentsList = new List<Student>();
-            studentsList = (from student in MyDB.Students select student).ToList();
-
-            return View();
-        }
         [HttpGet]
         public ActionResult AddReport()
         {
@@ -29,17 +20,6 @@ namespace TrainingApp.Controllers
             };
             return View(model);
         }
-        public ActionResult DeleteReport(int id)
-        {
-            var report = MyDB.Reports.Find(id);
-            if (report != null)
-            {
-                MyDB.Reports.Remove(report);
-                MyDB.SaveChanges();
-            }
-            return RedirectToAction("StudentDashboard");
-        }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -47,16 +27,19 @@ namespace TrainingApp.Controllers
         {
             try
             {
+                report.ReportId = GenerateNewReportId();
+                report.OwnerId = User.Identity.GetUserId();
+
+                var student = MyDB.Students.SingleOrDefault(s => s.StudentID == report.OwnerId);
+                if (student != null)
                 {
-                    report.ReportId = GenerateNewReportId();
-                    report.OwnerId = User.Identity.GetUserId();
-                    report.SupervisorID = (from superid in MyDB.Students
-                                           where superid.StudentID == report.OwnerId
-                                           select superid.SupervisorID).FirstOrDefault();
-                    MyDB.Reports.Add(report);
-                    MyDB.SaveChanges();
-                    return RedirectToAction("StudentDashboard", "Students");
+                    report.SupervisorID = student.SupervisorID;
                 }
+
+                MyDB.Reports.Add(report);
+                MyDB.SaveChanges();
+
+                return RedirectToAction("StudentDashboard", "Students");
             }
             catch (DbEntityValidationException ex)
             {
@@ -69,28 +52,23 @@ namespace TrainingApp.Controllers
                 }
                 return View(report);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "An error occurred while saving the report.");
+                ModelState.AddModelError("", "An error occurred while saving the report: " + ex.Message);
                 return View(report);
             }
         }
 
         private int GenerateNewReportId()
         {
-            int latestReportId = MyDB.Reports.Any()
-                ? ++MyDB.Reports.OrderByDescending(m => m.ReportId).First().ReportId
-                : 0;
-            return latestReportId;
+            return MyDB.Reports.Any()
+                ? MyDB.Reports.Max(r => r.ReportId) + 1
+                : 1;
         }
 
         public ActionResult StudentDashboard()
         {
             var studentId = User.Identity.GetUserId();
-            if (string.IsNullOrEmpty(studentId))
-            {
-                return View((new List<Reports>()));
-            }
             var reports = MyDB.Reports.Where(r => r.OwnerId == studentId).ToList();
             return View(reports);
         }

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<TrainingApp.Models.Reports>
+
+@{
+    ViewBag.Title = "Student Reports";
+}
+
+<h2>Reports</h2>
+
+<!-- Button to return to Dashboard -->
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Report ID</th>
+
+            <th>Report Title</th>
+            <th>Description</th>
+            <th>Date Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model)
+        {
+            <tr>
+                <td>@report.ReportId</td>
+                <td>@report.ReportTitle</td>
+                <td>@report.ReportDescription</td>
+                <td>@report.ReportDateCreated.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Another Button to return to Dashboard at the bottom if needed -->
+<a href="@Url.Action("Dashboard", "Supervisor")" class="btn btn-primary">Return to Dashboard</a>

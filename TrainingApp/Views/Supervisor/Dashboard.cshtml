@@ -1,0 +1,31 @@
+﻿@model IEnumerable<TrainingApp.Models.Student>
+
+@{
+    ViewBag.Title = "Supervisor Dashboard";
+}
+
+<h2>Students</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.StudentID</td>
+                <td>@student.StudentName</td>
+                <td>@student.StudentEmail</td>
+                <td>
+                    @Html.ActionLink("View Reports", "StudentReports", new { id = student.StudentID }, new { @class = "btn btn-primary" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

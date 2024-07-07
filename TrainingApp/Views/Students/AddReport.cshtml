@@ -24,7 +24,7 @@
 
     <div class="form-group">
         @Html.LabelFor(model => model.ReportDateCreated)
-        @Html.TextBoxFor(model => model.ReportDateCreated, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(model => model.ReportDateCreated, "{0:yyyy-MM-dd}", new { @class = "form-control", @readonly = "readonly" })
         @Html.ValidationMessageFor(model => model.ReportDateCreated, "", new { @class = "text-danger" })
     </div>
 

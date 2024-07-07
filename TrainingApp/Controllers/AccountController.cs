@@ -92,6 +92,15 @@ namespace TrainingApp.Controllers
                         await SignInStudent(student, model.RememberMe);
                         return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
                     }
+
+                    var supervisor = context.Supervisors.FirstOrDefault(s => s.SupervisorID.ToString() == model.UserId && s.SupervisorPassword == model.Password);
+                    if (supervisor != null)
+                    {
+                        await SignInSupervisor(supervisor, model.RememberMe);
+                        return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
+                    }
+
+
                 }
 
                 ModelState.AddModelError("", "Invalid login attempt.");
@@ -111,6 +120,15 @@ namespace TrainingApp.Controllers
             var identity = new ClaimsIdentity(new[] {
         new Claim(ClaimTypes.Name, admin.AdminName),
         new Claim(ClaimTypes.NameIdentifier, admin.AdminId.ToString())
+    }, DefaultAuthenticationTypes.ApplicationCookie);
+
+            await SignInAsync(identity, rememberMe);
+        }
+        private async Task SignInSupervisor(Supervisor supervisor, bool rememberMe)
+        {
+            var identity = new ClaimsIdentity(new[] {
+        new Claim(ClaimTypes.Name, supervisor.SupervisorName),
+        new Claim(ClaimTypes.NameIdentifier, supervisor.SupervisorID.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
 
             await SignInAsync(identity, rememberMe);
