@@ -126,11 +126,12 @@ namespace TrainingApp.Controllers
             await SignInAsync(identity, rememberMe);
         }
 
-        private async Task SignInAsync(ClaimsIdentity identity, bool rememberMe)
+        private Task SignInAsync(ClaimsIdentity identity, bool rememberMe)
         {
             var ctx = Request.GetOwinContext();
             var authManager = ctx.Authentication;
             authManager.SignIn(new AuthenticationProperties { IsPersistent = rememberMe }, identity);
+            return Task.CompletedTask;
         }
 
         private ActionResult RedirectToLocal(string returnUrl, string actionName, string controllerName)

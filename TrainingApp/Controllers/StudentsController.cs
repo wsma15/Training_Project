@@ -68,7 +68,7 @@ namespace TrainingApp.Controllers
                 }
                 return View(report);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ModelState.AddModelError("", "An error occurred while saving the report.");
                 return View(report);
