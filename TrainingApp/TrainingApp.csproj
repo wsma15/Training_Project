@@ -165,7 +165,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\SupervisorController.cs" />
     <Compile Include="Global.asax.cs">
@@ -261,9 +260,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Reports\ReportDetails.cshtml" />
-    <Content Include="Views\Reports\GetReportDetails.cshtml" />
-    <Content Include="Views\Reports\Index.cshtml" />
     <Content Include="Views\Admin\AddStudent.cshtml" />
     <Content Include="Views\Admin\AddSupervisor.cshtml" />
     <Content Include="Views\Admin\AdminDashboard.cshtml" />
@@ -272,6 +268,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Reports\" />
     <Folder Include="Views\Supervisor\" />
   </ItemGroup>
   <ItemGroup>
