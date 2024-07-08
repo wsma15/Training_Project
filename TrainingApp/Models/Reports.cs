@@ -8,6 +8,7 @@ namespace TrainingApp.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
+        [Required]
         public int ReportId { get; set; }
 
         [Required(ErrorMessage = "Report Title is required")]
@@ -24,5 +25,14 @@ namespace TrainingApp.Models
 
         [Required]
         public string SupervisorID { get; set; }
+        [Required(ErrorMessage = "Report File is required")]
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
+
+        public bool IsApproved { get; set; }
+        public string Feedback { get; set; }
+        public bool IsFeedbackSubmitted { get; set; } // Indicates whether feedback has been submitted
+
     }
 }

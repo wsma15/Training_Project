@@ -170,13 +170,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407062058242_Init.cs" />
-    <Compile Include="Migrations\202407062058242_Init.Designer.cs">
-      <DependentUpon>202407062058242_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202407080711024_Init.cs" />
+    <Compile Include="Migrations\202407080711024_Init.Designer.cs">
+      <DependentUpon>202407080711024_Init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407072352016_Init1.cs" />
-    <Compile Include="Migrations\202407072352016_Init1.Designer.cs">
-      <DependentUpon>202407072352016_Init1.cs</DependentUpon>
+    <Compile Include="Migrations\202407080736535_Init1.cs" />
+    <Compile Include="Migrations\202407080736535_Init1.Designer.cs">
+      <DependentUpon>202407080736535_Init1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407080744223_Init2.cs" />
+    <Compile Include="Migrations\202407080744223_Init2.Designer.cs">
+      <DependentUpon>202407080744223_Init2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -304,11 +308,14 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202407062058242_Init.resx">
-      <DependentUpon>202407062058242_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407080711024_Init.resx">
+      <DependentUpon>202407080711024_Init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407072352016_Init1.resx">
-      <DependentUpon>202407072352016_Init1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407080736535_Init1.resx">
+      <DependentUpon>202407080736535_Init1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407080744223_Init2.resx">
+      <DependentUpon>202407080744223_Init2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

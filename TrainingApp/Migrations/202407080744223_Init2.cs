@@ -3,16 +3,16 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Init : DbMigration
+    public partial class Init2 : DbMigration
     {
         public override void Up()
         {
-            AlterColumn("dbo.Reports", "ReportDescription", c => c.String(nullable: false));
+            AddColumn("dbo.Reports", "IsFeedbackSubmitted", c => c.Boolean(nullable: false));
         }
         
         public override void Down()
         {
-            AlterColumn("dbo.Reports", "ReportDescription", c => c.String());
+            DropColumn("dbo.Reports", "IsFeedbackSubmitted");
         }
     }
 }

@@ -9,6 +9,7 @@
             <th>Title</th>
             <th>Date Created</th>
             <th>Actions</th>
+            <th>Feedback</th> <!-- New column for feedback -->
         </tr>
     </thead>
     <tbody>
@@ -19,18 +20,58 @@
                 <td>@(report.ReportTitle)</td>
                 <td>@(report.ReportDateCreated.ToShortDateString())</td>
                 <td>
-                    <button class="btn btn-info" onclick="toggleContent(@report.ReportId)">Show Content</button>
+                    <button class="btn btn-info" onclick="toggleContent(@report.ReportId)">Show Description</button>
                     <button class="btn btn-danger" onclick="deleteReport(@report.ReportId)">Delete</button>
+                    <a href="@Url.Action("DownloadFile", "Students", new { id = report.ReportId })" class="btn btn-primary">Download</a>
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(report.Feedback))
+                    {
+                        <p>@report.Feedback</p>
+                    }
+                    else
+                    {
+                        <p>No feedback provided yet</p>
+                    }
                 </td>
             </tr>
             <tr id="content-@report.ReportId" style="display:none;">
-                <td colspan="4">@Html.Raw(report.ReportDescription)</td>
+                <td colspan="5">@Html.Raw(report.ReportDescription)</td>
             </tr>
         }
     </tbody>
 </table>
 
 <a href="@Url.Action("AddReport", "Students")" class="btn btn-primary">Add Report</a>
+
+<!-- Modal for providing feedback -->
+<div id="feedbackModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("SubmitFeedback", "Students", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Provide Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Hidden("ReportId", "", new { id = "Feedback_ReportId" })
+                    <div class="form-group">
+                        @Html.Label("Feedback", "Feedback")
+                        @Html.TextArea("Feedback", "", new { @class = "form-control", id = "Feedback_Content" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 <script>
     function toggleContent(reportId) {
@@ -39,10 +80,10 @@
 
         if (contentRow.style.display === "none") {
             contentRow.style.display = "";
-            button.textContent = "Hide Content";
+            button.textContent = "Hide Description";
         } else {
             contentRow.style.display = "none";
-            button.textContent = "Show Content";
+            button.textContent = "Show Description";
         }
     }
 
@@ -51,4 +92,14 @@
             window.location.href = '@Url.Action("DeleteReport", "Students")/' + reportId;
         }
     }
+
+    function showFeedbackModal(reportId) {
+        document.getElementById("Feedback_ReportId").value = reportId;
+        $('#feedbackModal').modal('show');
+    }
 </script>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>

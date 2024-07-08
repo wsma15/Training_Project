@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity.Validation;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using TrainingApp.Models;
 
@@ -23,10 +25,36 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddReport(Reports report)
+        public ActionResult SubmitFeedback(int reportId, string feedback)
+        {
+            var report = MyDB.Reports.SingleOrDefault(r => r.ReportId == reportId);
+            if (report != null && !report.IsFeedbackSubmitted)
+            {
+                report.Feedback = feedback;
+                report.IsFeedbackSubmitted = true;
+                MyDB.SaveChanges();
+            }
+
+            // Redirect back to the student dashboard after submitting feedback
+            return RedirectToAction("StudentDashboard", "Students");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddReport(Reports report, HttpPostedFileBase file)
         {
             try
             {
+                if (file != null && file.ContentLength > 0)
+                {
+                    report.FileName = Path.GetFileName(file.FileName);
+                    report.ContentType = file.ContentType;
+
+                    using (var reader = new BinaryReader(file.InputStream))
+                    {
+                        report.Content = reader.ReadBytes(file.ContentLength);
+                    }
+                }
+
                 report.ReportId = GenerateNewReportId();
                 report.OwnerId = User.Identity.GetUserId();
 
@@ -83,5 +111,16 @@ namespace TrainingApp.Controllers
             var reports = MyDB.Reports.Where(r => r.OwnerId == studentId).ToList();
             return View(reports);
         }
+
+        public ActionResult DownloadFile(int id)
+        {
+            var report = MyDB.Reports.Find(id);
+            if (report != null && report.Content != null)
+            {
+                return File(report.Content, report.ContentType, report.FileName);
+            }
+            return HttpNotFound();
+        }
+
     }
 }

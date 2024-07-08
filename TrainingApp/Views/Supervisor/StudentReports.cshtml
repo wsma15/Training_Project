@@ -7,15 +7,18 @@
 <h2>Reports</h2>
 
 <!-- Button to return to Dashboard -->
+<a href="@Url.Action("Dashboard", "Supervisor")" class="btn btn-primary">Return to Dashboard</a>
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Report ID</th>
-
             <th>Report Title</th>
             <th>Content</th>
             <th>Date Created</th>
+            <th>Actions</th>
+            <th>Feedback</th>
+            <th>File</th>
         </tr>
     </thead>
     <tbody>
@@ -26,10 +29,69 @@
                 <td>@report.ReportTitle</td>
                 <td>@report.ReportDescription</td>
                 <td>@report.ReportDateCreated.ToShortDateString()</td>
+                <td>
+                    @if (!report.IsFeedbackSubmitted)
+                    {
+                        <button class="btn btn-success" onclick="showFeedbackModal(@report.ReportId, true)">Approve</button>
+                        <button class="btn btn-danger" onclick="showFeedbackModal(@report.ReportId, false)">Decline</button>
+                    }
+                    else
+                    {
+                        <span>@(report.IsApproved == true ? "Approved" : "Declined")</span>
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(report.Feedback))
+                    {
+                        @report.Feedback
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(report.FileName))
+                    {
+                        <a href="@Url.Action("DownloadFile", "Supervisor", new { reportId = report.ReportId })" class="btn btn-info">Download File</a>
+                    }
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
-<!-- Another Button to return to Dashboard at the bottom if needed -->
-<a href="@Url.Action("Dashboard", "Supervisor")" class="btn btn-primary">Return to Dashboard</a>
+<!-- Modal for feedback -->
+<div id="feedbackModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("SubmitFeedback", "Supervisor", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Hidden("ReportId", "", new { id = "ReportId" })
+                    @Html.Hidden("IsApproved", "", new { id = "IsApproved" })
+                    <div class="form-group">
+                        @Html.Label("Feedback", "Feedback")
+                        @Html.TextArea("Feedback", "", new { @class = "form-control", id = "Feedback" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function showFeedbackModal(reportId, isApproved) {
+        document.getElementById("ReportId").value = reportId;
+        document.getElementById("IsApproved").value = isApproved;
+        document.getElementById("Feedback").required = !isApproved;
+        $('#feedbackModal').modal('show');
+    }
+</script>
