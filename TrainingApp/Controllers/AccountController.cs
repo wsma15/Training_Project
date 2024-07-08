@@ -85,8 +85,8 @@ namespace TrainingApp.Controllers
                         return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
                     }
 
-                    // Check if login credentials belong to a student
                     var student = context.Students.FirstOrDefault(s => s.StudentID.ToString() == model.UserId && s.StudentPassword == model.Password);
+                    // Check if login credentials belong to a student
                     if (student != null)
                     {
                         await SignInStudent(student, model.RememberMe);
@@ -99,8 +99,6 @@ namespace TrainingApp.Controllers
                         await SignInSupervisor(supervisor, model.RememberMe);
                         return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
                     }
-
-
                 }
 
                 ModelState.AddModelError("", "Invalid login attempt.");
