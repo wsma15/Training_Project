@@ -22,10 +22,6 @@ namespace TrainingApp.Controllers
                 Supervisors = _context.Users
                                   .Where(super => super.Roles == UserRole.Supervisor)
                                   .ToList()
-
-,
-
-
             };
 
             return View(viewModel);
@@ -50,7 +46,6 @@ namespace TrainingApp.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 using (var context = new TrainingAppDBContext())
                 {
                     // Save the student to the database using the generated ID
@@ -65,7 +60,6 @@ namespace TrainingApp.Controllers
                     });
                     context.SaveChanges();
                 }
-
                 // Redirect to the list of students or another appropriate page
                 return RedirectToAction("AdminDashboard", "Admin");
             }
@@ -99,7 +93,6 @@ namespace TrainingApp.Controllers
 
                     // Log the supervisor details before saving
                     ModelState.AddModelError("", ($"Supervisor Details: ID={supervisor.SupervisorID}, Name={supervisor.Name}, Email={supervisor.Email}"));
-
                     _context.Users.Add(supervisor);
                     _context.SaveChanges();
 
