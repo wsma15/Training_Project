@@ -82,8 +82,8 @@ namespace TrainingApp.Controllers
                         switch (user.Roles)
                         {
                             case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
-                            case UserRole.Supervisor: await SignInSupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
-                            case UserRole.Student: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
+                            case UserRole.UniversitySupervisor: await SignInSupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
+                            case UserRole.Trainer: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
 
                         }
 

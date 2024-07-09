@@ -61,7 +61,7 @@ namespace TrainingApp.Controllers
                 var student = MyDB.Users.SingleOrDefault(s => s.Id.ToString() == report.OwnerId);
                 if (student != null)
                 {
-                    report.SupervisorID = student.SupervisorID;
+                    report.SupervisorID = student.UniversitySupervisorID;
                 }
 
                 MyDB.Reports.Add(report);

@@ -24,7 +24,7 @@ namespace TrainingApp.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public string SupervisorID { get; set; }
+        public string UniversitySupervisorID { get; set; }
 
         [Required]
         public UserRole Roles { get; set; }
@@ -33,7 +33,8 @@ namespace TrainingApp.Models
     public enum UserRole
     {
         Admin,
-        Supervisor,
-        Student,
+        UniversitySupervisor,
+        Trainer,
+        CompanySupervisor
     }
 }

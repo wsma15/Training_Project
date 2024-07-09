@@ -198,9 +198,13 @@
     <Compile Include="Migrations\202407090021218_Init6.Designer.cs">
       <DependentUpon>202407090021218_Init6.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202407090610313_Init7.cs" />
+    <Compile Include="Migrations\202407090610313_Init7.Designer.cs">
+      <DependentUpon>202407090610313_Init7.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AddStudentViewModel.cs" />
+    <Compile Include="Models\AddTrainerViewModel.cs" />
     <Compile Include="Models\AddSupervisorViewModel.cs" />
     <Compile Include="Models\AdminDashboardViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -342,6 +346,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202407090021218_Init6.resx">
       <DependentUpon>202407090021218_Init6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407090610313_Init7.resx">
+      <DependentUpon>202407090610313_Init7.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -24,7 +24,7 @@ namespace TrainingApp.Controllers
         public ActionResult Dashboard()
         {
             string supervisorId = User.Identity.GetUserId(); // Assuming UserId is the SupervisorID
-            var students = db.Users.Where(s => s.SupervisorID == supervisorId).ToList();
+            var students = db.Users.Where(s => s.UniversitySupervisorID == supervisorId).ToList();
             return View(students);
         }
         // GET: Supervisor/StudentReports/5

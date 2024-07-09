@@ -17,10 +17,10 @@ namespace TrainingApp.Controllers
             var viewModel = new AdminDashboardViewModel
             {
                 Students = _context.Users
-                                  .Where(super => super.Roles == UserRole.Student)
+                                  .Where(super => super.Roles == UserRole.Trainer)
                                   .ToList(),
                 Supervisors = _context.Users
-                                  .Where(super => super.Roles == UserRole.Supervisor)
+                                  .Where(super => super.Roles == UserRole.UniversitySupervisor)
                                   .ToList()
             };
 
@@ -30,10 +30,10 @@ namespace TrainingApp.Controllers
 
         public ActionResult AddStudent()
         {
-            var viewModel = new AddStudentViewModel
+            var viewModel = new AddTrainerViewModel
             {
-                Supervisors = _context.Users
-                                  .Where(super => super.Roles == UserRole.Supervisor)
+                UniversitySupervisors = _context.Users
+                                  .Where(super => super.Roles == UserRole.UniversitySupervisor)
                                   .ToList(),
             };
 
@@ -42,7 +42,7 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddStudent(AddStudentViewModel model)
+        public ActionResult AddStudent(AddTrainerViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -52,11 +52,11 @@ namespace TrainingApp.Controllers
                     context.Users.Add(new Users
                     {
 
-                        Name = model.StudentName,
-                        Email = model.StudentEmail,
-                        Password = model.StudentPassword,
-                        SupervisorID = model.SupervisorID.ToString(),
-                        Roles = UserRole.Student
+                        Name = model.TrainerName,
+                        Email = model.TrainerEmail,
+                        Password = model.TrainerPassword,
+                        UniversitySupervisorID = model.UniversitySupervisorID.ToString(),
+                        Roles = UserRole.Trainer
                     });
                     context.SaveChanges();
                 }
@@ -88,11 +88,11 @@ namespace TrainingApp.Controllers
                         Name = model.SupervisorName,
                         Email = model.SupervisorEmail,
                         Password = model.SupervisorPassword,
-                        Roles = UserRole.Supervisor
+                        Roles = UserRole.UniversitySupervisor
                     };
 
                     // Log the supervisor details before saving
-                    ModelState.AddModelError("", ($"Supervisor Details: ID={supervisor.SupervisorID}, Name={supervisor.Name}, Email={supervisor.Email}"));
+                    ModelState.AddModelError("", ($"Supervisor Details: ID={supervisor.UniversitySupervisorID}, Name={supervisor.Name}, Email={supervisor.Email}"));
                     _context.Users.Add(supervisor);
                     _context.SaveChanges();
 

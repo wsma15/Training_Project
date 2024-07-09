@@ -4,25 +4,25 @@ using TrainingApp.Models;
 
 namespace TrainingApp.ViewModels
 {
-    public class AddStudentViewModel
+    public class AddTrainerViewModel
     {
         [Required]
         [StringLength(50)]
-        public string StudentName { get; set; }
+        public string TrainerName { get; set; }
 
         [Required]
         [StringLength(50)]
         [EmailAddress]
-        public string StudentEmail { get; set; }
+        public string TrainerEmail { get; set; }
 
         [Required]
         [StringLength(50)]
         [DataType(DataType.Password)]
-        public string StudentPassword { get; set; }
+        public string TrainerPassword { get; set; }
 
         [Required]
-        public int SupervisorID { get; set; }
+        public int UniversitySupervisorID { get; set; }
 
-        public IEnumerable<Users> Supervisors { get; set; }
+        public IEnumerable<Users> UniversitySupervisors { get; set; }
     }
 }

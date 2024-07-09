@@ -24,14 +24,14 @@
         <tbody>
             @foreach (var student in Model.Students)
             {
-                if (student.SupervisorID != null)
+                if (student.UniversitySupervisorID != null)
                 {
                 <tr>
                     <td>@student.Id</td>
                     <td>@student.Name</td>
                     <td>@student.Email</td>
                     
-                    <td>@(Model.GetSupervisorName(student.SupervisorID))</td>
+                    <td>@(Model.GetSupervisorName(student.UniversitySupervisorID))</td>
                 </tr>
                 }
             }
@@ -55,7 +55,7 @@
         <tbody>
             @foreach (var supervisor in Model.Supervisors)
             {
-                if (supervisor.SupervisorID == null)
+                if (supervisor.UniversitySupervisorID == null)
                 {
                 <tr>
                     <td>@supervisor.Id</td>
