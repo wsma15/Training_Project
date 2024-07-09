@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using TrainingApp.Models;
 using TrainingApp.ViewModels;
@@ -19,9 +17,12 @@ namespace TrainingApp.Controllers
                 Students = _context.Users
                                   .Where(super => super.Roles == UserRole.Trainer)
                                   .ToList(),
-                Supervisors = _context.Users
+                UniversitySupervisors = _context.Users
                                   .Where(super => super.Roles == UserRole.UniversitySupervisor)
-                                  .ToList()
+                                  .ToList(),
+                CompanySupervisors = _context.Users.Where(
+                    super => super.Roles == UserRole.CompanySupervisor
+                    ).ToList(),
             };
 
             return View(viewModel);
@@ -33,8 +34,23 @@ namespace TrainingApp.Controllers
             var viewModel = new AddTrainerViewModel
             {
                 UniversitySupervisors = _context.Users
-                                  .Where(super => super.Roles == UserRole.UniversitySupervisor)
-                                  .ToList(),
+                                      .Where(u => u.Roles == UserRole.UniversitySupervisor)
+                                      .Select(u => new SelectListItem
+                                      {
+                                          Value = u.Id.ToString(),
+                                          Text = u.Name
+                                      })
+                                      .ToList(),
+
+                // Retrieve list of company supervisors along with their company names
+                CompanySupervisors = _context.Users
+                                    .Where(u => u.Roles == UserRole.CompanySupervisor)
+                                    .Select(u => new SelectListItem
+                                    {
+                                        Value = u.Id.ToString(),
+                                        Text = u.CompanyName + " - " + u.Name // Display company name and supervisor name
+                                    })
+                                    .ToList()
             };
 
             return View(viewModel);
@@ -48,27 +64,44 @@ namespace TrainingApp.Controllers
             {
                 using (var context = new TrainingAppDBContext())
                 {
-                    // Save the student to the database using the generated ID
-                    context.Users.Add(new Users
-                    {
+                    // Retrieve the company name based on the selected supervisor ID
+                    var companyName = context.Users
+                                             .Where(u => u.Id == model.CompanySupervisorID)
+                                             .Select(u => u.CompanyName)
+                                             .FirstOrDefault();
 
+                    var user = new Users
+                    {
                         Name = model.TrainerName,
                         Email = model.TrainerEmail,
                         Password = model.TrainerPassword,
                         UniversitySupervisorID = model.UniversitySupervisorID.ToString(),
+                        CompanySupervisorID = model.CompanySupervisorID.ToString(),
+                        CompanyName = companyName, // Save the company name
                         Roles = UserRole.Trainer
-                    });
+                    };
+
+                    context.Users.Add(user);
                     context.SaveChanges();
                 }
-                // Redirect to the list of students or another appropriate page
+
+                // Redirect to the admin dashboard after adding the student
                 return RedirectToAction("AdminDashboard", "Admin");
             }
 
             // If the model state is not valid, return the view with validation errors
             return View(model);
         }
+        public string GetUniName(int id)
+        {
+            return (from name in _context.Users where name.Id == id select name.UniversityName).FirstOrDefault();
 
 
+        }
+        public ActionResult AddUniversitySupervisor()
+        {
+            return View();
+        }
         public ActionResult AddSupervisor()
         {
             return View();
@@ -76,51 +109,64 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddSupervisor(AddSupervisorViewModel model)
+
+        public ActionResult AddUniversitySupervisor(AddSupervisorViewModel model)
         {
             if (ModelState.IsValid)
             {
-                try
+                // Perform actions to add supervisor to database
+                using (var context = new TrainingAppDBContext())
                 {
-
-                    var supervisor = new Users
+                    context.Users.Add(new Users
                     {
                         Name = model.SupervisorName,
                         Email = model.SupervisorEmail,
                         Password = model.SupervisorPassword,
-                        Roles = UserRole.UniversitySupervisor
-                    };
+                        UniversityName = model.UniversityName, // Assuming you have this property in your Users model
+                        Roles = UserRole.UniversitySupervisor // Adjust roles as per your application logic
+                    });
+                    context.SaveChanges();
+                }
 
-                    // Log the supervisor details before saving
-                    ModelState.AddModelError("", ($"Supervisor Details: ID={supervisor.UniversitySupervisorID}, Name={supervisor.Name}, Email={supervisor.Email}"));
-                    _context.Users.Add(supervisor);
-                    _context.SaveChanges();
-
-                    return RedirectToAction("AdminDashboard", "Admin");
-                }
-                catch (DbUpdateException ex)
-                {
-                    // Log inner exceptions for more detail
-                    if (ex.InnerException != null)
-                    {
-                        Console.WriteLine("Inner Exception Message: " + ex.InnerException.Message);
-                        if (ex.InnerException.InnerException != null)
-                        {
-                            Console.WriteLine("Inner Inner Exception Message: " + ex.InnerException.InnerException.Message);
-                        }
-                    }
-                    ModelState.AddModelError("", "An error occurred while adding the supervisor. Please try again.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Exception Message: " + ex.Message);
-                    ModelState.AddModelError("", "An unexpected error occurred. Please try again.");
-                }
+                // Redirect to appropriate action after adding supervisor
+                return RedirectToAction("AdminDashboard", "Admin");
             }
 
+            // If model state is not valid, return view with errors
             return View(model);
         }
+        [HttpGet]
+        public ActionResult AddCompanySupervisor()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddCompanySupervisor(AddCompanySupervisorViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Map ViewModel data to the User entity
+                var user = new Users
+                {
+                    CompanyName = model.CompanyName,
+                    Name = model.Name,
+                    Email = model.Email,
+                    Password = model.Password,
+                    Roles = UserRole.CompanySupervisor
+                };
+
+                // Save to database
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                return RedirectToAction("AdminDashboard");
+            }
+
+            // If model state is not valid, return the view with errors
+            return View(model);
+        }
 
         protected override void Dispose(bool disposing)
         {

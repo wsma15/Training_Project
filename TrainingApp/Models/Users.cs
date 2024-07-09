@@ -24,6 +24,7 @@ namespace TrainingApp.Models
         public string Password { get; set; }
 
         public string UniversitySupervisorID { get; set; }
+        public string CompanySupervisorID { get; set; }
 
         public string UniversityName { get; set; }
 

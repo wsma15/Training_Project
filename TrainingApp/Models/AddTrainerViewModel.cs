@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TrainingApp.Models;
+using System.Web.Mvc;
 
 namespace TrainingApp.ViewModels
 {
@@ -23,6 +23,12 @@ namespace TrainingApp.ViewModels
         [Required]
         public int UniversitySupervisorID { get; set; }
 
-        public IEnumerable<Users> UniversitySupervisors { get; set; }
+        [Required]
+        public int CompanySupervisorID { get; set; }
+
+        public IEnumerable<SelectListItem> UniversitySupervisors { get; set; }
+        public IEnumerable<SelectListItem> CompanySupervisors { get; set; }
+
+        public string CompanyName { get; set; } // To hold the selected company's name
     }
 }

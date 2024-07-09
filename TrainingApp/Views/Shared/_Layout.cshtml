@@ -3,9 +3,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewBag.Title</title>
+    @using System.Security.Claims
+    @using Microsoft.AspNet.Identity
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Open Sans', sans-serif;
@@ -56,22 +59,68 @@
             background-color: #337ab7;
             border-color: #2e6da4;
         }
+
+        .inbox-icon {
+            font-size: 1.2em;
+            color: #777;
+            margin-left: 15px;
+        }
+
+            .inbox-icon:hover {
+                color: #337ab7;
+            }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">TMS</a>
             </div>
-                <ul class="nav navbar-nav">
-                       @if (User.IsInRole("Admin"))
-                    {
-                        <li>@Html.ActionLink("Admin Dashboard", "AdminDashboard", "Admin")</li>
-                    }
-                </ul>
-                @Html.Partial("_LoginPartial")
+            <ul class="nav navbar-nav">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>@Html.ActionLink("Admin Dashboard", "AdminDashboard", "Admin")</li>
+                }
+                else if (User.IsInRole("UniversitySupervisor"))
+                {
+                    <li>@Html.ActionLink("Supervisor Dashboard", "Dashboard", "Supervisor")</li>
+
+
+                }
+
+                else if (User.IsInRole("Trainer"))
+                {
+                    <li>@Html.ActionLink("Trainer Dashboard", "StudentDashboard", "Students")</li>
+
+
+                }
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                @if (Request.IsAuthenticated)
+                {
+                    <li>
+                        <a href="@Url.Action("Inbox", "Message", new { userId = User.Identity.GetUserId() })" class="inbox-icon">
+                            <i class="fas fa-inbox"></i> Inbox
+                        </a>
+                    </li>
+                    <li>
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })
+                    </li>
+                    <li>
+                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                        }
+                    </li>
+                }
+                else
+                {
+                    <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })</li>
+                }
+            </ul>
         </div>
     </nav>
     <div class="container body-content">

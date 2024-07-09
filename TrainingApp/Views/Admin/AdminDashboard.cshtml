@@ -6,6 +6,8 @@
 }
 
 <h2>Admin Dashboard</h2>
+<hr />
+<hr />
 
 <div>
     <h3>Students</h3>
@@ -19,18 +21,22 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Supervisor</th>
+                <th>University</th>
+                <th>Company</th>
+
             </tr>
         </thead>
         <tbody>
             @foreach (var student in Model.Students)
             {
-                if (student.UniversitySupervisorID != null)
                 {
                     <tr>
                         <td>@student.Id</td>
                         <td>@student.Name</td>
                         <td>@student.Email</td>
                         <td>@(Model.GetSupervisorName(student.UniversitySupervisorID))</td>
+                        <td>@(Model.GetUniName(student.UniversitySupervisorID))</td>
+                        <td>@(Model.GetCompanyName(student.CompanySupervisorID))</td>
                     </tr>
                 }
             }
@@ -41,7 +47,7 @@
 <div>
     <h3>University Supervisors</h3>
     <p>
-        @Html.ActionLink("Add University Supervisor", "AddSupervisor", "Admin")
+        @Html.ActionLink("Add University Supervisor", "AddUniversitySupervisor", "Admin")
     </p>
     <table class="table">
         <thead>
@@ -49,24 +55,25 @@
                 <th>Supervisor ID</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>University</th>
+
             </tr>
         </thead>
         <tbody>
-            @foreach (var supervisor in Model.Supervisors)
+            @foreach (var supervisor in Model.UniversitySupervisors)
             {
-               if (supervisor.UniversitySupervisorID == null)
                 {
                     <tr>
                         <td>@supervisor.Id</td>
                         <td>@supervisor.Name</td>
                         <td>@supervisor.Email</td>
+                        <td>@supervisor.UniversityName</td>
                     </tr>
                 }
             }
         </tbody>
     </table>
 </div>
-
 <div>
     <h3>Company Supervisors</h3>
     <p>
@@ -82,18 +89,18 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var supervisor in Model.Supervisors)
+            @foreach (var supervisor in Model.CompanySupervisors)
             {
-                if (supervisor.CompanyName != null)
                 {
-                <tr>
-                    <td>@supervisor.Id</td>
-                    <td>@supervisor.Name</td>
-                    <td>@supervisor.Email</td>
-                    <td>@supervisor.CompanyName</td>
-                </tr>
+                    <tr>
+                        <td>@supervisor.Id</td>
+                        <td>@supervisor.Name</td>
+                        <td>@supervisor.Email</td>
+                        <td>@supervisor.CompanyName</td>
+                    </tr>
                 }
             }
         </tbody>
     </table>
 </div>
+

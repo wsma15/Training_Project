@@ -1,0 +1,28 @@
+﻿@model IEnumerable<TrainingApp.ViewModels.MessageViewModel>
+
+@{
+    ViewBag.Title = "Inbox";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Inbox</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>From</th>
+            <th>Message</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model)
+        {
+            <tr>
+                <td>@message.SenderName</td>
+                <td>@message.MessageText</td>
+                <td>@message.Timestamp</td>
+            </tr>
+        }
+    </tbody>
+</table>

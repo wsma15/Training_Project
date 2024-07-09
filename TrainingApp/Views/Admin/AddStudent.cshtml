@@ -2,12 +2,12 @@
 
 @{
     ViewBag.Title = "Add Student";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a shared layout, or you can remove this line if not applicable
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Add Student</h2>
 
-@using ((Html.BeginForm()))
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
@@ -43,15 +43,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.UniversitySupervisorID, "Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @if (Model.UniversitySupervisors != null && Model.UniversitySupervisors.Any())
-                {
-                    @Html.DropDownListFor(model => model.UniversitySupervisorID, new SelectList(Model.UniversitySupervisors, "Id", "Name"), "Select Supervisor", new { @class = "form-control" })
-                }
-                else
-                {
-                    <p>No supervisors available</p>
-                }
+                @Html.DropDownListFor(model => model.UniversitySupervisorID, Model.UniversitySupervisors, "Select Supervisor", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.UniversitySupervisorID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanySupervisorID, "Company Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CompanySupervisorID, Model.CompanySupervisors, "Select Company Supervisor", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CompanySupervisorID, "", new { @class = "text-danger" })
             </div>
         </div>
 

@@ -104,6 +104,7 @@ namespace TrainingApp.Controllers
         private async Task SignInAdmin(Users admin, bool rememberMe)
         {
             var identity = new ClaimsIdentity(new[] {
+    new Claim(ClaimTypes.Role, "Admin"),
         new Claim(ClaimTypes.Name, admin.Name),
         new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
@@ -112,7 +113,9 @@ namespace TrainingApp.Controllers
         }
         private async Task SignInSupervisor(Users supervisor, bool rememberMe)
         {
+
             var identity = new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.Role, "UniversitySupervisor"),
         new Claim(ClaimTypes.Name, supervisor.Name),
         new Claim(ClaimTypes.NameIdentifier, supervisor.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
@@ -123,6 +126,7 @@ namespace TrainingApp.Controllers
         private async Task SignInStudent(Users student, bool rememberMe)
         {
             var identity = new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.Role, "Trainer"),
         new Claim(ClaimTypes.Name, student.Name),
         new Claim(ClaimTypes.NameIdentifier, student.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);

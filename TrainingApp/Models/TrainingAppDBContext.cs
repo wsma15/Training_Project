@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using TrainingApp.ViewModels;
 
 namespace TrainingApp.Models
 {
@@ -15,5 +16,6 @@ namespace TrainingApp.Models
                 */
         public DbSet<Users> Users { get; set; }
         public DbSet<Reports> Reports { get; set; }
+        public DbSet<MessageViewModel> Messages { get; set; }
     }
 }
