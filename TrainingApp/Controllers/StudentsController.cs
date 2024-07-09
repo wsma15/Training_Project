@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
-using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -25,73 +24,44 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitFeedback(int reportId, string feedback)
-        {
-            var report = MyDB.Reports.SingleOrDefault(r => r.ReportId == reportId);
-            if (report != null && !report.IsFeedbackSubmitted)
-            {
-                report.Feedback = feedback;
-                report.IsFeedbackSubmitted = true;
-                MyDB.SaveChanges();
-            }
-
-            // Redirect back to the student dashboard after submitting feedback
-            return RedirectToAction("StudentDashboard", "Students");
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult AddReport(Reports report, HttpPostedFileBase file)
         {
-            try
+            if (file != null && file.ContentLength > 0)
             {
-                if (file != null && file.ContentLength > 0)
+                report.FileName = Path.GetFileName(file.FileName);
+                report.ContentType = file.ContentType;
+                using (var reader = new BinaryReader(file.InputStream))
                 {
-                    report.FileName = Path.GetFileName(file.FileName);
-                    report.ContentType = file.ContentType;
-
-                    using (var reader = new BinaryReader(file.InputStream))
-                    {
-                        report.Content = reader.ReadBytes(file.ContentLength);
-                    }
+                    report.Content = reader.ReadBytes(file.ContentLength);
                 }
+            }
+            else
+            {
+                ModelState.AddModelError("FileName", "Report File is required");
+            }
 
-                report.ReportId = GenerateNewReportId();
-                report.OwnerId = User.Identity.GetUserId();
+            report.OwnerId = User.Identity.GetUserId();
+            var student = MyDB.Users.SingleOrDefault(s => s.Id.ToString() == report.OwnerId && s.UniversitySupervisorID != null);
+            if (student != null)
+            {
+                report.SupervisorID = student.UniversitySupervisorID;
+            }
+            else
+            {
+                ModelState.AddModelError("OwnerId", "Student not found");
+            }
 
-                var student = MyDB.Users.SingleOrDefault(s => s.Id.ToString() == report.OwnerId);
-                if (student != null)
-                {
-                    report.SupervisorID = student.UniversitySupervisorID;
-                }
-
+            //            if (ModelState.IsValid)
+            {
+                //   return Content(report.IsFeedbackSubmitted.ToString());
                 MyDB.Reports.Add(report);
                 MyDB.SaveChanges();
-
                 return RedirectToAction("StudentDashboard", "Students");
             }
-            catch (DbEntityValidationException ex)
+            //      else
             {
-                foreach (var validationErrors in ex.EntityValidationErrors)
-                {
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                    {
-                        ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
-                    }
-                }
                 return View(report);
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "An error occurred while saving the report: " + ex.Message);
-                return View(report);
-            }
-        }
-
-        private int GenerateNewReportId()
-        {
-            return MyDB.Reports.Any()
-                ? MyDB.Reports.Max(r => r.ReportId) + 1
-                : 1;
         }
 
         public ActionResult DeleteReport(int id)
@@ -122,5 +92,19 @@ namespace TrainingApp.Controllers
             return HttpNotFound();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitFeedback(int Id, string feedback)
+        {
+            var report = MyDB.Reports.SingleOrDefault(r => r.Id == Id);
+            if (report != null && !report.IsFeedbackSubmitted)
+            {
+                report.Feedback = feedback;
+                report.IsFeedbackSubmitted = true;
+                MyDB.SaveChanges();
+            }
+
+            return RedirectToAction("StudentDashboard", "Students");
+        }
     }
 }

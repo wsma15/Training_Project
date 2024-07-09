@@ -16,13 +16,14 @@
         @foreach (var report in Model)
         {
             <tr>
-                <td>@(report.ReportId)</td>
+                <td>@(report.Id)</td>
+
                 <td>@(report.ReportTitle)</td>
                 <td>@(report.ReportDateCreated.ToShortDateString())</td>
                 <td>
-                    <button class="btn btn-info" onclick="toggleContent(@report.ReportId)">Show Description</button>
-                    <button class="btn btn-danger" onclick="deleteReport(@report.ReportId)">Delete</button>
-                    <a href="@Url.Action("DownloadFile", "Students", new { id = report.ReportId })" class="btn btn-primary">Download</a>
+                    <button class="btn btn-info" onclick="toggleContent(@report.Id)">Show Description</button>
+                    <button class="btn btn-danger" onclick="deleteReport(@report.Id)">Delete</button>
+                    <a href="@Url.Action("DownloadFile", "Students", new { id = report.Id })" class="btn btn-primary">Download</a>
                 </td>
                 <td>
                     @if (!string.IsNullOrEmpty(report.Feedback))
@@ -35,7 +36,7 @@
                     }
                 </td>
             </tr>
-            <tr id="content-@report.ReportId" style="display:none;">
+            <tr id="content-@report.Id" style="display:none;">
                 <td colspan="5">@Html.Raw(report.ReportDescription)</td>
             </tr>
         }
@@ -58,7 +59,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @Html.Hidden("ReportId", "", new { id = "Feedback_ReportId" })
+                    @Html.Hidden("Id", "", new { id = "Feedback_Id" })
                     <div class="form-group">
                         @Html.Label("Feedback", "Feedback")
                         @Html.TextArea("Feedback", "", new { @class = "form-control", id = "Feedback_Content" })
@@ -74,8 +75,8 @@
 </div>
 
 <script>
-    function toggleContent(reportId) {
-        var contentRow = document.getElementById("content-" + reportId);
+    function toggleContent(Id) {
+        var contentRow = document.getElementById("content-" + Id);
         var button = contentRow.previousElementSibling.querySelector("button.btn-info");
 
         if (contentRow.style.display === "none") {
@@ -87,14 +88,14 @@
         }
     }
 
-    function deleteReport(reportId) {
+    function deleteReport(Id) {
         if (confirm("Are you sure you want to delete this report?")) {
-            window.location.href = '@Url.Action("DeleteReport", "Students")/' + reportId;
+            window.location.href = '@Url.Action("DeleteReport", "Students")/' + Id;
         }
     }
 
-    function showFeedbackModal(reportId) {
-        document.getElementById("Feedback_ReportId").value = reportId;
+    function showFeedbackModal(Id) {
+        document.getElementById("Feedback_Id").value = Id;
         $('#feedbackModal').modal('show');
     }
 </script>

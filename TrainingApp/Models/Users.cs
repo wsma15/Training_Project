@@ -18,13 +18,16 @@ namespace TrainingApp.Models
         [StringLength(50)]
         public string Email { get; set; }
 
-
         [Required]
         [StringLength(50)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         public string UniversitySupervisorID { get; set; }
+
+        public string UniversityName { get; set; }
+
+        public string CompanyName { get; set; }
 
         [Required]
         public UserRole Roles { get; set; }

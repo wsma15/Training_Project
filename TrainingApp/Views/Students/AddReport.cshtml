@@ -32,7 +32,6 @@
         @Html.Label("File", "Upload File")
         <input type="file" name="file" class="form-control" />
         @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
-
     </div>
 
     @Html.HiddenFor(model => model.OwnerId)

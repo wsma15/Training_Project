@@ -25,15 +25,15 @@
         @foreach (var report in Model)
         {
             <tr>
-                <td>@report.ReportId</td>
+                <td>@report.Id</td>
                 <td>@report.ReportTitle</td>
                 <td>@report.ReportDescription</td>
                 <td>@report.ReportDateCreated.ToShortDateString()</td>
                 <td>
                     @if (!report.IsFeedbackSubmitted)
                     {
-                        <button class="btn btn-success" onclick="showFeedbackModal(@report.ReportId, true)">Approve</button>
-                        <button class="btn btn-danger" onclick="showFeedbackModal(@report.ReportId, false)">Decline</button>
+                        <button class="btn btn-success" onclick="showFeedbackModal(@report.Id, true)">Approve</button>
+                        <button class="btn btn-danger" onclick="showFeedbackModal(@report.Id, false)">Decline</button>
                     }
                     else
                     {
@@ -49,7 +49,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(report.FileName))
                     {
-                        <a href="@Url.Action("DownloadFile", "Supervisor", new { reportId = report.ReportId })" class="btn btn-info">Download File</a>
+                        <a href="@Url.Action("DownloadFile", "Supervisor", new { Id = report.Id })" class="btn btn-info">Download File</a>
                     }
                 </td>
             </tr>
@@ -71,7 +71,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @Html.Hidden("ReportId", "", new { id = "ReportId" })
+                    @Html.Hidden("Id", "", new { id = "Id" })
                     @Html.Hidden("IsApproved", "", new { id = "IsApproved" })
                     <div class="form-group">
                         @Html.Label("Feedback", "Feedback")
@@ -88,8 +88,8 @@
 </div>
 
 <script>
-    function showFeedbackModal(reportId, isApproved) {
-        document.getElementById("ReportId").value = reportId;
+    function showFeedbackModal(Id, isApproved) {
+        document.getElementById("Id").value = Id;
         document.getElementById("IsApproved").value = isApproved;
         document.getElementById("Feedback").required = !isApproved;
         $('#feedbackModal').modal('show');

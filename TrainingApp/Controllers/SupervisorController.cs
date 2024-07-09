@@ -9,9 +9,9 @@ namespace TrainingApp.Controllers
     {
         private TrainingAppDBContext db = new TrainingAppDBContext();
 
-        public ActionResult DownloadFile(int reportId)
+        public ActionResult DownloadFile(int Id)
         {
-            var report = db.Reports.Find(reportId);
+            var report = db.Reports.Find(Id);
             if (report != null && !string.IsNullOrEmpty(report.FileName))
             {
                 // Return the file using FileResult
@@ -37,9 +37,9 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitFeedback(int reportId, bool isApproved, string feedback)
+        public ActionResult SubmitFeedback(int Id, bool isApproved, string feedback)
         {
-            var report = db.Reports.SingleOrDefault(r => r.ReportId == reportId);
+            var report = db.Reports.SingleOrDefault(r => r.Id == Id);
             if (report != null && !report.IsFeedbackSubmitted)
             {
                 report.IsApproved = isApproved;

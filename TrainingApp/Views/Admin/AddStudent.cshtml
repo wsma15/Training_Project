@@ -7,7 +7,7 @@
 
 <h2>Add Student</h2>
 
-@using (Html.BeginForm())
+@using ((Html.BeginForm()))
 {
     @Html.AntiForgeryToken()
 
@@ -17,47 +17,47 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.StudentName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StudentName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StudentName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.TrainerName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter student name" } })
+                @Html.ValidationMessageFor(model => model.TrainerName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.StudentEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.TrainerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StudentEmail, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StudentEmail, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.TrainerEmail, new { htmlAttributes = new { @class = "form-control", type = "email", placeholder = "Enter student email" } })
+                @Html.ValidationMessageFor(model => model.TrainerEmail, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.StudentPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.TrainerPassword, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.PasswordFor(model => model.StudentPassword, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StudentPassword, "", new { @class = "text-danger" })
+                @Html.PasswordFor(model => model.TrainerPassword, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter password" } })
+                @Html.ValidationMessageFor(model => model.TrainerPassword, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SupervisorID, "Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.UniversitySupervisorID, "Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @if (Model.Supervisors != null && Model.Supervisors.Any())
+                @if (Model.UniversitySupervisors != null && Model.UniversitySupervisors.Any())
                 {
-                    @Html.DropDownListFor(model => model.SupervisorID, new SelectList(Model.Supervisors, "Id", "Name"), "Select Supervisor", new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.UniversitySupervisorID, new SelectList(Model.UniversitySupervisors, "Id", "Name"), "Select Supervisor", new { @class = "form-control" })
                 }
                 else
                 {
                     <p>No supervisors available</p>
                 }
-                @Html.ValidationMessageFor(model => model.SupervisorID, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.UniversitySupervisorID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Add Student" class="btn btn-default" />
+                <input type="submit" value="Add Student" class="btn btn-primary" />
             </div>
         </div>
     </div>

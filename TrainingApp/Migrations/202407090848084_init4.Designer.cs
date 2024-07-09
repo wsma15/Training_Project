@@ -7,13 +7,13 @@ namespace TrainingApp.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class Init : IMigrationMetadata
+    public sealed partial class init4 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Init));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(init4));
         
         string IMigrationMetadata.Id
         {
-            get { return "202407080711024_Init"; }
+            get { return "202407090848084_init4"; }
         }
         
         string IMigrationMetadata.Source

@@ -6,10 +6,10 @@ namespace TrainingApp.Models
 {
     public class Reports
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
-        public int ReportId { get; set; }
+        [Key]
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Report Title is required")]
         public string ReportTitle { get; set; }
@@ -25,14 +25,15 @@ namespace TrainingApp.Models
 
         [Required]
         public string SupervisorID { get; set; }
+
         [Required(ErrorMessage = "Report File is required")]
         public string FileName { get; set; }
+
         public string ContentType { get; set; }
         public byte[] Content { get; set; }
 
         public bool IsApproved { get; set; }
         public string Feedback { get; set; }
         public bool IsFeedbackSubmitted { get; set; } // Indicates whether feedback has been submitted
-
     }
 }
