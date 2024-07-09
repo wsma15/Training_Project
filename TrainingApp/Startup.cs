@@ -8,6 +8,5 @@ namespace TrainingApp
         {
             ConfigureAuth(app);
         }
-
     }
 }

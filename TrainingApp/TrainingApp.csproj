@@ -182,18 +182,32 @@
     <Compile Include="Migrations\202407080744223_Init2.Designer.cs">
       <DependentUpon>202407080744223_Init2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202407082352422_Init3.cs" />
+    <Compile Include="Migrations\202407082352422_Init3.Designer.cs">
+      <DependentUpon>202407082352422_Init3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407082356428_Init4.cs" />
+    <Compile Include="Migrations\202407082356428_Init4.Designer.cs">
+      <DependentUpon>202407082356428_Init4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407082357286_Init5.cs" />
+    <Compile Include="Migrations\202407082357286_Init5.Designer.cs">
+      <DependentUpon>202407082357286_Init5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407090021218_Init6.cs" />
+    <Compile Include="Migrations\202407090021218_Init6.Designer.cs">
+      <DependentUpon>202407090021218_Init6.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddStudentViewModel.cs" />
     <Compile Include="Models\AddSupervisorViewModel.cs" />
-    <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\AdminDashboardViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Reports.cs" />
-    <Compile Include="Models\Students.cs" />
-    <Compile Include="Models\Supervisors.cs" />
     <Compile Include="Models\TrainingAppDBContext.cs" />
+    <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -316,6 +330,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202407080744223_Init2.resx">
       <DependentUpon>202407080744223_Init2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407082352422_Init3.resx">
+      <DependentUpon>202407082352422_Init3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407082356428_Init4.resx">
+      <DependentUpon>202407082356428_Init4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407082357286_Init5.resx">
+      <DependentUpon>202407082357286_Init5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407090021218_Init6.resx">
+      <DependentUpon>202407090021218_Init6.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

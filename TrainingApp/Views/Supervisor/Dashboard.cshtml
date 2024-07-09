@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TrainingApp.Models.Student>
+﻿@model IEnumerable<TrainingApp.Models.Users>
 
 @{
     ViewBag.Title = "Supervisor Dashboard";
@@ -19,11 +19,11 @@
         @foreach (var student in Model)
         {
             <tr>
-                <td>@student.StudentID</td>
-                <td>@student.StudentName</td>
-                <td>@student.StudentEmail</td>
+                <td>@student.Id</td>
+                <td>@student.Name</td>
+                <td>@student.Email</td>
                 <td>
-                    @Html.ActionLink("View Reports", "StudentReports", new { id = student.StudentID }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("View Reports", "StudentReports", new { id = student.Id }, new { @class = "btn btn-primary" })
                 </td>
             </tr>
         }

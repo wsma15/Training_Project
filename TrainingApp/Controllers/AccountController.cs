@@ -77,31 +77,19 @@ namespace TrainingApp.Controllers
             {
                 using (var context = new TrainingAppDBContext())
                 {
-                    // Check if login credentials belong to an admin
-                    var admin = context.Admins.FirstOrDefault(a => a.AdminId.ToString() == model.UserId && a.AdminPassword == model.Password);
-                    if (admin != null)
-                    {
-                        await SignInAdmin(admin, model.RememberMe);
-                        return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
-                    }
+                    var user = context.Users.FirstOrDefault(a => a.Id.ToString() == model.UserId && a.Password == model.Password);
+                    if (user != null)
+                        switch (user.Roles)
+                        {
+                            case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
+                            case UserRole.Supervisor: await SignInSupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
+                            case UserRole.Student: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
 
-                    var student = context.Students.FirstOrDefault(s => s.StudentID.ToString() == model.UserId && s.StudentPassword == model.Password);
-                    // Check if login credentials belong to a student
-                    if (student != null)
-                    {
-                        await SignInStudent(student, model.RememberMe);
-                        return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
-                    }
+                        }
 
-                    var supervisor = context.Supervisors.FirstOrDefault(s => s.SupervisorID.ToString() == model.UserId && s.SupervisorPassword == model.Password);
-                    if (supervisor != null)
-                    {
-                        await SignInSupervisor(supervisor, model.RememberMe);
-                        return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
-                    }
+
+                    ModelState.AddModelError("", "Invalid login attempt.");
                 }
-
-                ModelState.AddModelError("", "Invalid login attempt.");
             }
             catch (Exception ex)
             {
@@ -113,30 +101,30 @@ namespace TrainingApp.Controllers
             return View(model);
         }
 
-        private async Task SignInAdmin(Admin admin, bool rememberMe)
+        private async Task SignInAdmin(Users admin, bool rememberMe)
         {
             var identity = new ClaimsIdentity(new[] {
-        new Claim(ClaimTypes.Name, admin.AdminName),
-        new Claim(ClaimTypes.NameIdentifier, admin.AdminId.ToString())
+        new Claim(ClaimTypes.Name, admin.Name),
+        new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
 
             await SignInAsync(identity, rememberMe);
         }
-        private async Task SignInSupervisor(Supervisor supervisor, bool rememberMe)
+        private async Task SignInSupervisor(Users supervisor, bool rememberMe)
         {
             var identity = new ClaimsIdentity(new[] {
-        new Claim(ClaimTypes.Name, supervisor.SupervisorName),
-        new Claim(ClaimTypes.NameIdentifier, supervisor.SupervisorID.ToString())
+        new Claim(ClaimTypes.Name, supervisor.Name),
+        new Claim(ClaimTypes.NameIdentifier, supervisor.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
 
             await SignInAsync(identity, rememberMe);
         }
 
-        private async Task SignInStudent(Student student, bool rememberMe)
+        private async Task SignInStudent(Users student, bool rememberMe)
         {
             var identity = new ClaimsIdentity(new[] {
-        new Claim(ClaimTypes.Name, student.StudentName),
-        new Claim(ClaimTypes.NameIdentifier, student.StudentID.ToString())
+        new Claim(ClaimTypes.Name, student.Name),
+        new Claim(ClaimTypes.NameIdentifier, student.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
 
             await SignInAsync(identity, rememberMe);

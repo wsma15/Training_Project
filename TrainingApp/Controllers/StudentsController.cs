@@ -58,7 +58,7 @@ namespace TrainingApp.Controllers
                 report.ReportId = GenerateNewReportId();
                 report.OwnerId = User.Identity.GetUserId();
 
-                var student = MyDB.Students.SingleOrDefault(s => s.StudentID == report.OwnerId);
+                var student = MyDB.Users.SingleOrDefault(s => s.Id.ToString() == report.OwnerId);
                 if (student != null)
                 {
                     report.SupervisorID = student.SupervisorID;
