@@ -35,33 +35,33 @@ namespace TrainingApp.Controllers
                     report.Content = reader.ReadBytes(file.ContentLength);
                 }
             }
-            else
+            if (report.ReportDescription == null)
+                report.ReportDescription = " ";
+            if (file == null || report.ReportTitle == null)
             {
-                ModelState.AddModelError("FileName", "Report File is required");
+                //      ModelState.AddModelError("FileName", "Report File is required");
+
+                return View(report);
             }
 
             report.OwnerId = User.Identity.GetUserId();
             var student = MyDB.Users.SingleOrDefault(s => s.Id.ToString() == report.OwnerId && s.UniversitySupervisorID != null);
             if (student != null)
             {
-                report.SupervisorID = student.UniversitySupervisorID;
+                report.SupervisorID = (int)student.UniversitySupervisorID;
             }
             else
             {
                 ModelState.AddModelError("OwnerId", "Student not found");
             }
 
-            //            if (ModelState.IsValid)
             {
                 //   return Content(report.IsFeedbackSubmitted.ToString());
                 MyDB.Reports.Add(report);
                 MyDB.SaveChanges();
                 return RedirectToAction("StudentDashboard", "Students");
             }
-            //      else
-            {
-                return View(report);
-            }
+
         }
 
         public ActionResult DeleteReport(int id)

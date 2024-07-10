@@ -24,7 +24,7 @@ namespace TrainingApp.Models
         public string OwnerId { get; set; }
 
         [Required]
-        public string SupervisorID { get; set; }
+        public int SupervisorID { get; set; }
 
         [Required(ErrorMessage = "Report File is required")]
         public string FileName { get; set; }

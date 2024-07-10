@@ -23,8 +23,8 @@ namespace TrainingApp.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public string UniversitySupervisorID { get; set; }
-        public string CompanySupervisorID { get; set; }
+        public int? UniversitySupervisorID { get; set; }
+        public int? CompanySupervisorID { get; set; }
 
         public string UniversityName { get; set; }
 

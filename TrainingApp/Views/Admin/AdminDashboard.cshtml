@@ -34,9 +34,9 @@
                         <td>@student.Id</td>
                         <td>@student.Name</td>
                         <td>@student.Email</td>
-                        <td>@(Model.GetSupervisorName(student.UniversitySupervisorID))</td>
-                        <td>@(Model.GetUniName(student.UniversitySupervisorID))</td>
-                        <td>@(Model.GetCompanyName(student.CompanySupervisorID))</td>
+                        <td>@(Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
+                        <td>@(Model.GetUniName((int)student.UniversitySupervisorID))</td>
+                        <td>@(Model.GetCompanyName((int)student.CompanySupervisorID))</td>
                     </tr>
                 }
             }

@@ -75,8 +75,8 @@ namespace TrainingApp.Controllers
                         Name = model.TrainerName,
                         Email = model.TrainerEmail,
                         Password = model.TrainerPassword,
-                        UniversitySupervisorID = model.UniversitySupervisorID.ToString(),
-                        CompanySupervisorID = model.CompanySupervisorID.ToString(),
+                        UniversitySupervisorID = model.UniversitySupervisorID,
+                        CompanySupervisorID = model.CompanySupervisorID,
                         CompanyName = companyName, // Save the company name
                         Roles = UserRole.Trainer
                     };

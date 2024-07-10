@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using TrainingApp.Models;
@@ -23,7 +24,7 @@ namespace TrainingApp.Controllers
         // GET: Supervisor/Dashboard
         public ActionResult Dashboard()
         {
-            string supervisorId = User.Identity.GetUserId(); // Assuming UserId is the SupervisorID
+            int supervisorId = (int)Convert.ToInt64(User.Identity.GetUserId()); // Assuming UserId is the SupervisorID
             var students = db.Users.Where(s => s.UniversitySupervisorID == supervisorId).ToList();
             return View(students);
         }

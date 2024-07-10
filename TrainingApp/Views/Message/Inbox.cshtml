@@ -1,28 +1,100 @@
 ﻿@model IEnumerable<TrainingApp.ViewModels.MessageViewModel>
+@using TrainingApp.ViewModels;
 
 @{
     ViewBag.Title = "Inbox";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Inbox</h2>
+<div class="container">
+    <div class="row">
+        <!-- Left Panel: List of Unique Users -->
+        <div class="col-md-4">
+            <h3>Users</h3>
+            <ul class="list-group">
+                @{
+                    var uniqueUsers = Model.Select(m => new { m.ReceiverId, m.ReceiverName }).Distinct();
+                }
+                @foreach (var user in uniqueUsers)
+                {
+                    <li class="list-group-item">
+                        <a href="#" class="user-link" data-senderid="@user.ReceiverId">@user.ReceiverName</a>
+                    </li>
+                }
+            </ul>
+        </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>From</th>
-            <th>Message</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var message in Model)
-        {
-            <tr>
-                <td>@message.SenderName</td>
-                <td>@message.MessageText</td>
-                <td>@message.Timestamp</td>
-            </tr>
+        <!-- Right Panel: Chat History and Message Box -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Chat History</h3>
+                </div>
+                <div class="card-body chat-history">
+                    <!-- Chat Messages -->
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Messages will be loaded dynamically via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Message Input Box -->
+                <div class="card-footer">
+                    @using (Html.BeginForm("SendMessage", "Message", FormMethod.Post, new { @class = "send-message-form" }))
+                    {
+                        @Html.HiddenFor(m => m.FirstOrDefault().ReceiverId)
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.FirstOrDefault().MessageText, new { @class = "form-control", placeholder = "Type your message..." })
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Send</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            // Handle click on user link to load chat history
+            $('.user-link').click(function (e) {
+                e.preventDefault();
+                var senderId = $(this).data('senderid');
+                loadChatHistory(senderId);
+            });
+
+// Function to load chat history via AJAX
+function loadChatHistory(senderId) {
+    $.ajax({
+        url: '@Url.Action("GetChatHistory", "Message")',
+        type: 'GET',
+        data: { receiverId: senderId },
+        success: function (data) {
+            var chatMessages = '';
+            $.each(data, function (index, message) {
+                var timestamp = new Date(message.Timestamp); // Convert timestamp to Date object
+                var formattedTimestamp = "";
+                try {
+                    var timestamp = new Date(message.Timestamp);
+                    formattedTimestamp = timestamp.toLocaleString();
+                } catch (error) {
+                    formattedTimestamp = "Invalid Date";
+                }
+
+                chatMessages += '<div class="message">' +
+                    '<strong>' + message.SenderName + '</strong>: ' + message.MessageText +
+                    '<span class="timestamp">' + formattedTimestamp + '</span>' +
+                    '</div>';
+});
+            $('#chat-messages').html(chatMessages);
+        },
+        error: function () {
+            alert('Error loading chat history.');
         }
-    </tbody>
-</table>
+    });
+}
+        });
+    </script>
+}

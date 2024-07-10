@@ -1,27 +1,38 @@
 ﻿@model TrainingApp.ViewModels.MessageViewModel
 
-@using (Html.BeginForm())
+@{
+    ViewBag.Title = "Send Message";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Send Message</h2>
+
+@using (Html.BeginForm("SendMessage", "Message", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <div class="form-group">
-            @Html.Label("Receiver", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ReceiverId, (SelectList)ViewBag.Users, "Select Receiver", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ReceiverId, "", new { @class = "text-danger" })
-            </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.SenderId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ReceiverId, "Select User", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ReceiverId, (IEnumerable<SelectListItem>)ViewBag.Users, "Select User", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ReceiverId, "", new { @class = "text-danger" })
         </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.MessageText, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.MessageText, new { @class = "form-control", rows = 5 })
-                @Html.ValidationMessageFor(model => model.MessageText, "", new { @class = "text-danger" })
-            </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MessageText, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.MessageText, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.MessageText, "", new { @class = "text-danger" })
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Send" class="btn btn-primary" />
-            </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Send" class="btn btn-primary" />
         </div>
     </div>
 }

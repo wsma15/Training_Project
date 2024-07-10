@@ -171,41 +171,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407090802317_init.cs" />
-    <Compile Include="Migrations\202407090802317_init.Designer.cs">
-      <DependentUpon>202407090802317_init.cs</DependentUpon>
+    <Compile Include="Migrations\202407100704312_Init.cs" />
+    <Compile Include="Migrations\202407100704312_Init.Designer.cs">
+      <DependentUpon>202407100704312_Init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407090804552_init1.cs" />
-    <Compile Include="Migrations\202407090804552_init1.Designer.cs">
-      <DependentUpon>202407090804552_init1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407090828386_init2.cs" />
-    <Compile Include="Migrations\202407090828386_init2.Designer.cs">
-      <DependentUpon>202407090828386_init2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407090844324_init3.cs" />
-    <Compile Include="Migrations\202407090844324_init3.Designer.cs">
-      <DependentUpon>202407090844324_init3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407090848084_init4.cs" />
-    <Compile Include="Migrations\202407090848084_init4.Designer.cs">
-      <DependentUpon>202407090848084_init4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407090906500_init5.cs" />
-    <Compile Include="Migrations\202407090906500_init5.Designer.cs">
-      <DependentUpon>202407090906500_init5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407090910329_init6.cs" />
-    <Compile Include="Migrations\202407090910329_init6.Designer.cs">
-      <DependentUpon>202407090910329_init6.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407091039503_init7.cs" />
-    <Compile Include="Migrations\202407091039503_init7.Designer.cs">
-      <DependentUpon>202407091039503_init7.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407091129390_init8.cs" />
-    <Compile Include="Migrations\202407091129390_init8.Designer.cs">
-      <DependentUpon>202407091129390_init8.cs</DependentUpon>
+    <Compile Include="Migrations\202407100709320_Init1.cs" />
+    <Compile Include="Migrations\202407100709320_Init1.Designer.cs">
+      <DependentUpon>202407100709320_Init1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -213,8 +185,10 @@
     <Compile Include="Models\AddTrainerViewModel.cs" />
     <Compile Include="Models\AddSupervisorViewModel.cs" />
     <Compile Include="Models\AdminDashboardViewModel.cs" />
+    <Compile Include="Models\ChatMessageViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageViewModel.cs" />
     <Compile Include="Models\Reports.cs" />
     <Compile Include="Models\TrainingAppDBContext.cs" />
@@ -336,32 +310,11 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202407090802317_init.resx">
-      <DependentUpon>202407090802317_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407100704312_Init.resx">
+      <DependentUpon>202407100704312_Init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407090804552_init1.resx">
-      <DependentUpon>202407090804552_init1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407090828386_init2.resx">
-      <DependentUpon>202407090828386_init2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407090844324_init3.resx">
-      <DependentUpon>202407090844324_init3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407090848084_init4.resx">
-      <DependentUpon>202407090848084_init4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407090906500_init5.resx">
-      <DependentUpon>202407090906500_init5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407090910329_init6.resx">
-      <DependentUpon>202407090910329_init6.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407091039503_init7.resx">
-      <DependentUpon>202407091039503_init7.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407091129390_init8.resx">
-      <DependentUpon>202407091129390_init8.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407100709320_Init1.resx">
+      <DependentUpon>202407100709320_Init1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
