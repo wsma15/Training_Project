@@ -1,5 +1,6 @@
-﻿@model IEnumerable<TrainingApp.ViewModels.MessageViewModel>
+﻿@model IEnumerable<TrainingApp.ViewModels.UsersPanelViewModels>
 @using TrainingApp.ViewModels;
+@using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Inbox";
@@ -12,13 +13,14 @@
         <div class="col-md-4">
             <h3>Users</h3>
             <ul class="list-group">
-                @{
+   @*             @{
+                    TrainingApp.Models.TrainingAppDBContext _context = new();
                     var uniqueUsers = Model.Select(m => new { m.ReceiverId, m.ReceiverName }).Distinct();
                 }
-                @foreach (var user in uniqueUsers)
+   *@             @foreach (var user in Model)
                 {
                     <li class="list-group-item">
-                        <a href="#" class="user-link" data-senderid="@user.ReceiverId">@user.ReceiverName</a>
+                        <a href="#" class="user-link" data-senderid="@user.Id">@user.Name</a>
                     </li>
                 }
             </ul>
@@ -38,19 +40,19 @@
                 </div>
 
                 <!-- Message Input Box -->
-                <div class="card-footer">
+         @*       <div class="card-footer">
                     @using (Html.BeginForm("SendMessage", "Message", FormMethod.Post, new { @class = "send-message-form" }))
                     {
-                        @Html.HiddenFor(m => m.FirstOrDefault().ReceiverId)
+                        @Html.HiddenFor(m => m.FirstOrDefault().Id)
                         <div class="input-group">
-                            @Html.TextBoxFor(m => m.FirstOrDefault().MessageText, new { @class = "form-control", placeholder = "Type your message..." })
+                            @Html.TextBoxFor(m => m.FirstOrDefault().Name, new { @class = "form-control", placeholder = "Type your message..." })
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-primary">Send</button>
                             </div>
                         </div>
                     }
                 </div>
-            </div>
+        *@    </div>
         </div>
     </div>
 </div>

@@ -75,8 +75,110 @@ namespace TrainingApp.Controllers
                     Timestamp = m.Timestamp
                 })
                 .ToList();
+            if (userRole == UserRole.Trainer)
+            {
+                int UniSuperId =
+                    (int)(from u in _context.Users where (userId == u.Id) select u.UniversitySupervisorID).FirstOrDefault();
 
-            return View(messages);
+                int CompSuperId =
+                    (int)(from u in _context.Users where (userId == u.Id) select u.CompanySupervisorID).FirstOrDefault();
+
+                var supervisors =
+
+                _context.Users
+                                  .Where(user => user.Id == CompSuperId || user.Id == UniSuperId)
+                                  .Select(user => new UsersPanelViewModels
+                                  {
+                                      Id = user.Id,
+                                      Name = user.Name
+                                  })
+                                  .ToList();
+                return View(supervisors);
+            }
+            if (userRole == UserRole.UniversitySupervisor)
+            {
+                var companySupervisorIds = _context.Users
+                                  .Where(user => user.UniversitySupervisorID == userId)
+                                  .Select(user => user.CompanySupervisorID)
+                                  .Distinct() // Ensure no duplicate CompanySupervisorIDs
+                                  .ToList();
+
+
+                var relatedUsers = _context.Users
+                           .Where(user => companySupervisorIds.Contains(user.Id))
+                           .Select(user => new UsersPanelViewModels
+                           {
+                               Id = user.Id,
+                               Name = user.Name,
+                               // CompanySupervisorID = user.CompanySupervisorID
+                           })
+                           .Distinct() // Ensure no duplicate users
+                           .ToList();
+
+                var Trainers =
+                _context.Users
+                                  .Where(user => user.UniversitySupervisorID == userId)
+                                  .Select(user => new UsersPanelViewModels
+                                  {
+                                      Id = user.Id,
+                                      Name = user.Name,
+                                      //     CompId = user.CompanySupervisorID,
+                                  })
+                                  .ToList();
+                var USERS = Trainers.Union(relatedUsers);
+                return View(USERS);
+            }
+            if (userRole == UserRole.CompanySupervisor)
+            {
+
+                var UniSupervisorIds = _context.Users
+                     .Where(user => user.CompanySupervisorID == userId)
+                     .Select(user => user.UniversitySupervisorID)
+                     .Distinct() // Ensure no duplicate CompanySupervisorIDs
+                     .ToList();
+
+
+                var relatedUsers = _context.Users
+                           .Where(user => UniSupervisorIds.Contains(user.Id))
+                           .Select(user => new UsersPanelViewModels
+                           {
+                               Id = user.Id,
+                               Name = user.Name,
+                               // CompanySupervisorID = user.CompanySupervisorID
+                           })
+                           .Distinct() // Ensure no duplicate users
+                           .ToList();
+
+                var Trainers =
+            _context.Users
+                              .Where(user => user.CompanySupervisorID == userId)
+                              .Select(user => new UsersPanelViewModels
+                              {
+                                  Id = user.Id,
+                                  Name = user.Name,
+                                  //     CompId = user.CompanySupervisorID,
+                              }).ToList();
+                var USERS = Trainers.Union(relatedUsers);
+
+                return View(USERS);
+            }
+            if (userRole == UserRole.Admin)
+            {
+
+                var Users =
+           _context.Users.
+           Where(user => user.Id != userId)
+                             .Select(user => new UsersPanelViewModels
+                             {
+                                 Id = user.Id,
+                                 Name = user.Name,
+                                 //     CompId = user.CompanySupervisorID,
+                             }).ToList();
+                return View(Users);
+            }
+
+            else
+                return View();
         }
 
         [HttpGet]

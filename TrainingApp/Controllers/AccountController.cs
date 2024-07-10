@@ -84,6 +84,7 @@ namespace TrainingApp.Controllers
                             case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
                             case UserRole.UniversitySupervisor: await SignInSupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
                             case UserRole.Trainer: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
+                            case UserRole.CompanySupervisor: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
 
                         }
 
@@ -111,24 +112,34 @@ namespace TrainingApp.Controllers
 
             await SignInAsync(identity, rememberMe);
         }
-        private async Task SignInSupervisor(Users supervisor, bool rememberMe)
+        private async Task SignInSupervisor(Users UniSupervisor, bool rememberMe)
         {
 
             var identity = new ClaimsIdentity(new[] {
             new Claim(ClaimTypes.Role, "UniversitySupervisor"),
-        new Claim(ClaimTypes.Name, supervisor.Name),
-        new Claim(ClaimTypes.NameIdentifier, supervisor.Id.ToString())
+        new Claim(ClaimTypes.Name, UniSupervisor.Name),
+        new Claim(ClaimTypes.NameIdentifier, UniSupervisor.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
 
             await SignInAsync(identity, rememberMe);
         }
 
-        private async Task SignInStudent(Users student, bool rememberMe)
+        private async Task SignInStudent(Users Trainer, bool rememberMe)
         {
             var identity = new ClaimsIdentity(new[] {
             new Claim(ClaimTypes.Role, "Trainer"),
-        new Claim(ClaimTypes.Name, student.Name),
-        new Claim(ClaimTypes.NameIdentifier, student.Id.ToString())
+        new Claim(ClaimTypes.Name, Trainer.Name),
+        new Claim(ClaimTypes.NameIdentifier, Trainer.Id.ToString())
+    }, DefaultAuthenticationTypes.ApplicationCookie);
+
+            await SignInAsync(identity, rememberMe);
+        }
+        private async Task SignInCompany(Users CompSupervisor, bool rememberMe)
+        {
+            var identity = new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.Role, "CompanySupervisor"),
+        new Claim(ClaimTypes.Name, CompSupervisor.Name),
+        new Claim(ClaimTypes.NameIdentifier, CompSupervisor.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
 
             await SignInAsync(identity, rememberMe);
