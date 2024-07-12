@@ -45,7 +45,7 @@ namespace TrainingApp.Controllers
                 ReceiverId = ReceiverId,
                 SenderName = senderName,
                 MessageText = MessageText,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             };
 
             _context.ChatMessages.Add(message);

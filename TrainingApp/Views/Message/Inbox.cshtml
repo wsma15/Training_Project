@@ -53,6 +53,7 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
     $(document).ready(function() {
         // Load chat history when a user is clicked
@@ -69,7 +70,8 @@
                 var chatMessages = $('#chat-messages');
                 chatMessages.empty();
                 $.each(data, function(index, message) {
-                    chatMessages.append('<div><strong>' + message.SenderName + ':</strong> ' + message.MessageText + ' <span class="text-muted small">' + new Date(message.Timestamp).toLocaleString() + '</span></div>');
+                    var formattedTime = formatTimestamp(message.Timestamp);
+                    chatMessages.append('<div><strong>' + message.SenderName + ':</strong> ' + message.MessageText + ' <span class="text-muted small">' + formattedTime + '</span></div>');
                 });
             });
         }
@@ -85,5 +87,19 @@
                 $('#messageText').val(''); // Clear the message box
             });
         });
+
+        // Function to format the timestamp
+        function formatTimestamp(timestamp) {
+            var now = moment();
+            var messageTime = moment.utc(timestamp).local(); // Convert UTC to local time
+
+            if (messageTime.isSame(now, 'day')) {
+                return messageTime.format('h:mm A') + ' (Today)';
+            } else if (messageTime.isSame(now.subtract(1, 'days'), 'day')) {
+                return messageTime.format('h:mm A') + ' (Yesterday)';
+            } else {
+                return messageTime.format('h:mm A, MMM D, YYYY');
+            }
+        }
     });
 </script>
