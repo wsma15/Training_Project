@@ -1,0 +1,8 @@
+﻿@model TrainingApp.ViewModels.CompanySupervisorDashboardViewModel
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <h2>Company Supervisor Dashboard</h2>
+    <p>Welcome, @Model.CompanyName</p>
+    <p>Number of users under your supervision: @Model.UserCount</p>
+}

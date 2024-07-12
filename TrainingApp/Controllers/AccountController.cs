@@ -82,9 +82,9 @@ namespace TrainingApp.Controllers
                         switch (user.Roles)
                         {
                             case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
-                            case UserRole.UniversitySupervisor: await SignInSupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
+                            case UserRole.UniversitySupervisor: await SignInUniversitySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Supervisor");
                             case UserRole.Trainer: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
-                            case UserRole.CompanySupervisor: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "StudentDashboard", "Students");
+                            case UserRole.CompanySupervisor: await SignInCompanySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "CompanySupervisor");
 
                         }
 
@@ -112,11 +112,22 @@ namespace TrainingApp.Controllers
 
             await SignInAsync(identity, rememberMe);
         }
-        private async Task SignInSupervisor(Users UniSupervisor, bool rememberMe)
+        private async Task SignInUniversitySupervisor(Users UniSupervisor, bool rememberMe)
         {
 
             var identity = new ClaimsIdentity(new[] {
             new Claim(ClaimTypes.Role, "UniversitySupervisor"),
+        new Claim(ClaimTypes.Name, UniSupervisor.Name),
+        new Claim(ClaimTypes.NameIdentifier, UniSupervisor.Id.ToString())
+    }, DefaultAuthenticationTypes.ApplicationCookie);
+
+            await SignInAsync(identity, rememberMe);
+        }
+        private async Task SignInCompanySupervisor(Users UniSupervisor, bool rememberMe)
+        {
+
+            var identity = new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.Role, "CompanySupervisor"),
         new Claim(ClaimTypes.Name, UniSupervisor.Name),
         new Claim(ClaimTypes.NameIdentifier, UniSupervisor.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
@@ -472,7 +483,7 @@ namespace TrainingApp.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

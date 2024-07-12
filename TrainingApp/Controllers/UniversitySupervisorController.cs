@@ -6,7 +6,7 @@ using TrainingApp.Models;
 
 namespace TrainingApp.Controllers
 {
-    public class SupervisorController : Controller
+    public class UniversitySupervisorController : Controller
     {
         private TrainingAppDBContext db = new TrainingAppDBContext();
 

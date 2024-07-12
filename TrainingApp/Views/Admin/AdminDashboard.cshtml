@@ -9,40 +9,6 @@
 <hr />
 <hr />
 
-<div>
-    <h3>Students</h3>
-    <p>
-        @Html.ActionLink("Add Student", "AddStudent", "Admin")
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Supervisor</th>
-                <th>University</th>
-                <th>Company</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var student in Model.Students)
-            {
-                {
-                    <tr>
-                        <td>@student.Id</td>
-                        <td>@student.Name</td>
-                        <td>@student.Email</td>
-                        <td>@(Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
-                        <td>@(Model.GetUniName((int)student.UniversitySupervisorID))</td>
-                        <td>@(Model.GetCompanyName((int)student.CompanySupervisorID))</td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
 
 <div>
     <h3>University Supervisors</h3>
@@ -103,4 +69,39 @@
         </tbody>
     </table>
 </div>
+<div>
+    <h3>Students</h3>
+    <p>
+        @Html.ActionLink("Add Student", "AddStudent", "Admin")
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Supervisor</th>
+                <th>University</th>
+                <th>Company</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model.Students)
+            {
+                {
+                    <tr>
+                        <td>@student.Id</td>
+                        <td>@student.Name</td>
+                        <td>@student.Email</td>
+                        <td>@(Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
+                        <td>@(Model.GetUniName((int)student.UniversitySupervisorID))</td>
+                        <td>@(Model.GetCompanyName((int)student.CompanySupervisorID))</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
 

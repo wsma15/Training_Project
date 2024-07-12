@@ -88,6 +88,12 @@
 
 
                 }
+                else if (User.IsInRole("CompanySupervisor"))
+                {
+                    <li>@Html.ActionLink("Company Supervisor Dashboard", "Dashboard", "CompanySupervisor")</li>
+
+
+                }
 
                 else if (User.IsInRole("Trainer"))
                 {
