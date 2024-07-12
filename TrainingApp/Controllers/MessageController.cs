@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.WebPages;
 using TrainingApp.Models;
 using TrainingApp.ViewModels;
 
@@ -11,26 +12,47 @@ namespace TrainingApp.Controllers
     public class MessageController : Controller
     {
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
+
         [HttpGet]
-        public ActionResult GetChatHistory(int receiverId)
+        public async Task<ActionResult> GetChatHistory(int receiverId)
         {
-            var userId = User.Identity.GetUserId<int>();
-
-            var chatHistory = _context.Messages
-                .Where(m => (m.SenderId == userId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == userId))
+            int senderId = User.Identity.GetUserId<int>(); // Assuming you are using ASP.NET Identity
+            var messages = await _context.Messages
+                .Where(m => (m.SenderId == senderId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == senderId))
                 .OrderBy(m => m.Timestamp)
-                .Select(m => new ChatMessageViewModel
+                .Select(m => new
                 {
-                    SenderId = m.SenderId,
-                    ReceiverId = m.ReceiverId,
-                    SenderName = _context.Users.FirstOrDefault(u => u.Id == m.SenderId).Name,
-                    ReceiverName = _context.Users.FirstOrDefault(u => u.Id == m.ReceiverId).Name,
-                    MessageText = m.MessageText,
-                    Timestamp = m.Timestamp
+                    m.SenderName,
+                    m.MessageText,
+                    m.Timestamp
                 })
-                .ToList();
+                .ToListAsync();
 
-            return Json(chatHistory, JsonRequestBehavior.AllowGet);
+            return Json(messages, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<ActionResult> SendNewMessage(int ReceiverId, string MessageText)
+        {
+            int senderId = User.Identity.GetUserId<int>(); // Assuming you are using ASP.NET Identity
+            var senderName = User.Identity.GetUserName();
+
+            var message = new Message
+            {
+                SenderId = senderId,
+                ReceiverId = ReceiverId,
+                SenderName = senderName,
+                MessageText = MessageText,
+                Timestamp = DateTime.UtcNow
+            };
+
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+
+            // Return an empty result or any specific result if needed
+            return Json(new { success = true });
         }
 
         [HttpGet]
@@ -75,6 +97,7 @@ namespace TrainingApp.Controllers
                     Timestamp = m.Timestamp
                 })
                 .ToList();
+
             if (userRole == UserRole.Trainer)
             {
                 int UniSuperId =
@@ -182,7 +205,7 @@ namespace TrainingApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult SendMessage(int? receiverId = null)
+        public ActionResult SendMessageForm(int? receiverId = null)
         {
             var currentUser = _context.Users.Find(User.Identity.GetUserId<int>());
             IQueryable<Users> usersQuery = _context.Users;
@@ -205,67 +228,6 @@ namespace TrainingApp.Controllers
             ViewBag.Users = users;
             ViewBag.SelectedReceiverId = receiverId ?? 0;
             return View(new MessageViewModel { SenderId = currentUser.Id });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SendMessage(MessageViewModel model)
-        {
-            string recivername = (from RName in _context.Users where model.ReceiverId == RName.Id select RName.Name).FirstOrDefault();
-            model.ReceiverName = recivername;
-            model.SenderId = User.Identity.GetUserId().AsInt();
-            model.SenderName = User.Identity.Name;
-            /*string 
-            return Content(recivername);
-            */
-            if (!string.IsNullOrEmpty(recivername) && !string.IsNullOrEmpty(model.MessageText))
-            {
-                var message = new Message
-                {
-                    SenderId = model.SenderId,
-                    ReceiverId = model.ReceiverId,
-                    MessageText = model.MessageText,
-                    Timestamp = DateTime.Now,
-
-                };
-
-                _context.Messages.Add(message);
-                _context.SaveChanges();
-
-                return RedirectToAction("Inbox", new { userId = model.SenderId });
-            }
-            /*else
-            {
-                // Assuming ModelState has been populated with errors or other data
-                var modelStateValues = ModelState.Values;
-
-                // Convert ModelState.Values to JSON
-                var jsonResult = JsonConvert.SerializeObject(modelStateValues, Formatting.Indented);
-
-                // Return JSON result
-                return Content(jsonResult, "application/json");
-            }*/
-            // If model state is not valid, re-populate ViewBag.Users and return the view with the model
-            var currentUser = _context.Users.Find(User.Identity.GetUserId<int>());
-            IQueryable<Users> usersQuery = _context.Users;
-
-            if (currentUser.Roles == UserRole.UniversitySupervisor)
-            {
-                usersQuery = usersQuery.Where(u => u.UniversitySupervisorID == currentUser.Id);
-            }
-            else if (currentUser.Roles == UserRole.CompanySupervisor)
-            {
-                usersQuery = usersQuery.Where(u => u.CompanySupervisorID == currentUser.Id);
-            }
-
-            var users = usersQuery.Select(u => new SelectListItem
-            {
-                Value = u.Id.ToString(),
-                Text = u.Name
-            }).ToList();
-
-            ViewBag.Users = users;
-            return View(model);
         }
     }
 }

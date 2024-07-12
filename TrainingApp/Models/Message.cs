@@ -19,6 +19,8 @@ namespace TrainingApp.Models
 
         [Required]
         public string MessageText { get; set; }
+        [Required]
+        public string SenderName { get; set; }
 
         [Required]
         public DateTime Timestamp { get; set; }

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<TrainingApp.ViewModels.UsersPanelViewModels>
 @using TrainingApp.ViewModels;
-@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity;
 
 @{
     ViewBag.Title = "Inbox";
@@ -13,11 +13,7 @@
         <div class="col-md-4">
             <h3>Users</h3>
             <ul class="list-group">
-   @*             @{
-                    TrainingApp.Models.TrainingAppDBContext _context = new();
-                    var uniqueUsers = Model.Select(m => new { m.ReceiverId, m.ReceiverName }).Distinct();
-                }
-   *@             @foreach (var user in Model)
+                @foreach (var user in Model)
                 {
                     <li class="list-group-item">
                         <a href="#" class="user-link" data-senderid="@user.Id">@user.Name</a>
@@ -35,68 +31,59 @@
                 <div class="card-body chat-history">
                     <!-- Chat Messages -->
                     <div class="chat-messages" id="chat-messages">
-                        <!-- Messages will be loaded dynamically via JavaScript -->
+                        <!-- Messages will be loaded here via AJAX -->
+                    </div>
+                    <!-- Message Box -->
+                    <div class="chat-input">
+                        @using (Html.BeginForm("SendNewMessage", "Message", FormMethod.Post, new { id = "messageForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="receiverId" name="ReceiverId" />
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="messageText" name="MessageText" placeholder="Type a message..." />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">Send</button>
+                                </span>
+                            </div>
+                        }
                     </div>
                 </div>
-
-                <!-- Message Input Box -->
-         @*       <div class="card-footer">
-                    @using (Html.BeginForm("SendMessage", "Message", FormMethod.Post, new { @class = "send-message-form" }))
-                    {
-                        @Html.HiddenFor(m => m.FirstOrDefault().Id)
-                        <div class="input-group">
-                            @Html.TextBoxFor(m => m.FirstOrDefault().Name, new { @class = "form-control", placeholder = "Type your message..." })
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-primary">Send</button>
-                            </div>
-                        </div>
-                    }
-                </div>
-        *@    </div>
+            </div>
         </div>
     </div>
 </div>
-
-@section scripts {
-    <script>
-        $(function () {
-            // Handle click on user link to load chat history
-            $('.user-link').click(function (e) {
-                e.preventDefault();
-                var senderId = $(this).data('senderid');
-                loadChatHistory(senderId);
-            });
-
-// Function to load chat history via AJAX
-function loadChatHistory(senderId) {
-    $.ajax({
-        url: '@Url.Action("GetChatHistory", "Message")',
-        type: 'GET',
-        data: { receiverId: senderId },
-        success: function (data) {
-            var chatMessages = '';
-            $.each(data, function (index, message) {
-                var timestamp = new Date(message.Timestamp); // Convert timestamp to Date object
-                var formattedTimestamp = "";
-                try {
-                    var timestamp = new Date(message.Timestamp);
-                    formattedTimestamp = timestamp.toLocaleString();
-                } catch (error) {
-                    formattedTimestamp = "Invalid Date";
-                }
-
-                chatMessages += '<div class="message">' +
-                    '<strong>' + message.SenderName + '</strong>: ' + message.MessageText +
-                    '<span class="timestamp">' + formattedTimestamp + '</span>' +
-                    '</div>';
-});
-            $('#chat-messages').html(chatMessages);
-        },
-        error: function () {
-            alert('Error loading chat history.');
-        }
-    });
-}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Load chat history when a user is clicked
+        $('.user-link').click(function(e) {
+            e.preventDefault();
+            var receiverId = $(this).data('senderid');
+            $('#receiverId').val(receiverId);
+            loadChatHistory(receiverId);
         });
-    </script>
-}
+
+        // Function to load chat history via AJAX
+        function loadChatHistory(receiverId) {
+            $.get('@Url.Action("GetChatHistory", "Message")', { receiverId: receiverId }, function(data) {
+                var chatMessages = $('#chat-messages');
+                chatMessages.empty();
+                $.each(data, function(index, message) {
+                    chatMessages.append('<div><strong>' + message.SenderName + ':</strong> ' + message.MessageText + ' <span class="text-muted small">' + new Date(message.Timestamp).toLocaleString() + '</span></div>');
+                });
+            });
+        }
+
+        // Handle form submission for sending a new message
+        $('#messageForm').submit(function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var form = $(this);
+            $.post(form.attr('action'), form.serialize(), function() {
+                var receiverId = $('#receiverId').val();
+                loadChatHistory(receiverId); // Reload chat history
+                $('#messageText').val(''); // Clear the message box
+            });
+        });
+    });
+</script>
