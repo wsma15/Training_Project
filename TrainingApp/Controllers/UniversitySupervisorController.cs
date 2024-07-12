@@ -25,8 +25,8 @@ namespace TrainingApp.Controllers
         public ActionResult Dashboard()
         {
             int supervisorId = (int)Convert.ToInt64(User.Identity.GetUserId()); // Assuming UserId is the SupervisorID
-            var students = db.Users.Where(s => s.UniversitySupervisorID == supervisorId).ToList();
-            return View(students);
+            var Trainers = db.Users.Where(s => s.UniversitySupervisorID == supervisorId).ToList();
+            return View(Trainers);
         }
         // GET: Supervisor/StudentReports/5
         public ActionResult StudentReports(string id)
@@ -49,7 +49,7 @@ namespace TrainingApp.Controllers
                 db.SaveChanges();
             }
 
-            return RedirectToAction("Dashboard", "Supervisor");
+            return RedirectToAction("Dashboard", "UniversitySupervisor");
         }
         public ActionResult Reports()
         {

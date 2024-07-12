@@ -7,7 +7,7 @@
 <h2>Reports</h2>
 
 <!-- Button to return to Dashboard -->
-<a href="@Url.Action("Dashboard", "Supervisor")" class="btn btn-primary">Return to Dashboard</a>
+<a href="@Url.Action("Dashboard", "UniversitySupervisor")" class="btn btn-primary">Return to Dashboard</a>
 
 <table class="table table-striped">
     <thead>
@@ -49,7 +49,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(report.FileName))
                     {
-                        <a href="@Url.Action("DownloadFile", "Supervisor", new { Id = report.Id })" class="btn btn-info">Download File</a>
+                        <a href="@Url.Action("DownloadFile", "UniversitySupervisor", new { Id = report.Id })" class="btn btn-info">Download File</a>
                     }
                 </td>
             </tr>
@@ -61,7 +61,7 @@
 <div id="feedbackModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            @using (Html.BeginForm("SubmitFeedback", "Supervisor", FormMethod.Post))
+            @using (Html.BeginForm("SubmitFeedback", "UniversitySupervisor", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-header">

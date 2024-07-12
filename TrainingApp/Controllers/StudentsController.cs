@@ -8,7 +8,7 @@ using TrainingApp.Models;
 
 namespace TrainingApp.Controllers
 {
-    public class StudentsController : Controller
+    public class TrainersController : Controller
     {
         TrainingAppDBContext MyDB = new TrainingAppDBContext();
 
@@ -59,7 +59,7 @@ namespace TrainingApp.Controllers
                 //   return Content(report.IsFeedbackSubmitted.ToString());
                 MyDB.Reports.Add(report);
                 MyDB.SaveChanges();
-                return RedirectToAction("StudentDashboard", "Students");
+                return RedirectToAction("Dashboard", "Trainers");
             }
 
         }
@@ -72,10 +72,10 @@ namespace TrainingApp.Controllers
                 MyDB.Reports.Remove(report);
                 MyDB.SaveChanges();
             }
-            return RedirectToAction("StudentDashboard");
+            return RedirectToAction("Dashboard");
         }
 
-        public ActionResult StudentDashboard()
+        public ActionResult Dashboard()
         {
             var studentId = User.Identity.GetUserId();
             var reports = MyDB.Reports.Where(r => r.OwnerId == studentId).ToList();
@@ -104,7 +104,7 @@ namespace TrainingApp.Controllers
                 MyDB.SaveChanges();
             }
 
-            return RedirectToAction("StudentDashboard", "Students");
+            return RedirectToAction("Dashboard", "Trainers");
         }
     }
 }

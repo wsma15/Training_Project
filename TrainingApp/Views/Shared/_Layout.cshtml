@@ -84,7 +84,7 @@
                 }
                 else if (User.IsInRole("UniversitySupervisor"))
                 {
-                    <li>@Html.ActionLink("Supervisor Dashboard", "Dashboard", "Supervisor")</li>
+                    <li>@Html.ActionLink("Supervisor Dashboard", "Dashboard", "UniversitySupervisor")</li>
 
 
                 }
@@ -97,7 +97,7 @@
 
                 else if (User.IsInRole("Trainer"))
                 {
-                    <li>@Html.ActionLink("Trainer Dashboard", "StudentDashboard", "Students")</li>
+                    <li>@Html.ActionLink("Trainer Dashboard", "Dashboard", "Trainers")</li>
 
 
                 }

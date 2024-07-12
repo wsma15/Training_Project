@@ -17,7 +17,7 @@ namespace TrainingApp.Controllers
         public async Task<ActionResult> GetChatHistory(int receiverId)
         {
             int senderId = User.Identity.GetUserId<int>(); // Assuming you are using ASP.NET Identity
-            var messages = await _context.Messages
+            var messages = await _context.ChatMessages
                 .Where(m => (m.SenderId == senderId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == senderId))
                 .OrderBy(m => m.Timestamp)
                 .Select(m => new
@@ -48,7 +48,7 @@ namespace TrainingApp.Controllers
                 Timestamp = DateTime.UtcNow
             };
 
-            _context.Messages.Add(message);
+            _context.ChatMessages.Add(message);
             await _context.SaveChangesAsync();
 
             // Return an empty result or any specific result if needed
@@ -59,7 +59,7 @@ namespace TrainingApp.Controllers
         public ActionResult Inbox(int userId)
         {
             var userRole = _context.Users.Where(u => u.Id == userId).Select(u => u.Roles).FirstOrDefault();
-            IQueryable<Message> messagesQuery = _context.Messages;
+            IQueryable<Message> messagesQuery = _context.ChatMessages;
 
             if (userRole == UserRole.UniversitySupervisor)
             {

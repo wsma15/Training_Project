@@ -14,7 +14,7 @@ namespace TrainingApp.Controllers
         {
             var viewModel = new AdminDashboardViewModel
             {
-                Students = _context.Users
+                Trainers = _context.Users
                                   .Where(super => super.Roles == UserRole.Trainer)
                                   .ToList(),
                 UniversitySupervisors = _context.Users
@@ -69,7 +69,10 @@ namespace TrainingApp.Controllers
                                              .Where(u => u.Id == model.CompanySupervisorID)
                                              .Select(u => u.CompanyName)
                                              .FirstOrDefault();
-
+                    var UniName = context.Users
+                                 .Where(u => u.Id == model.UniversitySupervisorID)
+                                 .Select(u => u.UniversityName)
+                                 .FirstOrDefault();
                     var user = new Users
                     {
                         Name = model.TrainerName,
@@ -78,7 +81,8 @@ namespace TrainingApp.Controllers
                         UniversitySupervisorID = model.UniversitySupervisorID,
                         CompanySupervisorID = model.CompanySupervisorID,
                         CompanyName = companyName, // Save the company name
-                        Roles = UserRole.Trainer
+                        Roles = UserRole.Trainer,
+                        UniversityName = UniName,
                     };
 
                     context.Users.Add(user);

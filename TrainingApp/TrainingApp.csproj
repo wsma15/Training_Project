@@ -213,17 +213,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407100704312_Init.cs" />
-    <Compile Include="Migrations\202407100704312_Init.Designer.cs">
-      <DependentUpon>202407100704312_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407100709320_Init1.cs" />
-    <Compile Include="Migrations\202407100709320_Init1.Designer.cs">
-      <DependentUpon>202407100709320_Init1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407122128165_Init2.cs" />
-    <Compile Include="Migrations\202407122128165_Init2.Designer.cs">
-      <DependentUpon>202407122128165_Init2.cs</DependentUpon>
+    <Compile Include="Migrations\202407122245303_Init.cs" />
+    <Compile Include="Migrations\202407122245303_Init.Designer.cs">
+      <DependentUpon>202407122245303_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -320,10 +312,10 @@
     <Content Include="Views\Admin\AddStudent.cshtml" />
     <Content Include="Views\Admin\AddUniversitySupervisor.cshtml" />
     <Content Include="Views\Admin\AdminDashboard.cshtml" />
-    <Content Include="Views\Students\StudentDashboard.cshtml" />
-    <Content Include="Views\Students\AddReport.cshtml" />
-    <Content Include="Views\Supervisor\Dashboard.cshtml" />
-    <Content Include="Views\Supervisor\StudentReports.cshtml" />
+    <Content Include="Views\Trainers\Dashboard.cshtml" />
+    <Content Include="Views\Trainers\AddReport.cshtml" />
+    <Content Include="Views\UniversitySupervisor\Dashboard.cshtml" />
+    <Content Include="Views\UniversitySupervisor\StudentReports.cshtml" />
     <Content Include="Views\Admin\AddCompanySupervisor.cshtml" />
     <Content Include="Views\Message\Inbox.cshtml" />
     <Content Include="Views\Message\SendMessage.cshtml" />
@@ -361,14 +353,8 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202407100704312_Init.resx">
-      <DependentUpon>202407100704312_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407100709320_Init1.resx">
-      <DependentUpon>202407100709320_Init1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407122128165_Init2.resx">
-      <DependentUpon>202407122128165_Init2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407122245303_Init.resx">
+      <DependentUpon>202407122245303_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -6,7 +6,7 @@ namespace TrainingApp.ViewModels
 {
     public class AdminDashboardViewModel
     {
-        public List<Users> Students { get; set; }
+        public List<Users> Trainers { get; set; }
         public List<Users> UniversitySupervisors { get; set; }
         public List<Users> CompanySupervisors { get; set; }
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
