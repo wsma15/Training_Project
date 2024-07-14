@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TrainingApp.Models;
+using TrainingApp.ViewModels;
+using static TrainingApp.ViewModels.DashboardViewModel;
 
 namespace TrainingApp.Controllers
 {
@@ -81,7 +84,7 @@ namespace TrainingApp.Controllers
                     if (user != null)
                         switch (user.Roles)
                         {
-                            case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "AdminDashboard", "Admin");
+                            case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Admin");
                             case UserRole.UniversitySupervisor: await SignInUniversitySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "UniversitySupervisor");
                             case UserRole.Trainer: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Trainers");
                             case UserRole.CompanySupervisor: await SignInCompanySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "CompanySupervisor");
@@ -230,7 +233,85 @@ namespace TrainingApp.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            var viewModel = new CombinedRegistrationViewModel
+            {
+                UniversitySupervisors = GetUniversitySupervisorsSelectList(),
+                CompanySupervisors = GetCompanySupervisorsSelectList()
+            };
+            return View(viewModel);
+        }
+
+        private IEnumerable<SelectListItem> GetUniversitySupervisorsSelectList()
+        {
+            // Replace with actual data retrieval logic
+            var supervisors = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Supervisor A" },
+        new SelectListItem { Value = "2", Text = "Supervisor B" }
+    };
+            return supervisors;
+        }
+
+        private IEnumerable<SelectListItem> GetCompanySupervisorsSelectList()
+        {
+            // Replace with actual data retrieval logic
+            var supervisors = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Company Supervisor A" },
+        new SelectListItem { Value = "2", Text = "Company Supervisor B" }
+    };
+            return supervisors;
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegisterStudent(AddTrainerViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Register student logic
+                return RedirectToAction("Index", "Home");
+            }
+            var combinedModel = new CombinedRegistrationViewModel
+            {
+                StudentViewModel = model,
+                CompanySupervisorViewModel = new AddCompanySupervisorViewModel(),
+                UniversitySupervisorViewModel = new AddSupervisorViewModel()
+            };
+            return View("Register", combinedModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegisterCompanySupervisor(AddCompanySupervisorViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Register company supervisor logic
+                return RedirectToAction("Index", "Home");
+            }
+            var combinedModel = new CombinedRegistrationViewModel
+            {
+                StudentViewModel = new AddTrainerViewModel(),
+                CompanySupervisorViewModel = model,
+                UniversitySupervisorViewModel = new AddSupervisorViewModel()
+            };
+            return View("Register", combinedModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegisterUniversitySupervisor(AddSupervisorViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Register university supervisor logic
+                return RedirectToAction("Index", "Home");
+            }
+            var combinedModel = new CombinedRegistrationViewModel
+            {
+                StudentViewModel = new AddTrainerViewModel(),
+                CompanySupervisorViewModel = new AddCompanySupervisorViewModel(),
+                UniversitySupervisorViewModel = model
+            };
+            return View("Register", combinedModel);
         }
 
         //

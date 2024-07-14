@@ -8,11 +8,11 @@ namespace TrainingApp.Controllers
     public class AdminController : Controller
     {
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
-        // GET: /Admin/AdminDashboard
+        // GET: /Admin/Dashboard
         //  [Authorize(Roles = "Admin")]
-        public ActionResult AdminDashboard()
+        public ActionResult Dashboard()
         {
-            var viewModel = new AdminDashboardViewModel
+            var viewModel = new DashboardViewModel
             {
                 Trainers = _context.Users
                                   .Where(super => super.Roles == UserRole.Trainer)
@@ -90,7 +90,7 @@ namespace TrainingApp.Controllers
                 }
 
                 // Redirect to the admin dashboard after adding the student
-                return RedirectToAction("AdminDashboard", "Admin");
+                return RedirectToAction("Dashboard", "Admin");
             }
 
             // If the model state is not valid, return the view with validation errors
@@ -133,7 +133,7 @@ namespace TrainingApp.Controllers
                 }
 
                 // Redirect to appropriate action after adding supervisor
-                return RedirectToAction("AdminDashboard", "Admin");
+                return RedirectToAction("Dashboard", "Admin");
             }
 
             // If model state is not valid, return view with errors
@@ -165,7 +165,7 @@ namespace TrainingApp.Controllers
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
-                return RedirectToAction("AdminDashboard");
+                return RedirectToAction("Dashboard");
             }
 
             // If model state is not valid, return the view with errors

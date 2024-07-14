@@ -80,7 +80,7 @@
             <ul class="nav navbar-nav">
                 @if (User.IsInRole("Admin"))
                 {
-                    <li>@Html.ActionLink("Admin Dashboard", "AdminDashboard", "Admin")</li>
+                    <li>@Html.ActionLink("Admin Dashboard", "Dashboard", "Admin")</li>
                 }
                 else if (User.IsInRole("UniversitySupervisor"))
                 {

@@ -1,43 +1,131 @@
-﻿@model TrainingApp.Models.RegisterViewModel
+﻿@model TrainingApp.ViewModels.CombinedRegistrationViewModel
+
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "User Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<h2>User Registration</h2>
 
-    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
-    {
-        @Html.AntiForgeryToken()
-        <h4>Create a new account.</h4>
-        <hr />
-        @Html.ValidationSummary("", new { @class = "text-danger" })
-        <div class="row">
-            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            <div class="offset-md-2 col-md-10">
-                <input type="submit" value="Register" class="btn btn-outline-dark" />
-            </div>
-        </div>
-    }
-</main>
+<!-- Tabs for different registration types -->
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#student" aria-controls="student" role="tab" data-toggle="tab">Student</a>
+    </li>
+    <li role="presentation">
+        <a href="#companySupervisor" aria-controls="companySupervisor" role="tab" data-toggle="tab">Company Supervisor</a>
+    </li>
+    <li role="presentation">
+        <a href="#universitySupervisor" aria-controls="universitySupervisor" role="tab" data-toggle="tab">University Supervisor</a>
+    </li>
+</ul>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<!-- Registration Forms -->
+<div class="tab-content">
+    <!-- Trainer Registration Form -->
+    <div role="tabpanel" class="tab-pane active" id="student">
+        @using (Html.BeginForm("RegisterStudent", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                <h4>Student Registration</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentViewModel.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.StudentViewModel.TrainerName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter student name" } })
+                        @Html.ValidationMessageFor(model => model.StudentViewModel.TrainerName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Other fields... -->
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentViewModel.UniversitySupervisorID, "University Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.StudentViewModel.UniversitySupervisorID, Model.UniversitySupervisors, "Select Supervisor", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.StudentViewModel.UniversitySupervisorID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentViewModel.CompanySupervisorID, "Company Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.StudentViewModel.CompanySupervisorID, Model.CompanySupervisors, "Select Company Supervisor", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.StudentViewModel.CompanySupervisorID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Register as Student" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Company Supervisor Registration Form -->
+    <div role="tabpanel" class="tab-pane" id="companySupervisor">
+        @using (Html.BeginForm("RegisterCompanySupervisor", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                <h4>Company Supervisor Registration</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CompanySupervisorViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CompanySupervisorViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter company name" } })
+                        @Html.ValidationMessageFor(model => model.CompanySupervisorViewModel.CompanyName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Other fields... -->
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Register as Company Supervisor" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- University Supervisor Registration Form -->
+    <div role="tabpanel" class="tab-pane" id="universitySupervisor">
+        @using (Html.BeginForm("RegisterUniversitySupervisor", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                <h4>University Supervisor Registration</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.UniversitySupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.UniversitySupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter supervisor name" } })
+                        @Html.ValidationMessageFor(model => model.UniversitySupervisorViewModel.SupervisorName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Other fields... -->
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Register as University Supervisor" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Dashboard", "Dashboard", "Admin")
+</div>
