@@ -52,16 +52,22 @@
         </div>
     </div>
 </div>
+
+<!-- Scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 <script>
     $(document).ready(function() {
+        var receiverId;
+
         // Load chat history when a user is clicked
         $('.user-link').click(function(e) {
             e.preventDefault();
-            var receiverId = $(this).data('senderid');
+            receiverId = $(this).data('senderid');
             $('#receiverId').val(receiverId);
             loadChatHistory(receiverId);
+            startPolling();
         });
 
         // Function to load chat history via AJAX
@@ -82,7 +88,6 @@
 
             var form = $(this);
             $.post(form.attr('action'), form.serialize(), function() {
-                var receiverId = $('#receiverId').val();
                 loadChatHistory(receiverId); // Reload chat history
                 $('#messageText').val(''); // Clear the message box
             });
@@ -100,6 +105,15 @@
             } else {
                 return messageTime.format('h:mm A, MMM D, YYYY');
             }
+        }
+
+        // Polling for new messages
+        function startPolling() {
+            setInterval(function() {
+                if (receiverId) {
+                    loadChatHistory(receiverId);
+                }
+            }, 3000); // Poll every 3 seconds
         }
     });
 </script>

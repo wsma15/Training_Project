@@ -16,7 +16,7 @@ namespace TrainingApp.Controllers
         [HttpGet]
         public async Task<ActionResult> GetChatHistory(int receiverId)
         {
-            int senderId = User.Identity.GetUserId<int>(); // Assuming you are using ASP.NET Identity
+            int senderId = User.Identity.GetUserId<int>();
             var messages = await _context.ChatMessages
                 .Where(m => (m.SenderId == senderId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == senderId))
                 .OrderBy(m => m.Timestamp)
@@ -33,10 +33,9 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<ActionResult> SendNewMessage(int ReceiverId, string MessageText)
         {
-            int senderId = User.Identity.GetUserId<int>(); // Assuming you are using ASP.NET Identity
+            int senderId = User.Identity.GetUserId<int>();
             var senderName = User.Identity.GetUserName();
 
             var message = new Message
@@ -51,10 +50,8 @@ namespace TrainingApp.Controllers
             _context.ChatMessages.Add(message);
             await _context.SaveChangesAsync();
 
-            // Return an empty result or any specific result if needed
             return Json(new { success = true });
         }
-
         [HttpGet]
         public ActionResult Inbox(int userId)
         {
