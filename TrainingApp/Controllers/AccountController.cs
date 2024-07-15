@@ -343,7 +343,7 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterCompanySupervisor(CombinedRegistrationViewModel model)
         {
-            if (ModelState.IsValid)
+//if (ModelState.IsValid)
             {
                 try
                 {
@@ -387,7 +387,7 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterUniversitySupervisor(CombinedRegistrationViewModel model)
         {
-            if (ModelState.IsValid)
+         //   if (ModelState.IsValid)
             {
                 try
                 {
