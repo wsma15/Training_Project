@@ -160,6 +160,10 @@ namespace TrainingApp.Controllers
             await SignInAsync(identity, rememberMe);
         }
 
+
+
+
+
         private Task SignInAsync(ClaimsIdentity identity, bool rememberMe)
         {
             var ctx = Request.GetOwinContext();
@@ -168,6 +172,7 @@ namespace TrainingApp.Controllers
             return Task.CompletedTask;
         }
 
+        
         private ActionResult RedirectToLocal(string returnUrl, string actionName, string controllerName)
         {
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -176,6 +181,7 @@ namespace TrainingApp.Controllers
             }
             return RedirectToAction(actionName, controllerName);
         }
+        
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -229,8 +235,14 @@ namespace TrainingApp.Controllers
             }
         }
 
+
+
+
+
         //
         // GET: /Account/Register
+        TrainingAppDBContext db = new TrainingAppDBContext();
+
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -241,40 +253,40 @@ namespace TrainingApp.Controllers
             };
             return View(viewModel);
         }
-        TrainingAppDBContext db = new TrainingAppDBContext();
+
         private IEnumerable<SelectListItem> GetUniversitySupervisorsSelectList()
         {
-            // Fetch company supervisors from the database
             var supervisors = db.Users
-                .Where(u => u.Roles == (UserRole.UniversitySupervisor))  // Adjust the condition based on how roles are represented in your database
+                .Where(u => u.Roles == UserRole.UniversitySupervisor)
                 .Select(u => new SelectListItem
                 {
-                    Value = u.Id.ToString(),           // Assuming 'Id' is the unique identifier for the user
-                    Text = u.Name + " ( " + u.UniversityName + " )"                // Assuming 'FullName' is the property for the user's name
+                    Value = u.Id.ToString(),
+                    Text = u.Name + " ( " + u.UniversityName + " )"
                 })
                 .ToList();
-
             return supervisors;
         }
+
         private IEnumerable<SelectListItem> GetCompanySupervisorsSelectList()
         {
-            // Fetch company supervisors from the database
             var supervisors = db.Users
-                .Where(u => u.Roles==(UserRole.CompanySupervisor))  // Adjust the condition based on how roles are represented in your database
+                .Where(u => u.Roles == UserRole.CompanySupervisor)
                 .Select(u => new SelectListItem
                 {
-                    Value = u.Id.ToString(),           // Assuming 'Id' is the unique identifier for the user
-                    Text = u.Name  + " ( "+u.CompanyName+" )"                // Assuming 'FullName' is the property for the user's name
+                    Value = u.Id.ToString(),
+                    Text = u.Name + " ( " + u.CompanyName + " )"
                 })
                 .ToList();
-
             return supervisors;
         }
 
         [HttpPost]
+        [AllowAnonymous]
+
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterStudent(AddTrainerViewModel model)
+        public ActionResult RegisterStudent(CombinedRegistrationViewModel model)
         {
+        //    return Content(model.StudentViewModel.TrainerPassword.ToString());
             if (ModelState.IsValid)
             {
                 try
@@ -282,21 +294,21 @@ namespace TrainingApp.Controllers
                     using (var context = new TrainingAppDBContext())
                     {
                         var companyName = context.Users
-                                                 .Where(u => u.Id == model.CompanySupervisorID)
-                                                 .Select(u => u.CompanyName)
-                                                 .FirstOrDefault();
+                            .Where(u => u.Id == model.StudentViewModel.CompanySupervisorID)
+                            .Select(u => u.CompanyName)
+                            .FirstOrDefault();
                         var uniName = context.Users
-                                             .Where(u => u.Id == model.UniversitySupervisorID)
-                                             .Select(u => u.UniversityName)
-                                             .FirstOrDefault();
+                            .Where(u => u.Id == model.StudentViewModel.UniversitySupervisorID)
+                            .Select(u => u.UniversityName)
+                            .FirstOrDefault();
 
                         var user = new Users
                         {
-                            Name = model.TrainerName,
-                            Email = model.TrainerEmail,
-                            Password = model.TrainerPassword, // Hash the password before saving
-                            UniversitySupervisorID = model.UniversitySupervisorID,
-                            CompanySupervisorID = model.CompanySupervisorID,
+                            Name = model.StudentViewModel.TrainerName,
+                            Email = model.StudentViewModel.TrainerEmail,
+                            Password = model.StudentViewModel.TrainerPassword,
+                            UniversitySupervisorID = model.StudentViewModel.UniversitySupervisorID,
+                            CompanySupervisorID = model.StudentViewModel.CompanySupervisorID,
                             CompanyName = companyName,
                             Roles = UserRole.Trainer,
                             UniversityName = uniName,
@@ -307,27 +319,29 @@ namespace TrainingApp.Controllers
                     }
 
                     TempData["SuccessMessage"] = "Student registered successfully!";
-                    return RedirectToAction("RegistrationSuccess"); // Redirect to a success page or message
+                    return RedirectToAction("RegistrationSuccess");
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception
                     ModelState.AddModelError("", "An error occurred while registering the student.");
                 }
             }
 
-            // Return to the registration view with the combined model if the model is not valid or an exception occurred
             var combinedModel = new CombinedRegistrationViewModel
             {
-                StudentViewModel = model,
+                StudentViewModel = model.StudentViewModel,
                 CompanySupervisorViewModel = new AddCompanySupervisorViewModel(),
                 UniversitySupervisorViewModel = new AddSupervisorViewModel()
             };
+            combinedModel.UniversitySupervisors = GetUniversitySupervisorsSelectList();
+            combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
             return View("Register", combinedModel);
         }
+        [AllowAnonymous]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterCompanySupervisor(AddCompanySupervisorViewModel model)
+        public ActionResult RegisterCompanySupervisor(CombinedRegistrationViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -337,10 +351,10 @@ namespace TrainingApp.Controllers
                     {
                         var user = new Users
                         {
-                            Name = model.FullName,
-                            CompanyName = model.CompanyName,
-                            Email = model.Email,
-                            Password = model.Password, // Hash the password before saving
+                            Name = model.CompanySupervisorViewModel.FullName,
+                            Email = model.CompanySupervisorViewModel.Email,
+                            Password = model.CompanySupervisorViewModel.Password,
+                            CompanyName = model.CompanySupervisorViewModel.CompanyName,
                             Roles = UserRole.CompanySupervisor
                         };
 
@@ -353,23 +367,25 @@ namespace TrainingApp.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception
                     ModelState.AddModelError("", "An error occurred while registering the company supervisor.");
                 }
             }
 
-            // Return to the registration view with the combined model if the model is not valid or an exception occurred
             var combinedModel = new CombinedRegistrationViewModel
             {
                 StudentViewModel = new AddTrainerViewModel(),
-                CompanySupervisorViewModel = model,
+                CompanySupervisorViewModel = model.CompanySupervisorViewModel,
                 UniversitySupervisorViewModel = new AddSupervisorViewModel()
             };
+            combinedModel.UniversitySupervisors = GetUniversitySupervisorsSelectList();
+            combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
             return View("Register", combinedModel);
         }
+        [AllowAnonymous]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterUniversitySupervisor(AddSupervisorViewModel model)
+        public ActionResult RegisterUniversitySupervisor(CombinedRegistrationViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -379,10 +395,10 @@ namespace TrainingApp.Controllers
                     {
                         var user = new Users
                         {
-                            Name = model.FullName,
-                            UniversityName = model.UniversityName,
-                            Email = model.SupervisorEmail,
-                            Password = model.SupervisorPassword, // Hash the password before saving
+                            Name = model.UniversitySupervisorViewModel.FullName,
+                            Email = model.UniversitySupervisorViewModel.SupervisorEmail,
+                            Password = model.UniversitySupervisorViewModel.SupervisorPassword,
+                            UniversityName = model.UniversitySupervisorViewModel.UniversityName,
                             Roles = UserRole.UniversitySupervisor
                         };
 
@@ -395,20 +411,32 @@ namespace TrainingApp.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception
                     ModelState.AddModelError("", "An error occurred while registering the university supervisor.");
                 }
             }
 
-            // Return to the registration view with the combined model if the model is not valid or an exception occurred
             var combinedModel = new CombinedRegistrationViewModel
             {
                 StudentViewModel = new AddTrainerViewModel(),
                 CompanySupervisorViewModel = new AddCompanySupervisorViewModel(),
-                UniversitySupervisorViewModel = model
+                UniversitySupervisorViewModel = model.UniversitySupervisorViewModel
             };
+            combinedModel.UniversitySupervisors = GetUniversitySupervisorsSelectList();
+            combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
             return View("Register", combinedModel);
         }
+
+        public ActionResult RegistrationSuccess()
+        {
+            return View();
+        }
+
+
+
+
+
+
+
 
         //
         //

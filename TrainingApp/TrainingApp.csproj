@@ -314,6 +314,7 @@
     <Content Include="Views\Message\Inbox.cshtml" />
     <Content Include="Views\Message\SendMessage.cshtml" />
     <Content Include="Views\CompanySupervisor\Dashboard.cshtml" />
+    <Content Include="Views\Account\RegistrationSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
