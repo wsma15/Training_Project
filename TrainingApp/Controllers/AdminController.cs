@@ -28,6 +28,7 @@ namespace TrainingApp.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Admin")]
 
         public ActionResult AddStudent()
         {
@@ -57,6 +58,7 @@ namespace TrainingApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult AddStudent(AddTrainerViewModel model)
         {
@@ -113,6 +115,7 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
 
         public ActionResult AddUniversitySupervisor(AddSupervisorViewModel model)
         {
@@ -140,6 +143,8 @@ namespace TrainingApp.Controllers
             return View(model);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public ActionResult AddCompanySupervisor()
         {
             return View();

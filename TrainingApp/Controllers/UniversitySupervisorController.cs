@@ -29,6 +29,8 @@ namespace TrainingApp.Controllers
             var Trainers = db.Users.Where(s => s.UniversitySupervisorID == supervisorId).ToList();
             return View(Trainers);
         }
+        [Authorize(Roles = "UniversitySupervisor")]
+
         // GET: Supervisor/StudentReports/5
         public ActionResult StudentReports(string id)
         {
