@@ -7,6 +7,8 @@ using TrainingApp.ViewModels;
 public class CompanySupervisorController : Controller
 {
     private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
+    [Authorize(Roles = "CompanySupervisor")]
+
     public ActionResult Dashboard()
     {
         int supervisorId = User.Identity.GetUserId<int>(); // Assuming you are using ASP.NET Identity

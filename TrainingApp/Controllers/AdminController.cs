@@ -9,7 +9,7 @@ namespace TrainingApp.Controllers
     {
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
         // GET: /Admin/Dashboard
-        //  [Authorize(Roles = "Admin")]
+          [Authorize(Roles = "Admin")]
         public ActionResult Dashboard()
         {
             var viewModel = new DashboardViewModel

@@ -20,6 +20,7 @@ namespace TrainingApp.Controllers
             }
             return HttpNotFound();
         }
+        [Authorize(Roles = "UniversitySupervisor")]
 
         // GET: Supervisor/Dashboard
         public ActionResult Dashboard()

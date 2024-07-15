@@ -282,7 +282,6 @@ namespace TrainingApp.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-
         [ValidateAntiForgeryToken]
         public ActionResult RegisterStudent(CombinedRegistrationViewModel model)
         {
