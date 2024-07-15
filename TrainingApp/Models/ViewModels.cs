@@ -10,6 +10,8 @@ namespace TrainingApp.ViewModels
 {
     public class AddCompanySupervisorViewModel
     {
+        [Required(ErrorMessage = "Full Name is Required")]
+        public string FullName { get; set; }
         [Required(ErrorMessage = "Company Name is required")]
         public string CompanyName { get; set; }
 
@@ -27,6 +29,8 @@ namespace TrainingApp.ViewModels
 
     public class AddSupervisorViewModel
     {
+        [Required(ErrorMessage = "Full Name is Required")]
+        public string FullName { get; set; }
         [Required(ErrorMessage = "Supervisor Name is required")]
         public string SupervisorName { get; set; }
 
@@ -60,7 +64,7 @@ namespace TrainingApp.ViewModels
 
         [Required]
         public int UniversitySupervisorID { get; set; }
-
+       
         [Required]
         public int CompanySupervisorID { get; set; }
 

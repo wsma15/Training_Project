@@ -129,7 +129,7 @@ namespace TrainingApp.Controllers
                            .Select(user => new UsersPanelViewModels
                            {
                                Id = user.Id,
-                               Name = user.Name,
+                               Name = $"({user.Id})- {user.Name}",
                                // CompanySupervisorID = user.CompanySupervisorID
                            })
                            .Distinct() // Ensure no duplicate users

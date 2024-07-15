@@ -7,9 +7,26 @@
 
 <h2>User Registration</h2>
 
+<!-- Role Selection -->
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <label class="radio-inline">
+                <input type="radio" name="userRole" value="student" checked> Student
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="userRole" value="companySupervisor"> Company Supervisor
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="userRole" value="universitySupervisor"> University Supervisor
+            </label>
+        </div>
+    </div>
+</div>
+
 <!-- Registration Forms -->
 <div class="tab-content">
-    <!-- Trainer Registration Form -->
+    <!-- Student Registration Form -->
     <div role="tabpanel" class="tab-pane active" id="student">
         @using (Html.BeginForm("RegisterStudent", "Account", FormMethod.Post))
         {
@@ -27,8 +44,23 @@
                     </div>
                 </div>
 
-                <!-- Other fields... -->
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentViewModel.TrainerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.StudentViewModel.TrainerEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter email address" } })
+                        @Html.ValidationMessageFor(model => model.StudentViewModel.TrainerEmail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentViewModel.TrainerPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(model => model.StudentViewModel.TrainerPassword, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter password" } })
+                        @Html.ValidationMessageFor(model => model.StudentViewModel.TrainerPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- University and Company Supervisors dropdowns -->
                 <div class="form-group">
                     @Html.LabelFor(model => model.StudentViewModel.UniversitySupervisorID, "University Supervisor", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -65,6 +97,14 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                 <div class="form-group">
+                    @Html.LabelFor(model => model.CompanySupervisorViewModel.FullName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CompanySupervisorViewModel.FullName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter full name" } })
+                        @Html.ValidationMessageFor(model => model.CompanySupervisorViewModel.FullName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
                     @Html.LabelFor(model => model.CompanySupervisorViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.CompanySupervisorViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter company name" } })
@@ -72,7 +112,21 @@
                     </div>
                 </div>
 
-                <!-- Other fields... -->
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CompanySupervisorViewModel.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CompanySupervisorViewModel.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter email address" } })
+                        @Html.ValidationMessageFor(model => model.CompanySupervisorViewModel.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CompanySupervisorViewModel.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(model => model.CompanySupervisorViewModel.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter password" } })
+                        @Html.ValidationMessageFor(model => model.CompanySupervisorViewModel.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
@@ -88,27 +142,48 @@
         @using (Html.BeginForm("RegisterUniversitySupervisor", "Account", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            <div class="form-horizontal">
-                <h4>University Supervisor Registration</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-horizontal">
+            <h4>University Supervisor Registration</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.UniversitySupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.UniversitySupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter supervisor name" } })
-                        @Html.ValidationMessageFor(model => model.UniversitySupervisorViewModel.SupervisorName, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <!-- Other fields... -->
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Register as University Supervisor" class="btn btn-primary" />
-                    </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.UniversitySupervisorViewModel.FullName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.UniversitySupervisorViewModel.FullName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter full name" } })
+                    @Html.ValidationMessageFor(model => model.UniversitySupervisorViewModel.FullName, "", new { @class = "text-danger" })
                 </div>
             </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.UniversitySupervisorViewModel.UniversityName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.UniversitySupervisorViewModel.UniversityName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter company name" } })
+                    @Html.ValidationMessageFor(model => model.UniversitySupervisorViewModel.UniversityName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UniversitySupervisorViewModel.SupervisorEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.UniversitySupervisorViewModel.SupervisorEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter email address" } })
+                    @Html.ValidationMessageFor(model => model.UniversitySupervisorViewModel.SupervisorEmail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UniversitySupervisorViewModel.SupervisorPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.UniversitySupervisorViewModel.SupervisorPassword, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter password" } })
+                    @Html.ValidationMessageFor(model => model.UniversitySupervisorViewModel.SupervisorPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Register as University Supervisor" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
         }
     </div>
 </div>
@@ -116,3 +191,25 @@
 <div>
     @Html.ActionLink("Already Have an Account?", "Login", "Account")
 </div>
+
+<!-- JavaScript to handle radio button changes -->
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleRadios = document.querySelectorAll('input[name="userRole"]');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            roleRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    const selectedRole = this.value;
+                    tabPanes.forEach(pane => {
+                        pane.classList.remove('active');
+                        if (pane.id === selectedRole) {
+                            pane.classList.add('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

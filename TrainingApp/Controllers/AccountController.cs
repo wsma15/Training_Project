@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using TrainingApp.Models;
 using TrainingApp.ViewModels;
 using static TrainingApp.ViewModels.DashboardViewModel;
@@ -240,28 +241,36 @@ namespace TrainingApp.Controllers
             };
             return View(viewModel);
         }
-
+        TrainingAppDBContext db = new TrainingAppDBContext();
         private IEnumerable<SelectListItem> GetUniversitySupervisorsSelectList()
         {
-            // Replace with actual data retrieval logic
-            var supervisors = new List<SelectListItem>
-    {
-        new SelectListItem { Value = "1", Text = "Supervisor A" },
-        new SelectListItem { Value = "2", Text = "Supervisor B" }
-    };
+            // Fetch company supervisors from the database
+            var supervisors = db.Users
+                .Where(u => u.Roles == (UserRole.UniversitySupervisor))  // Adjust the condition based on how roles are represented in your database
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),           // Assuming 'Id' is the unique identifier for the user
+                    Text = u.Name + " ( " + u.UniversityName + " )"                // Assuming 'FullName' is the property for the user's name
+                })
+                .ToList();
+
+            return supervisors;
+        }
+        private IEnumerable<SelectListItem> GetCompanySupervisorsSelectList()
+        {
+            // Fetch company supervisors from the database
+            var supervisors = db.Users
+                .Where(u => u.Roles==(UserRole.CompanySupervisor))  // Adjust the condition based on how roles are represented in your database
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),           // Assuming 'Id' is the unique identifier for the user
+                    Text = u.Name  + " ( "+u.CompanyName+" )"                // Assuming 'FullName' is the property for the user's name
+                })
+                .ToList();
+
             return supervisors;
         }
 
-        private IEnumerable<SelectListItem> GetCompanySupervisorsSelectList()
-        {
-            // Replace with actual data retrieval logic
-            var supervisors = new List<SelectListItem>
-    {
-        new SelectListItem { Value = "1", Text = "Company Supervisor A" },
-        new SelectListItem { Value = "2", Text = "Company Supervisor B" }
-    };
-            return supervisors;
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegisterStudent(AddTrainerViewModel model)
