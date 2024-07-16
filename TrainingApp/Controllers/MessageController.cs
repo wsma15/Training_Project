@@ -167,7 +167,6 @@ if (userRole == UserRole.UniversitySupervisor)
                      .Distinct() // Ensure no duplicate CompanySupervisorIDs
                      .ToList();
 
-
                 var relatedUsers = _context.Users
                            .Where(user => UniSupervisorIds.Contains(user.Id))
                            .Select(user => new UsersPanelViewModels
