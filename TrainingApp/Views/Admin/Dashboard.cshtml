@@ -80,9 +80,10 @@
                 <th>Student ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Supervisor</th>
                 <th>University</th>
+                <th>University Supervisor</th>
                 <th>Company</th>
+                <th>Company Supervisor</th>
 
             </tr>
         </thead>
@@ -94,9 +95,11 @@
                         <td>@student.Id</td>
                         <td>@student.Name</td>
                         <td>@student.Email</td>
-                        <td>@(Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
                         <td>@(Model.GetUniName((int)student.UniversitySupervisorID))</td>
+                        <td>@(Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
                         <td>@(Model.GetCompanyName((int)student.CompanySupervisorID))</td>
+                        <td>@(Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
+
                     </tr>
                 }
             }

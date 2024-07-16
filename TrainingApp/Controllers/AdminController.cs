@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrainingApp.Models;
 using TrainingApp.ViewModels;
-
 namespace TrainingApp.Controllers
 {
     public class AdminController : Controller
@@ -12,7 +14,7 @@ namespace TrainingApp.Controllers
           [Authorize(Roles = "Admin")]
         public ActionResult Dashboard()
         {
-            var viewModel = new DashboardViewModel
+        var viewModel = new DashboardViewModel
             {
                 Trainers = _context.Users
                                   .Where(super => super.Roles == UserRole.Trainer)
@@ -64,6 +66,7 @@ namespace TrainingApp.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 using (var context = new TrainingAppDBContext())
                 {
                     // Retrieve the company name based on the selected supervisor ID
@@ -89,6 +92,18 @@ namespace TrainingApp.Controllers
 
                     context.Users.Add(user);
                     context.SaveChanges();
+                    MailHelper.SendEmail(
+        user.Email,
+        "Welcome to the Training Management System",
+        $"Dear {user.Name},\n\n" +
+        "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+        "Here are your account details:\n" +
+        $"- **User ID:** {user.Id}\n" +
+        $"- **Password:** {user.Password}\n\n" +
+        "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+        "Best regards,\n" +
+        "The TMS Team"
+    );
                 }
 
                 // Redirect to the admin dashboard after adding the student
@@ -119,20 +134,41 @@ namespace TrainingApp.Controllers
 
         public ActionResult AddUniversitySupervisor(AddSupervisorViewModel model)
         {
-            if (ModelState.IsValid)
+           // if (ModelState.IsValid)
             {
                 // Perform actions to add supervisor to database
                 using (var context = new TrainingAppDBContext())
                 {
-                    context.Users.Add(new Users
+                    // Create a new user instance
+                    var newUser = new Users
                     {
                         Name = model.SupervisorName,
                         Email = model.SupervisorEmail,
-                        Password = model.SupervisorPassword,
+                        Password = model.SupervisorPassword, // Ensure you are hashing passwords in a real application
                         UniversityName = model.UniversityName, // Assuming you have this property in your Users model
                         Roles = UserRole.UniversitySupervisor // Adjust roles as per your application logic
-                    });
+                    };
+
+                    // Add the user to the database and save changes
+                    context.Users.Add(newUser);
                     context.SaveChanges();
+
+                    // Retrieve the ID of the newly added user
+                    int newUserId = newUser.Id;
+
+                    // Send the welcome email with the user ID and password
+                   MailHelper.SendEmail(
+                        model.SupervisorEmail,
+                        "Welcome to the Training Management System",
+                        $"Dear {model.SupervisorName},\n\n" +
+                        "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+                        "Here are your account details:\n" +
+                        $"- **User ID:** {newUserId}\n" +
+                        $"- **Password:** {model.SupervisorPassword}\n\n" +
+                        "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+                        "Best regards,\n" +
+                        "The TMS Team"
+                    );
                 }
 
                 // Redirect to appropriate action after adding supervisor

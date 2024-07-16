@@ -315,9 +315,22 @@ namespace TrainingApp.Controllers
 
                         context.Users.Add(user);
                         context.SaveChanges();
+                        MailHelper.SendEmail(
+user.Email,
+"Welcome to the Training Management System",
+$"Dear {user.Name} Trainer,\n\n" +
+"Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+"Here are your account details:\n" +
+$"- **User ID:** {user.Id}\n" +
+$"- **Password:** {user.Password}\n\n" +
+"If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+"Best regards,\n" +
+"The TMS Team"
+);
                     }
 
                     TempData["SuccessMessage"] = "Student registered successfully!";
+
                     return RedirectToAction("RegistrationSuccess");
                 }
                 catch (Exception ex)
@@ -336,8 +349,8 @@ namespace TrainingApp.Controllers
             combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
             return View("Register", combinedModel);
         }
-        [AllowAnonymous]
 
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegisterCompanySupervisor(CombinedRegistrationViewModel model)
@@ -359,6 +372,18 @@ namespace TrainingApp.Controllers
 
                         context.Users.Add(user);
                         context.SaveChanges();
+                        MailHelper.SendEmail(
+user.Email,
+"Welcome to the Training Management System",
+$"Dear {user.Name} Supervisor,\n\n" +
+"Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+"Here are your account details:\n" +
+$"- **User ID:** {user.Id}\n" +
+$"- **Password:** {user.Password}\n\n" +
+"If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+"Best regards,\n" +
+"The TMS Team"
+);
                     }
 
                     TempData["SuccessMessage"] = "Company Supervisor registered successfully!";
@@ -403,6 +428,18 @@ namespace TrainingApp.Controllers
 
                         context.Users.Add(user);
                         context.SaveChanges();
+                        MailHelper.SendEmail(
+user.Email,
+"Welcome to the Training Management System",
+$"Dear {user.Name} Supervisor,\n\n" +
+"Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+"Here are your account details:\n" +
+$"- **User ID:** {user.Id}\n" +
+$"- **Password:** {user.Password}\n\n" +
+"If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+"Best regards,\n" +
+"The TMS Team"
+);
                     }
 
                     TempData["SuccessMessage"] = "University Supervisor registered successfully!";
@@ -424,6 +461,7 @@ namespace TrainingApp.Controllers
             combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
             return View("Register", combinedModel);
         }
+        [AllowAnonymous]
 
         public ActionResult RegistrationSuccess()
         {

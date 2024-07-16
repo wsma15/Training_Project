@@ -115,42 +115,52 @@ namespace TrainingApp.Controllers
                                   .ToList();
                 return View(supervisors);
             }
-            if (userRole == UserRole.UniversitySupervisor)
-            {
-                var companySupervisorIds = _context.Users
-                                  .Where(user => user.UniversitySupervisorID == userId)
-                                  .Select(user => user.CompanySupervisorID)
-                                  .Distinct() // Ensure no duplicate CompanySupervisorIDs
-                                  .ToList();
+if (userRole == UserRole.UniversitySupervisor)
+{
+    var companySupervisorIds = _context.Users
+                          .Where(user => user.UniversitySupervisorID == userId)
+                          .Select(user => user.CompanySupervisorID)
+                          .Distinct()
+                          .ToList();
 
+    var relatedUsers = _context.Users
+             .Where(user => companySupervisorIds.Contains(user.Id))
+             .Select(user => new
+             {
+                 user.Id,
+                 user.Name,
+                 user.Roles
+             })
+             .ToList() // Fetch data into memory
+             .Select(user => new UsersPanelViewModels
+             {
+                 Id = user.Id,
+                 Name = $"({user.Name}) ({user.Roles})"
+             })
+             .ToList();
 
-                var relatedUsers = _context.Users
-                           .Where(user => companySupervisorIds.Contains(user.Id))
-                           .Select(user => new UsersPanelViewModels
-                           {
-                               Id = user.Id,
-                               Name = $"({user.Id})- {user.Name}",
-                               // CompanySupervisorID = user.CompanySupervisorID
-                           })
-                           .Distinct() // Ensure no duplicate users
-                           .ToList();
+    var trainers = _context.Users
+                          .Where(user => user.UniversitySupervisorID == userId)
+                          .Select(user => new
+                          {
+                              user.Id,
+                              user.Name,
+                              user.Roles
+                          })
+                          .ToList() // Fetch data into memory
+                          .Select(user => new UsersPanelViewModels
+                          {
+                              Id = user.Id,
+                              Name = $"{user.Name} - ({user.Roles})"
+                          })
+                          .ToList();
 
-                var Trainers =
-                _context.Users
-                                  .Where(user => user.UniversitySupervisorID == userId)
-                                  .Select(user => new UsersPanelViewModels
-                                  {
-                                      Id = user.Id,
-                                      Name = user.Name,
-                                      //     CompId = user.CompanySupervisorID,
-                                  })
-                                  .ToList();
-                var USERS = Trainers.Union(relatedUsers);
-                return View(USERS);
-            }
+    var users = trainers.Union(relatedUsers).ToList();
+
+    return View(users);
+}
             if (userRole == UserRole.CompanySupervisor)
             {
-
                 var UniSupervisorIds = _context.Users
                      .Where(user => user.CompanySupervisorID == userId)
                      .Select(user => user.UniversitySupervisorID)
