@@ -256,7 +256,6 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="css\fontawesome-all.css" />
     <Content Include="css\style.css" />
-    <Content Include="css\style1.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -328,6 +327,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="imsages\" />
     <Folder Include="Views\Reports\" />
   </ItemGroup>
   <ItemGroup>
