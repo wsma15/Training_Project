@@ -1,58 +1,48 @@
 ﻿@using TrainingApp.Models
 @model LoginViewModel
+
 @{
     ViewBag.Title = "Log in";
 }
-<head>
 
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+    <link href="~/style/style.css" rel="stylesheet" />
 </head>
-<main aria-labelledby="title">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <h2 id="title">@ViewBag.Title</h2>
-            <section id="loginForm">
-                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group row">
-                        @Html.LabelFor(m => m.UserId, new { @class = "col-md-3 col-form-label" })
-                        <div class="col-md-9">
-                            @Html.TextBoxFor(m => m.UserId, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        @Html.LabelFor(m => m.Password, new { @class = "col-md-3 col-form-label" })
-                        <div class="col-md-9">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="offset-md-3 col-md-9">
-                            <div class="form-check">
-                                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
-                                @Html.LabelFor(m => m.RememberMe, new { @class = "form-check-label" })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="offset-md-3 col-md-9">
-                            <input type="submit" value="Log in" class="btn btn-primary" />
-                            <div>
-                                @Html.ActionLink("Register Now!", "Register", "Account")
-                            </div>
-                        </div>
-                    </div>
-                }
-            </section>
+<body>
+    <div class="main">
+        <input type="checkbox" id="chk" aria-hidden="true">
+
+        <div class="signup">
+            @using (Html.BeginForm("RegisterNewUser", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <label for="chk" aria-hidden="true">Sign up</label>
+
+                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Full Name" })
+
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Email Address" })
+
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Password" })
+
+                <button>Sign up</button>
+            }
+        </div>
+
+        <div class="login">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+            {
+                <label for="chk" aria-hidden="true">Login</label>
+                @Html.AntiForgeryToken()
+                @Html.TextBoxFor(m => m.UserId, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "ID" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Password" })
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <button type="submit" value="Log in">Log in</button>
+            }
         </div>
     </div>
-</main>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</body>

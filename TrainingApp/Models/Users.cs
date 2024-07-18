@@ -30,7 +30,6 @@ namespace TrainingApp.Models
 
         public string CompanyName { get; set; }
 
-        [Required]
         public UserRole Roles { get; set; }
     }
 
@@ -39,6 +38,7 @@ namespace TrainingApp.Models
         Admin,
         UniversitySupervisor,
         Trainer,
-        CompanySupervisor
+        CompanySupervisor,
+        NewUser
     }
 }

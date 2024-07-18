@@ -223,6 +223,18 @@
     <Compile Include="Migrations\202407122245303_Init.Designer.cs">
       <DependentUpon>202407122245303_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202407180801259_Init1.cs" />
+    <Compile Include="Migrations\202407180801259_Init1.Designer.cs">
+      <DependentUpon>202407180801259_Init1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407180815010_Init2.cs" />
+    <Compile Include="Migrations\202407180815010_Init2.Designer.cs">
+      <DependentUpon>202407180815010_Init2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407180833508_Init3.cs" />
+    <Compile Include="Migrations\202407180833508_Init3.Designer.cs">
+      <DependentUpon>202407180833508_Init3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -278,6 +290,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="style\style.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -360,6 +373,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202407122245303_Init.resx">
       <DependentUpon>202407122245303_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407180801259_Init1.resx">
+      <DependentUpon>202407180801259_Init1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407180815010_Init2.resx">
+      <DependentUpon>202407180815010_Init2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407180833508_Init3.resx">
+      <DependentUpon>202407180833508_Init3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

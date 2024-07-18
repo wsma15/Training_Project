@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace TrainingApp.Models
 {
@@ -48,8 +49,6 @@ namespace TrainingApp.Models
 
     public class LoginViewModel
     {
-        [Required]
-
         [Display(Name = "User ID")]
         public string UserId { get; set; }
 
@@ -58,8 +57,16 @@ namespace TrainingApp.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        [Required(ErrorMessage = "Please enter Valid Full Name")]
+        public string FullName { get; set; }  // <-- Use get; set; instead of a semicolon
     }
 
     public class RegisterViewModel

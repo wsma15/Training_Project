@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
@@ -72,10 +73,6 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
 
             try
             {
@@ -283,71 +280,125 @@ namespace TrainingApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterStudent(CombinedRegistrationViewModel model)
+        public ActionResult RegisterNewUser(LoginViewModel model)
         {
-        //    return Content(model.StudentViewModel.TrainerPassword.ToString());
             if (ModelState.IsValid)
             {
                 try
                 {
                     using (var context = new TrainingAppDBContext())
                     {
-                        var companyName = context.Users
-                            .Where(u => u.Id == model.StudentViewModel.CompanySupervisorID)
-                            .Select(u => u.CompanyName)
-                            .FirstOrDefault();
-                        var uniName = context.Users
-                            .Where(u => u.Id == model.StudentViewModel.UniversitySupervisorID)
-                            .Select(u => u.UniversityName)
-                            .FirstOrDefault();
-
                         var user = new Users
                         {
-                            Name = model.StudentViewModel.TrainerName,
-                            Email = model.StudentViewModel.TrainerEmail,
-                            Password = model.StudentViewModel.TrainerPassword,
-                            UniversitySupervisorID = model.StudentViewModel.UniversitySupervisorID,
-                            CompanySupervisorID = model.StudentViewModel.CompanySupervisorID,
-                            CompanyName = companyName,
-                            Roles = UserRole.Trainer,
-                            UniversityName = uniName,
+                            Name = model.FullName,
+                            Email = model.Email,
+                            Password = model.Password,
+                            Roles = UserRole.NewUser,
                         };
-
                         context.Users.Add(user);
                         context.SaveChanges();
-                        MailHelper.SendEmail(
-user.Email,
-"Welcome to the Training Management System",
-$"Dear {user.Name} Trainer,\n\n" +
-"Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
-"Here are your account details:\n" +
-$"- **User ID:** {user.Id}\n" +
-$"- **Password:** {user.Password}\n\n" +
-"If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
-"Best regards,\n" +
-"The TMS Team"
-);
                     }
-
                     TempData["SuccessMessage"] = "Student registered successfully!";
-
                     return RedirectToAction("RegistrationSuccess");
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var validationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                        }
+                    }
+                    return Content(FormatValidationErrors(ModelState)); // Return the formatted validation errors
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "An error occurred while registering the student.");
+                    ModelState.AddModelError("", "An error occurred while processing your request.");
+                    return Content(FormatValidationErrors(ModelState)); // Return the formatted general error message
                 }
             }
+            return Content(FormatValidationErrors(ModelState)); // Return the formatted validation errors
+        }
 
-            var combinedModel = new CombinedRegistrationViewModel
-            {
-                StudentViewModel = model.StudentViewModel,
-                CompanySupervisorViewModel = new AddCompanySupervisorViewModel(),
-                UniversitySupervisorViewModel = new AddSupervisorViewModel()
-            };
-            combinedModel.UniversitySupervisors = GetUniversitySupervisorsSelectList();
-            combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
-            return View("Register", combinedModel);
+        private string FormatValidationErrors(ModelStateDictionary modelState)
+        {
+            var errors = modelState
+                .SelectMany(x => x.Value.Errors)
+                .Select(x => x.ErrorMessage)
+                .ToList();
+
+            return string.Join("; ", errors);
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegisterStudent(LoginViewModel model)
+        {
+            //    return Content(model.StudentViewModel.TrainerPassword.ToString());
+            /*            if (ModelState.IsValid)
+                        {
+                            try
+                            {
+                                using (var context = new TrainingAppDBContext())
+                                {
+                                    var companyName = context.Users
+                                        .Where(u => u.Id == model.StudentViewModel.CompanySupervisorID)
+                                        .Select(u => u.CompanyName)
+                                        .FirstOrDefault();
+                                    var uniName = context.Users
+                                        .Where(u => u.Id == model.StudentViewModel.UniversitySupervisorID)
+                                        .Select(u => u.UniversityName)
+                                        .FirstOrDefault();
+
+                                    var user = new Users
+                                    {
+                                        Name = model.StudentViewModel.TrainerName,
+                                        Email = model.StudentViewModel.TrainerEmail,
+                                        Password = model.StudentViewModel.TrainerPassword,
+                                        UniversitySupervisorID = model.StudentViewModel.UniversitySupervisorID,
+                                        CompanySupervisorID = model.StudentViewModel.CompanySupervisorID,
+                                        CompanyName = companyName,
+                                        Roles = UserRole.Trainer,
+                                        UniversityName = uniName,
+                                    };
+
+                                    context.Users.Add(user);
+                                    context.SaveChanges();
+                                    MailHelper.SendEmail(
+            user.Email,
+            "Welcome to the Training Management System",
+            $"Dear {user.Name} Trainer,\n\n" +
+            "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+            "Here are your account details:\n" +
+            $"- **User ID:** {user.Id}\n" +
+            $"- **Password:** {user.Password}\n\n" +
+            "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+            "Best regards,\n" +
+            "The TMS Team"
+            );
+                                }
+
+                                TempData["SuccessMessage"] = "Student registered successfully!";
+
+                                return RedirectToAction("RegistrationSuccess");
+                            }
+                            catch (Exception ex)
+                            {
+                                ModelState.AddModelError("", "An error occurred while registering the student.");
+                            }
+                        }
+
+                        var combinedModel = new CombinedRegistrationViewModel
+                        {
+                            StudentViewModel = model.StudentViewModel,
+                            CompanySupervisorViewModel = new AddCompanySupervisorViewModel(),
+                            UniversitySupervisorViewModel = new AddSupervisorViewModel()
+                        };
+                        combinedModel.UniversitySupervisors = GetUniversitySupervisorsSelectList();
+                        combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
+                        return View("Register", combinedModel);*/
+            return View(model);
         }
 
         [AllowAnonymous]
