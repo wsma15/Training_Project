@@ -235,6 +235,10 @@
     <Compile Include="Migrations\202407180833508_Init3.Designer.cs">
       <DependentUpon>202407180833508_Init3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202407181007503_Init4.cs" />
+    <Compile Include="Migrations\202407181007503_Init4.Designer.cs">
+      <DependentUpon>202407181007503_Init4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -267,6 +271,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="css\fontawesome-all.css" />
+    <Content Include="css\master.css" />
     <Content Include="css\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -382,6 +387,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202407180833508_Init3.resx">
       <DependentUpon>202407180833508_Init3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407181007503_Init4.resx">
+      <DependentUpon>202407181007503_Init4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

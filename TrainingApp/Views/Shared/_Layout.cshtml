@@ -1,83 +1,112 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    @*<meta name="viewport" content="width=device-width, initial-scale=1" />
-    *@
-    <title>@ViewBag.Title</title>
-    @using System.Security.Claims
+
     @using Microsoft.AspNet.Identity
-    @* @Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/modernizr")*@
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+  @*  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+ *@   <style>
+        /* Optional: Custom styles */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-link-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none; /* Hide by default */
+        }
+
+        .nav-dropdown.show .nav-link-menu {
+            display: block; /* Show when parent .nav-dropdown has class .show */
+        }
+    </style>
 </head>
 <body>
-  <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home")">TMS</a>
+    @if (Request.IsAuthenticated)
+    {
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="padding-left:100px">TMS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <div class="nav-dropdown">
+                            <a href="#" id="nav2" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" style="padding-right: 20px; padding-left:100px;">
+                                <i class="fas fa-user"></i> <span>@User.Identity.Name</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right nav-link-menu">
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "Admin")">Admin Dashboard</a>
+                                }
+                                else if (User.IsInRole("UniversitySupervisor"))
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "UniversitySupervisor")">Supervisor Dashboard</a>
+                                }
+                                else if (User.IsInRole("CompanySupervisor"))
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "CompanySupervisor")">Company Supervisor Dashboard</a>
+                                }
+                                else if (User.IsInRole("Trainer"))
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "Trainers")">Trainer Dashboard</a>
+                                }
+                                <a class="dropdown-item" href="#">Profile</a>
+                                <a class="dropdown-item" href="@Url.Action("Inbox", "Message", new { userId = User.Identity.GetUserId() })">Messages</a>
+                                <a class="dropdown-item" href="#">Settings</a>
+                                <div class="dropdown-divider"></div>
+                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Log off</button>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <ul class="nav navbar-nav">
-                @if (User.IsInRole("Admin"))
-                {
-                    <li>@Html.ActionLink("Admin Dashboard", "Dashboard", "Admin")</li>
-                }
-                else if (User.IsInRole("UniversitySupervisor"))
-                {
-                    <li>@Html.ActionLink("Supervisor Dashboard", "Dashboard", "UniversitySupervisor")</li>
+        </nav>
+    }
 
-
-                }
-                else if (User.IsInRole("CompanySupervisor"))
-                {
-                    <li>@Html.ActionLink("Company Supervisor Dashboard", "Dashboard", "CompanySupervisor")</li>
-
-
-                }
-
-                else if (User.IsInRole("Trainer"))
-                {
-                    <li>@Html.ActionLink("Trainer Dashboard", "Dashboard", "Trainers")</li>
-
-
-                }
-
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                @if (Request.IsAuthenticated)
-                {
-                    <li>
-                        <a href="@Url.Action("Inbox", "Message", new { userId = User.Identity.GetUserId() })" class="inbox-icon">
-                            <i class="fas fa-inbox"></i> Inbox
-                        </a>
-                    </li>
-                    <li>
-                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })
-                    </li>
-                    <li>
-                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
-                        }
-                    </li>
-                }
-                else
-                {
-                    <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })</li>
-                }
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p style="color:silver;">&copy; @DateTime.Now.Year - Training Management System</p>
-        </footer>
-    </div>
-
+<div class="container body-content">
+    @RenderBody()
+    @RenderSection("Scripts", required: false)
+    <hr />
+    <footer style="text-align: center;">
+        <p style="color: silver;">&copy; @DateTime.Now.Year - Training Management System</p>
+    </footer>
+</div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle dropdown menu on click
+            $('.nav-dropdown > .nav-link').on('click', function (e) {
+                var $el = $(this).parent();
+                var $parent = $el.closest('.nav-dropdown');
+                var $menu = $el.find('.nav-link-menu');
+
+                if (!$parent.hasClass('show')) {
+                    $parent.addClass('show');
+                    $menu.css('display', 'block');
+                } else {
+                    $parent.removeClass('show');
+                    $menu.css('display', 'none');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

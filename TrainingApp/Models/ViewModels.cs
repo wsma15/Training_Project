@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -78,6 +79,8 @@ namespace TrainingApp.ViewModels
         public List<Users> Trainers { get; set; }
         public List<Users> UniversitySupervisors { get; set; }
         public List<Users> CompanySupervisors { get; set; }
+        public List<Users> NewUsers { get; set; }
+
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
 
         public string GetUniName(int supervisorId)
@@ -85,13 +88,13 @@ namespace TrainingApp.ViewModels
             // Assuming you have a method to retrieve supervisor details from the database
             string supervisor = (from name in _context.Users where name.Roles == UserRole.UniversitySupervisor && name.Id == supervisorId select name.UniversityName).FirstOrDefault();
 
-            if (supervisor != null)
+            if (supervisor == null)
             {
-                return supervisor;
+                return "University not found"; // Or handle the case when supervisor is not found
             }
             else
             {
-                return "University not found"; // Or handle the case when supervisor is not found
+                return supervisor;
             }
         }
         public string GetCompanyName(int supervisorId)

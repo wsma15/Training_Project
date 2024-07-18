@@ -25,7 +25,10 @@ namespace TrainingApp.Controllers
                 CompanySupervisors = _context.Users.Where(
                     super => super.Roles == UserRole.CompanySupervisor
                     ).ToList(),
-            };
+                NewUsers = _context.Users.Where(
+                    super => super.Roles == UserRole.NewUser
+                    ).ToList(),
+        };
 
             return View(viewModel);
         }
