@@ -80,7 +80,7 @@ namespace TrainingApp.ViewModels
         public List<Users> UniversitySupervisors { get; set; }
         public List<Users> CompanySupervisors { get; set; }
         public List<Users> NewUsers { get; set; }
-
+        public AddSupervisorViewModel addSupervisorViewModel { get; set; }
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
 
         public string GetUniName(int supervisorId)

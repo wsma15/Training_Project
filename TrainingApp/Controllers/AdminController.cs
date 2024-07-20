@@ -135,7 +135,7 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
 
-        public ActionResult AddUniversitySupervisor(AddSupervisorViewModel model)
+        public ActionResult AddUniversitySupervisor(DashboardViewModel model)
         {
            // if (ModelState.IsValid)
             {
@@ -145,10 +145,10 @@ namespace TrainingApp.Controllers
                     // Create a new user instance
                     var newUser = new Users
                     {
-                        Name = model.SupervisorName,
-                        Email = model.SupervisorEmail,
-                        Password = model.SupervisorPassword, // Ensure you are hashing passwords in a real application
-                        UniversityName = model.UniversityName, // Assuming you have this property in your Users model
+                        Name = model.addSupervisorViewModel.SupervisorName,
+                        Email = model.addSupervisorViewModel.SupervisorEmail,
+                        Password = model.addSupervisorViewModel.SupervisorPassword, // Ensure you are hashing passwords in a real application
+                        UniversityName = model.addSupervisorViewModel.UniversityName, // Assuming you have this property in your Users model
                         Roles = UserRole.UniversitySupervisor // Adjust roles as per your application logic
                     };
 
@@ -157,10 +157,10 @@ namespace TrainingApp.Controllers
                     context.SaveChanges();
 
                     // Retrieve the ID of the newly added user
-                    int newUserId = newUser.Id;
+  //                  int newUserId = newUser.Id;
 
                     // Send the welcome email with the user ID and password
-                   MailHelper.SendEmail(
+/*                   MailHelper.SendEmail(
                         model.SupervisorEmail,
                         "Welcome to the Training Management System",
                         $"Dear {model.SupervisorName},\n\n" +
@@ -172,7 +172,7 @@ namespace TrainingApp.Controllers
                         "Best regards,\n" +
                         "The TMS Team"
                     );
-                }
+*/                }
 
                 // Redirect to appropriate action after adding supervisor
                 return RedirectToAction("Dashboard", "Admin");

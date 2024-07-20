@@ -2,104 +2,186 @@
 
 @{
     ViewBag.Title = "Admin Dashboard";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a shared layout, or you can remove this line if not applicable
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <head>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link href="~/css/master.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="~/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="~/vendor/fontawesome/css/solid.css" rel="stylesheet" />
+    <link href="~/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/vendor/datatables/DataTables-1.10.25/css/dataTables.dataTables.min.css" rel="stylesheet" />
 </head>
-<h2>Admin Dashboard</h2>
-<hr />
-<hr />
-<div>
-    <p>
-        @Html.ActionLink("Add University Supervisor", "AddUniversitySupervisor", "Admin")
-    </p>
-    <div class="col-md-12 col-lg-12">
-        <div class="card">
-            <div class="card-header">University Supervisors</div>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Admin Dashboard</h1>
+
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>University Supervisors</h3>
+            <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add University Supervisor</button>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add University Supervisor</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+
+
+                                    @using (Html.BeginForm("AddUniversitySupervisor", "Admin", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addSupervisorViewModel.UniversityName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addSupervisorViewModel.UniversityName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter university name" } })
+                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.UniversityName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorEmail, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.PasswordFor(model => model.addSupervisorViewModel.SupervisorPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorPassword, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-md-offset-2 col-md-10">
+                                                    <input type="submit" value="Add Supervisor" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div class="card-body">
-                <p class="card-title"></p>
-                <table class="table table-hover" id="dataTables-example" width="100%">
+                <table class="table table-hover" id="universitySupervisorsTable">
                     <thead>
                         <tr>
                             <th>Supervisor ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>University</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var supervisor in Model.UniversitySupervisors)
                         {
-                                <tr>
-                                    <td>@supervisor.Id</td>
-                                    <td>@supervisor.Name</td>
-                                    <td>@supervisor.Email</td>
-                                    <td>@supervisor.UniversityName</td>
-                                </tr>
+                            <tr>
+                                <td>@supervisor.Id</td>
+                                <td>@supervisor.Name</td>
+                                <td>@supervisor.Email</td>
+                                <td>@supervisor.UniversityName</td>
+                                <td class="text-end">
+                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-</div>
-@Html.ActionLink("Add Company Supervisor", "AddCompanySupervisor", "Admin")
 
-<div class="col-md-12 col-lg-12">
-    <div class="card">
-        <div class="card-header">Company Supervisors</div>
-        <div class="card-body">
-            <p class="card-title"></p>
-            <table class="table table-hover" id="dataTables-example" width="100%">
-                <thead>
-                    <tr>
-                        <th>Supervisor ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Company</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var supervisor in Model.CompanySupervisors)
-                    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Company Supervisors</h3>
+                @Html.ActionLink("Add Company Supervisor", "AddCompanySupervisor", "Admin", new { @class = "btn btn-success float-end" })
+            </div>
+            <div class="card-body">
+                <table class="table table-hover" id="companySupervisorsTable">
+                    <thead>
+                        <tr>
+                            <th>Supervisor ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Company</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var supervisor in Model.CompanySupervisors)
+                        {
                             <tr>
                                 <td>@supervisor.Id</td>
                                 <td>@supervisor.Name</td>
                                 <td>@supervisor.Email</td>
                                 <td>@supervisor.CompanyName</td>
+                                <td class="text-end">
+                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                </td>
                             </tr>
-                    }
-                </tbody>
-            </table>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-</div>
-<p>
-    @Html.ActionLink("Add Student", "AddStudent", "Admin")
-</p>
-<div class="col-md-12 col-lg-12">
-    <div class="card">
-        <div class="card-header">Trainers</div>
-        <div class="card-body">
-            <p class="card-title"></p>
-            <table class="table table-hover" id="dataTables-example" width="100%">
-                <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>University</th>
-                        <th>University Supervisor</th>
-                        <th>Company</th>
-                        <th>Company Supervisor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in Model.Trainers)
-                    {
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Trainers</h3>
+                @Html.ActionLink("Add Student", "AddStudent", "Admin", new { @class = "btn btn-success float-end" })
+            </div>
+            <div class="card-body">
+                <table class="table table-hover" id="trainersTable">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>University</th>
+                            <th>University Supervisor</th>
+                            <th>Company</th>
+                            <th>Company Supervisor</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model.Trainers)
+                        {
                             <tr>
                                 <td>@student.Id</td>
                                 <td>@student.Name</td>
@@ -108,46 +190,98 @@
                                 <td>@(Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
                                 <td>@(Model.GetCompanyName((int)student.CompanySupervisorID))</td>
                                 <td>@(Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
+                                <td class="text-end">
+                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                </td>
                             </tr>
-                    }
-                </tbody>
-            </table>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-</div>
 
-<div class="col-md-12 col-lg-12">
-    <div class="card">
-        <div class="card-header">New Users</div>
-        <div class="card-body">
-            <p class="card-title"></p>
-            <table class="table table-hover" id="dataTables-example" width="100%">
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>University</th>
-                        <th>University Supervisor</th>
-                        <th>Company</th>
-                        <th>Company Supervisor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in Model.NewUsers)
-                    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>New Users</h3>
+                @Html.ActionLink("Add Student", "AddStudent", "Admin", new { @class = "btn btn-success float-end" })
+            </div>
+            <div class="card-body">
+                <table class="table table-hover" id="newUsersTable">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>University</th>
+                            <th>University Supervisor</th>
+                            <th>Company</th>
+                            <th>Company Supervisor</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model.NewUsers)
+                        {
                             <tr>
                                 <td>@student.Id</td>
                                 <td>@student.Name</td>
                                 <td>@student.Email</td>
-                                <td>@(student.UniversitySupervisorID is null?"Not Found":Model.GetUniName((int)student.UniversitySupervisorID))</td>
+                                <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)student.UniversitySupervisorID))</td>
                                 <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
                                 <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)student.CompanySupervisorID))</td>
                                 <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
+                                <td class="text-end">
+                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                </td>
                             </tr>
-                    }
-                </tbody>
-            </table>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/datatables/datatables.min.js"></script>
+    <script src="~/js/initiate-datatables.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            $('#universitySupervisorsTable').DataTable({
+                responsive: true,
+                pageLength: 20,
+                lengthChange: false,
+                searching: true,
+                ordering: true
+            });
+
+            $('#companySupervisorsTable').DataTable({
+                responsive: true,
+                pageLength: 20,
+                lengthChange: false,
+                searching: true,
+                ordering: true
+            });
+
+            $('#trainersTable').DataTable({
+                responsive: true,
+                pageLength: 20,
+                lengthChange: false,
+                searching: true,
+                ordering: true
+            });
+
+            $('#newUsersTable').DataTable({
+                responsive: true,
+                pageLength: 20,
+                lengthChange: false,
+                searching: true,
+                ordering: true
+            });
+        })();
+    </script>
+</body>
