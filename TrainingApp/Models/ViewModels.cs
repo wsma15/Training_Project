@@ -12,11 +12,13 @@ namespace TrainingApp.ViewModels
 {
     public class AddCompanySupervisorViewModel
     {
- 
+        [Required]
+        public int CompanyID { get; set; }
+
         [Display(Name = "Company Name")]
         [Required(ErrorMessage = "Company Name is required")]
         public string CompanyName { get; set; }
-        [Display(Name = "Company Name")]
+        [Display(Name = "Full Name")]
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
 
@@ -33,9 +35,12 @@ namespace TrainingApp.ViewModels
 
 public class AddSupervisorViewModel
 {
-        [Display(Name ="University Name")]
-    [Required(ErrorMessage = "University Name is required")]
-    public string UniversityName { get; set; }
+        [Display(Name = "University ID")]
+        [Required(ErrorMessage = "University ID is required")]
+        public int UniversityID { get; set; }
+        [Display(Name = "Company ID")]
+        [Required(ErrorMessage = "Company ID is required")]
+        public int CompanyID { get; set; }
         [Display(Name = "Full Name")]
 
         [Required(ErrorMessage = "Supervisor Name is required")]
@@ -61,8 +66,11 @@ public class AddSupervisorViewModel
 
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Trainer Name can only contain letters and spaces.")]
         public string TrainerName { get; set; }
-        [Display(Name = "Email")]
+       public int UniversityID { get; set; }
 
+
+
+        [Display(Name = "Email")]
         [Required(ErrorMessage = "Trainer Email is required.")]
         [StringLength(50, ErrorMessage = "Trainer Email cannot exceed 50 characters.")]
         [EmailAddress(ErrorMessage = "Invalid Email Address.")]
@@ -95,6 +103,8 @@ public class AddSupervisorViewModel
         public List<Users> UniversitySupervisors { get; set; }
         public List<Users> CompanySupervisors { get; set; }
         public List<Users> NewUsers { get; set; }
+        public IEnumerable<SelectListItem> UniversityNames { get; set; }
+        public IEnumerable<SelectListItem> CompaniesNames { get; set; }
 
         public AddSupervisorViewModel addSupervisorViewModel { get; set; }
         public AddCompanySupervisorViewModel addCompanySupervisorViewModel { get; set; }
@@ -109,8 +119,8 @@ public class AddSupervisorViewModel
 
         public string GetUniName(int supervisorId)
         {
-            string supervisor = (from name in _context.Users
-                                 where name.Roles == UserRole.UniversitySupervisor && name.Id == supervisorId
+            string supervisor = (from name in _context.Universities
+                                 where name.Id == supervisorId
                                  select name.UniversityName).FirstOrDefault();
 
             return supervisor ?? "University not found";
@@ -118,8 +128,8 @@ public class AddSupervisorViewModel
 
         public string GetCompanyName(int supervisorId)
         {
-            string supervisor = (from name in _context.Users
-                                 where name.Roles == UserRole.CompanySupervisor && name.Id == supervisorId
+            string supervisor = (from name in _context.Companies
+                                 where  name.Id == supervisorId
                                  select name.CompanyName).FirstOrDefault();
 
             return supervisor ?? "Company not found";

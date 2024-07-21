@@ -258,7 +258,7 @@ namespace TrainingApp.Controllers
                 .Select(u => new SelectListItem
                 {
                     Value = u.Id.ToString(),
-                    Text = u.Name + " ( " + u.UniversityName + " )"
+                    Text = u.Name + " ( " + u.UniversityID + " )"
                 })
                 .ToList();
             return supervisors;
@@ -271,7 +271,7 @@ namespace TrainingApp.Controllers
                 .Select(u => new SelectListItem
                 {
                     Value = u.Id.ToString(),
-                    Text = u.Name + " ( " + u.CompanyName + " )"
+                    Text = u.Name + " ( " + u.CompanyID + " )"
                 })
                 .ToList();
             return supervisors;
@@ -417,7 +417,7 @@ namespace TrainingApp.Controllers
                             Name = model.CompanySupervisorViewModel.Name,
                             Email = model.CompanySupervisorViewModel.Email,
                             Password = model.CompanySupervisorViewModel.Password,
-                            CompanyName = model.CompanySupervisorViewModel.CompanyName,
+                            CompanyID = model.CompanySupervisorViewModel.CompanyID,
                             Roles = UserRole.CompanySupervisor
                         };
 
@@ -473,7 +473,7 @@ $"- **Password:** {user.Password}\n\n" +
                             Name = model.UniversitySupervisorViewModel.SupervisorName,
                             Email = model.UniversitySupervisorViewModel.SupervisorEmail,
                             Password = model.UniversitySupervisorViewModel.SupervisorPassword,
-                            UniversityName = model.UniversitySupervisorViewModel.UniversityName,
+                            UniversityID = model.UniversitySupervisorViewModel.UniversityID,
                             Roles = UserRole.UniversitySupervisor
                         };
 

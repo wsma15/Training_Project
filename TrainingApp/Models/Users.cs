@@ -26,9 +26,9 @@ namespace TrainingApp.Models
         public int? UniversitySupervisorID { get; set; }
         public int? CompanySupervisorID { get; set; }
 
-        public string UniversityName { get; set; }
+        public int UniversityID { get; set; }
 
-        public string CompanyName { get; set; }
+        public int CompanyID { get; set; }
 
         public UserRole Roles { get; set; }
     }

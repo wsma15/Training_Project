@@ -24,7 +24,7 @@ public class CompanySupervisorController : Controller
                    .Count();
         var viewModel = new CompanySupervisorDashboardViewModel
         {
-            CompanyName = supervisor.CompanyName.ToString(),
+            CompanyName = supervisor.CompanyID.ToString(),
             UserCount = userCount
         };
 

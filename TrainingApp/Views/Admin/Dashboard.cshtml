@@ -41,47 +41,43 @@
                                     {
                                         @Html.AntiForgeryToken()
 
-                                        <div class="form">
-                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.addSupervisorViewModel.UniversityID, "University Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownListFor(model => model.addSupervisorViewModel.UniversityID,Model.UniversityNames, "Select University Name", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.addSupervisorViewModel.UniversityID, "", new { @class = "text-danger" })
+                                        </div>
 
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addSupervisorViewModel.UniversityName, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addSupervisorViewModel.UniversityName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter university name" } })
-                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.UniversityName, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorName, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorEmail, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorEmail, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorEmail, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.PasswordFor(model => model.addSupervisorViewModel.SupervisorPassword, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorPassword, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="col-md-offset-2 col-md-10">
-                                                    <input type="submit" value="Add Supervisor" class="btn btn-default" />
-                                                </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorName, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorEmail, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.PasswordFor(model => model.addSupervisorViewModel.SupervisorPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorPassword, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <input type="submit" value="Add Supervisor" class="btn btn-default" />
+                                            </div>
+                                        </div>
+                                    </div>
                                     }
                                 </div>
 
@@ -99,7 +95,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>University</th>
-                            <th></th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,7 +107,7 @@
                                     <td>@supervisor.Id</td>
                                     <td>@supervisor.Name</td>
                                     <td>@supervisor.Email</td>
-                                    <td>@supervisor.UniversityName</td>
+                                    <td>@Model.GetUniName(@supervisor.UniversityID)</td>
                                     <td class="text-end">
                                         <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
                                         <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -137,22 +133,20 @@
                             </div>
                             <div class="modal-body">
                                 <div>
+                                    @using (Html.BeginForm("AddCompanySupervisor", "Admin", FormMethod.Post, new { id = "addCompanySupervisorForm" }))
 
-                                    @using (Html.BeginForm("AddCompanySupervisor", "Admin", FormMethod.Post))
-                                    {
+                                        {
                                         @Html.AntiForgeryToken()
-
                                         <div class="form-horizontal">
                                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.CompanyID, "Company Name", htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.CompanyName, "", new { @class = "text-danger" })
+                                                    @Html.DropDownListFor(model => model.addCompanySupervisorViewModel.CompanyID, Model.CompaniesNames, "Select University Name", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.CompanyID, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
@@ -187,8 +181,9 @@
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             </div>
                                         </div>
-                                    }
-                                </div>
+                                        }
+                                        }
+                                    </div>
 
                             </div>
                         </div>
@@ -213,7 +208,7 @@
                                 <td>@supervisor.Id</td>
                                 <td>@supervisor.Name</td>
                                 <td>@supervisor.Email</td>
-                                <td>@supervisor.CompanyName</td>
+                                <td>@Model.GetCompanyName(supervisor.CompanyID)</td>
                                 <td class="text-end">
                                     <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
                                     <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -239,34 +234,41 @@
                             <div class="modal-body">
                                 <div>
 
-                                    @using (Html.BeginForm("AddStudent", "Admin", FormMethod.Post))
+                                    @using (Html.BeginForm("AddCompanySupervisor", "Admin", FormMethod.Post))
                                     {
                                         @Html.AntiForgeryToken()
-
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                         <div class="form-horizontal">
-                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.addTrainerViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.CompanyID, "Company Name", htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addTrainerViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.CompanyName, "", new { @class = "text-danger" })
+                                                    @Html.DropDownListFor(model => model.addCompanySupervisorViewModel.CompanyID, Model.CompaniesNames, "Select Company Name", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.CompanyID, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.addTrainerViewModel.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addTrainerViewModel.TrainerName, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerName, "", new { @class = "text-danger" })
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Name, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                @Html.LabelFor(model => model.addTrainerViewModel.TrainerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Email, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addTrainerViewModel.TrainerEmail, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerEmail, "", new { @class = "text-danger" })
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Email, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.PasswordFor(model => model.addCompanySupervisorViewModel.Password, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Password, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
 
@@ -280,19 +282,19 @@
 
                                             <div class="form-group">
                                                 <div class="col-md-offset-2 col-md-10">
-                                                    <input type="submit" value="Add Trainer" class="btn btn-default" />
+                                                    <input type="submit" value="Add Supervisor" class="btn btn-default" />
                                                 </div>
                                             </div>
+
+
                                         </div>
-                                    }
+                                      }
+                                    </div>
+                                    <div class="modal-footer">
+
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
-
-                            </div>
-                            <div class="modal-footer">
-
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -304,7 +306,8 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Company</th>
-                            <th></th>
+                            <th>University Name</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -314,7 +317,7 @@
                                 <td>@trainer.Id</td>
                                 <td>@trainer.Name</td>
                                 <td>@trainer.Email</td>
-                                <td>@trainer.CompanyName</td>
+                                <td>@trainer.CompanyID</td>
                                 <td class="text-end">
                                     <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
                                     <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -327,8 +330,7 @@
         </div>
     </div>
 
-
-    <div class="card mb-4">
+        <div class="card mb-4">
         <div class="card-header">
             <h3>New Users</h3>
         </div>
@@ -368,6 +370,7 @@
         </div>
     </div>
 
+    </div>
     <script src="~/vendor/jquery/jquery.min.js"></script>
     <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/vendor/datatables/datatables.min.js"></script>

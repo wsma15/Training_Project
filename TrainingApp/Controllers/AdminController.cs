@@ -28,6 +28,17 @@ namespace TrainingApp.Controllers
                 NewUsers = _context.Users.Where(
                     super => super.Roles == UserRole.NewUser
                     ).ToList(),
+                UniversityNames= _context.Universities.Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.UniversityName + " - " + u.City // Display company name and supervisor name
+                }).ToList(),
+                CompaniesNames= _context.Companies.Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.CompanyName + " - " + u.City // Display company name and supervisor name
+                }).ToList()
+
         };
 
             return View(viewModel);
@@ -54,7 +65,7 @@ namespace TrainingApp.Controllers
                                     .Select(u => new SelectListItem
                                     {
                                         Value = u.Id.ToString(),
-                                        Text = u.CompanyName + " - " + u.Name // Display company name and supervisor name
+                                        Text = u.CompanyID + " - " + u.Name // Display company name and supervisor name
                                     })
                                     .ToList()
             };
@@ -75,11 +86,11 @@ namespace TrainingApp.Controllers
                     // Retrieve the company name based on the selected supervisor ID
                     var companyName = context.Users
                                              .Where(u => u.Id == model.addTrainerViewModel.CompanySupervisorID)
-                                             .Select(u => u.CompanyName)
+                                             .Select(u => u.CompanyID)
                                              .FirstOrDefault();
                     var UniName = context.Users
                                  .Where(u => u.Id == model.addTrainerViewModel.UniversitySupervisorID)
-                                 .Select(u => u.UniversityName)
+                                 .Select(u => u.UniversityID)
                                  .FirstOrDefault();
                     var user = new Users
                     {
@@ -88,9 +99,9 @@ namespace TrainingApp.Controllers
                         Password = model.addTrainerViewModel.TrainerPassword,
                         UniversitySupervisorID = model.addTrainerViewModel.UniversitySupervisorID,
                         CompanySupervisorID = model.addTrainerViewModel.CompanySupervisorID,
-                        CompanyName = companyName, // Save the company name
+                        CompanyID = companyName, // Save the company name
                         Roles = UserRole.Trainer,
-                        UniversityName = UniName,
+                        UniversityID = UniName,
                     };
 
                     context.Users.Add(user);
@@ -118,7 +129,7 @@ namespace TrainingApp.Controllers
         }
         public string GetUniName(int id)
         {
-            return (from name in _context.Users where name.Id == id select name.UniversityName).FirstOrDefault();
+            return (from name in _context.Universities where name.Id == id select name.UniversityName).FirstOrDefault();
 
 
         }
@@ -138,7 +149,7 @@ namespace TrainingApp.Controllers
                         Name = model.addSupervisorViewModel.SupervisorName,
                         Email = model.addSupervisorViewModel.SupervisorEmail,
                         Password = model.addSupervisorViewModel.SupervisorPassword, // Ensure you are hashing passwords in a real application
-                        UniversityName = model.addSupervisorViewModel.UniversityName,
+                        UniversityID = model.addSupervisorViewModel.UniversityID,
                         Roles = UserRole.UniversitySupervisor
                     };
 
@@ -170,10 +181,11 @@ namespace TrainingApp.Controllers
             {
                 var user = new Users
                 {
-                    CompanyName = model.addCompanySupervisorViewModel.CompanyName,
+                    CompanyID = model.addCompanySupervisorViewModel.CompanyID,
                     Name = model.addCompanySupervisorViewModel.Name,
                     Email = model.addCompanySupervisorViewModel.Email,
                     Password = model.addCompanySupervisorViewModel.Password, // Ensure you hash the password
+                    
                     Roles = UserRole.CompanySupervisor
                 };
 
