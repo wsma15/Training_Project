@@ -191,3 +191,18 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:first
 div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:last-child {
   padding-right: 0;
 }
+div.dataTables_wrapper div.dataTables_filter input {
+    display: inline-block;
+    width: auto;
+    visibility: visible; /* Ensure the input field is visible */
+}
+
+div.dataTables_wrapper div.dataTables_paginate {
+    display: block; /* Ensure pagination controls are displayed */
+}
+
+    div.dataTables_wrapper div.dataTables_filter label,
+    div.dataTables_wrapper div.dataTables_paginate a {
+        display: inline-block;
+        margin: 0 2px; /* Ensure there's space around the buttons */
+    }

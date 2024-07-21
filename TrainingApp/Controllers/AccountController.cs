@@ -414,7 +414,7 @@ namespace TrainingApp.Controllers
                     {
                         var user = new Users
                         {
-                            Name = model.CompanySupervisorViewModel.FullName,
+                            Name = model.CompanySupervisorViewModel.Name,
                             Email = model.CompanySupervisorViewModel.Email,
                             Password = model.CompanySupervisorViewModel.Password,
                             CompanyName = model.CompanySupervisorViewModel.CompanyName,

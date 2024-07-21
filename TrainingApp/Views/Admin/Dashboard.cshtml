@@ -104,20 +104,20 @@
                     </thead>
                     <tbody>
                         @if (Model.UniversitySupervisors != null)
-                        {                
-                            foreach (var supervisor in Model.UniversitySupervisors)
                         {
-                            <tr>
-                                <td>@supervisor.Id</td>
-                                <td>@supervisor.Name</td>
-                                <td>@supervisor.Email</td>
-                                <td>@supervisor.UniversityName</td>
-                                <td class="text-end">
-                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        }
+                            foreach (var supervisor in Model.UniversitySupervisors)
+                            {
+                                <tr>
+                                    <td>@supervisor.Id</td>
+                                    <td>@supervisor.Name</td>
+                                    <td>@supervisor.Email</td>
+                                    <td>@supervisor.UniversityName</td>
+                                    <td class="text-end">
+                                        <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                        <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -177,7 +177,7 @@
                                                 </div>
                                             </div>
 
-                                      
+
                                             <div class="modal-footer">
                                                 <div class="form-group">
                                                     <div class="col-md-offset-2 col-md-10">
@@ -328,175 +328,102 @@
     </div>
 
 
-<div class="card mb-4">
-    <div class="card-header">
-        <h3>New Users</h3>
-    </div>
-    <div class="card-body">
-        <table class="table table-hover" id="newUsersTable">
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>University</th>
-                    <th>University Supervisor</th>
-                    <th>Company</th>
-                    <th>Company Supervisor</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var student in Model.NewUsers)
-                {
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>New Users</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover" id="newUsersTable">
+                <thead>
                     <tr>
-                        <td>@student.Id</td>
-                        <td>@student.Name</td>
-                        <td>@student.Email</td>
-                        <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)student.UniversitySupervisorID))</td>
-                        <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
-                        <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)student.CompanySupervisorID))</td>
-                        <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
-                        <td class="text-end">
-                            <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                            <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
-                        </td>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>University</th>
+                        <th>University Supervisor</th>
+                        <th>Company</th>
+                        <th>Company Supervisor</th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model.NewUsers)
+                    {
+                        <tr>
+                            <td>@student.Id</td>
+                            <td>@student.Name</td>
+                            <td>@student.Email</td>
+                            <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)student.UniversitySupervisorID))</td>
+                            <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
+                            <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)student.CompanySupervisorID))</td>
+                            <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
+                            <td class="text-end">
+                                <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-    </div>
 
-<script src="~/vendor/jquery/jquery.min.js"></script>
-<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="~/vendor/datatables/datatables.min.js"></script>
-<script src="~/js/initiate-datatables.js"></script>
-<script>
-    $(document).ready(function () {
-    $('#addUniversitySupervisorModal').on('shown.bs.modal', function () {
-        $.ajax({
-            url: '@Url.Action("AddUniversitySupervisor", "Admin")',
-            type: 'GET',
-            success: function (data) {
-                $('#addUniversitySupervisorModal .modal-body').html(data);
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/datatables/datatables.min.js"></script>
+    <script src="~/js/initiate-datatables.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval.unobtrusive")
+
+    <script>
+        (function () {
+            'use strict';
+
+            // Function to initialize DataTable
+            function initializeDataTable(tableId) {
+                $(tableId).DataTable({
+                    responsive: true,
+                    pageLength: 20,
+                    lengthChange: false,
+                    searching: true,
+                    ordering: true
+                });
             }
-        });
-    });
 
-    $('#addUniversitySupervisorModal').on('submit', '#addUniversitySupervisorForm', function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (response) {
-                if (response.success) {
-                    $('#addUniversitySupervisorModal').modal('hide');
-                    location.reload(); // Or update the table dynamically
-                } else {
-                    $('#addUniversitySupervisorModal .modal-body').html(response);
-                }
-            },
-            error: function () {
-                alert('An error occurred.');
+            // Initialize DataTables
+            initializeDataTable('#universitySupervisorsTable');
+            initializeDataTable('#companySupervisorsTable');
+            initializeDataTable('#trainersTable');
+            initializeDataTable('#newUsersTable');
+
+            // Function to handle form submission
+            function handleFormSubmission(modalClass, formClass) {
+                $(document).on('submit', formClass, function (e) {
+                    e.preventDefault();
+                    var form = $(this);
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function (response) {
+                            if (response.success) {
+                                $(modalClass).modal('hide');
+                                location.reload(); // Or update the table dynamically
+                            } else {
+                                $(modalClass + ' .modal-body').html(response);
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred.');
+                        }
+                    });
+                });
             }
-        });
-    });
 
-    $('#addCompanySupervisorModal').on('shown.bs.modal', function () {
-        $.ajax({
-            url: '@Url.Action("AddCompanySupervisor", "Admin")',
-            type: 'GET',
-            success: function (data) {
-                $('#addCompanySupervisorModal .modal-body').html(data);
-            }
-        });
-    });
-
-    $('#addCompanySupervisorModal').on('submit', '#addCompanySupervisorForm', function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (response) {
-                if (response.success) {
-                    $('#addCompanySupervisorModal').modal('hide');
-                    location.reload(); // Or update the table dynamically
-                } else {
-                    $('#addCompanySupervisorModal .modal-body').html(response);
-                }
-            },
-            error: function () {
-                alert('An error occurred.');
-            }
-        });
-    });
-});
-
-    $(document).ready(function () {
-    // Add University Supervisor
-    $('#addUniversitySupervisorModal').on('shown.bs.modal', function () {
-        $.ajax({
-            url: '@Url.Action("AddUniversitySupervisor", "Admin")',
-            type: 'GET',
-            success: function (data) {
-                $('#addUniversitySupervisorModal .modal-body').html(data);
-            }
-        });
-    });
-
-    $('#addUniversitySupervisorModal form').on('submit', function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (data) {
-                $('#addUniversitySupervisorModal .modal-body').html(data);
-            }
-        });
-    });
-});
-
-    (function () {
-        'use strict';
-
-        $('#universitySupervisorsTable').DataTable({
-            responsive: true,
-            pageLength: 20,
-            lengthChange: false,
-            searching: true,
-            ordering: true
-        });
-
-        $('#companySupervisorsTable').DataTable({
-            responsive: true,
-            pageLength: 20,
-            lengthChange: false,
-            searching: true,
-            ordering: true
-        });
-
-        $('#trainersTable').DataTable({
-            responsive: true,
-            pageLength: 20,
-            lengthChange: false,
-            searching: true,
-            ordering: true
-        });
-
-        $('#newUsersTable').DataTable({
-            responsive: true,
-            pageLength: 20,
-            lengthChange: false,
-            searching: true,
-            ordering: true
-        });
-
-
-    })();
-</script>
+            // Initialize form handling for different modals
+            handleFormSubmission('.addUniversitySupervisorModal', '.addUniversitySupervisorForm');
+            handleFormSubmission('.addCompanySupervisorModal', '.addCompanySupervisorForm');
+        })();
+    </script>
 </body>
