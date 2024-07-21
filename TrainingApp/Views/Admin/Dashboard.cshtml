@@ -15,33 +15,33 @@
     <link href="~/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
     <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/vendor/datatables/DataTables-1.10.25/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <link href="~/vendor/datatables/DataTables-1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/vendor/datatables/DataTables-1.10.25/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
     <div class="container mt-4">
         <h1 class="mb-4">Admin Dashboard</h1>
-
-
         <div class="card mb-4">
             <div class="card-header">
                 <h3>University Supervisors</h3>
-            <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add University Supervisor</button>
+                <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#addUniversitySupervisorModal">Add University Supervisor</button>
 
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="addUniversitySupervisorModal" tabindex="-1" aria-labelledby="addUniversitySupervisorModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Add University Supervisor</h5>
+                                <h5 class="modal-title" id="addUniversitySupervisorModalLabel">Add University Supervisor</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div>
 
 
-                                    @using (Html.BeginForm("AddUniversitySupervisor", "Admin", FormMethod.Post))
+                                    @using (Html.BeginForm("AddUniversitySupervisor", "Admin", FormMethod.Post, new { id = "addUniversitySupervisorForm" }))
                                     {
                                         @Html.AntiForgeryToken()
 
-                                        <div class="form-horizontal">
+                                        <div class="form">
                                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                             <div class="form-group">
@@ -86,10 +86,6 @@
                                 </div>
 
                             </div>
-                            <div class="modal-footer">
-
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,7 +103,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var supervisor in Model.UniversitySupervisors)
+                        @if (Model.UniversitySupervisors != null)
+                        {                
+                            foreach (var supervisor in Model.UniversitySupervisors)
                         {
                             <tr>
                                 <td>@supervisor.Id</td>
@@ -120,6 +118,7 @@
                                 </td>
                             </tr>
                         }
+                        }
                     </tbody>
                 </table>
             </div>
@@ -128,7 +127,73 @@
         <div class="card mb-4">
             <div class="card-header">
                 <h3>Company Supervisors</h3>
-                @Html.ActionLink("Add Company Supervisor", "AddCompanySupervisor", "Admin", new { @class = "btn btn-success float-end" })
+                <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#addCompanySupervisorModal">Add Company Supervisor</button>
+                <div class="modal fade" id="addCompanySupervisorModal" tabindex="-1" aria-labelledby="addCompanySupervisorModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addCompanySupervisorModalLabel">Add Company Supervisor</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+
+                                    @using (Html.BeginForm("AddCompanySupervisor", "Admin", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.CompanyName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Name, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Email, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.PasswordFor(model => model.addCompanySupervisorViewModel.Password, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Password, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                      
+                                            <div class="modal-footer">
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-2 col-md-10">
+                                                        <input type="submit" value="Add Supervisor" class="btn btn-default" />
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-hover" id="companySupervisorsTable">
@@ -163,74 +228,93 @@
         <div class="card mb-4">
             <div class="card-header">
                 <h3>Trainers</h3>
-                @Html.ActionLink("Add Student", "AddStudent", "Admin", new { @class = "btn btn-success float-end" })
+                <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#addTrainerModal">Add Trainer</button>
+                <div class="modal fade" id="addTrainerModal" tabindex="-1" aria-labelledby="addTrainerModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addTrainerModalLabel">Add Trainer</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+
+                                    @using (Html.BeginForm("AddStudent", "Admin", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addTrainerViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addTrainerViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.CompanyName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addTrainerViewModel.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addTrainerViewModel.TrainerName, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addTrainerViewModel.TrainerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.addTrainerViewModel.TrainerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerEmail, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.addTrainerViewModel.TrainerPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-10">
+                                                    @Html.PasswordFor(model => model.addTrainerViewModel.TrainerPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerPassword, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-md-offset-2 col-md-10">
+                                                    <input type="submit" value="Add Trainer" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-hover" id="trainersTable">
                     <thead>
                         <tr>
-                            <th>Student ID</th>
+                            <th>Trainer ID</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>University</th>
-                            <th>University Supervisor</th>
                             <th>Company</th>
-                            <th>Company Supervisor</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var student in Model.Trainers)
+                        @foreach (var trainer in Model.Trainers)
                         {
                             <tr>
-                                <td>@student.Id</td>
-                                <td>@student.Name</td>
-                                <td>@student.Email</td>
-                                <td>@(Model.GetUniName((int)student.UniversitySupervisorID))</td>
-                                <td>@(Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
-                                <td>@(Model.GetCompanyName((int)student.CompanySupervisorID))</td>
-                                <td>@(Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
-                                <td class="text-end">
-                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3>New Users</h3>
-                @Html.ActionLink("Add Student", "AddStudent", "Admin", new { @class = "btn btn-success float-end" })
-            </div>
-            <div class="card-body">
-                <table class="table table-hover" id="newUsersTable">
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>University</th>
-                            <th>University Supervisor</th>
-                            <th>Company</th>
-                            <th>Company Supervisor</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var student in Model.NewUsers)
-                        {
-                            <tr>
-                                <td>@student.Id</td>
-                                <td>@student.Name</td>
-                                <td>@student.Email</td>
-                                <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)student.UniversitySupervisorID))</td>
-                                <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
-                                <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)student.CompanySupervisorID))</td>
-                                <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
+                                <td>@trainer.Id</td>
+                                <td>@trainer.Name</td>
+                                <td>@trainer.Email</td>
+                                <td>@trainer.CompanyName</td>
                                 <td class="text-end">
                                     <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
                                     <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -243,45 +327,176 @@
         </div>
     </div>
 
-    <script src="~/vendor/jquery/jquery.min.js"></script>
-    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/vendor/datatables/datatables.min.js"></script>
-    <script src="~/js/initiate-datatables.js"></script>
-    <script>
-        (function () {
-            'use strict';
 
-            $('#universitySupervisorsTable').DataTable({
-                responsive: true,
-                pageLength: 20,
-                lengthChange: false,
-                searching: true,
-                ordering: true
-            });
+<div class="card mb-4">
+    <div class="card-header">
+        <h3>New Users</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover" id="newUsersTable">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>University</th>
+                    <th>University Supervisor</th>
+                    <th>Company</th>
+                    <th>Company Supervisor</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.NewUsers)
+                {
+                    <tr>
+                        <td>@student.Id</td>
+                        <td>@student.Name</td>
+                        <td>@student.Email</td>
+                        <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)student.UniversitySupervisorID))</td>
+                        <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
+                        <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)student.CompanySupervisorID))</td>
+                        <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
+                        <td class="text-end">
+                            <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                            <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
 
-            $('#companySupervisorsTable').DataTable({
-                responsive: true,
-                pageLength: 20,
-                lengthChange: false,
-                searching: true,
-                ordering: true
-            });
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/vendor/datatables/datatables.min.js"></script>
+<script src="~/js/initiate-datatables.js"></script>
+<script>
+    $(document).ready(function () {
+    $('#addUniversitySupervisorModal').on('shown.bs.modal', function () {
+        $.ajax({
+            url: '@Url.Action("AddUniversitySupervisor", "Admin")',
+            type: 'GET',
+            success: function (data) {
+                $('#addUniversitySupervisorModal .modal-body').html(data);
+            }
+        });
+    });
 
-            $('#trainersTable').DataTable({
-                responsive: true,
-                pageLength: 20,
-                lengthChange: false,
-                searching: true,
-                ordering: true
-            });
+    $('#addUniversitySupervisorModal').on('submit', '#addUniversitySupervisorForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.success) {
+                    $('#addUniversitySupervisorModal').modal('hide');
+                    location.reload(); // Or update the table dynamically
+                } else {
+                    $('#addUniversitySupervisorModal .modal-body').html(response);
+                }
+            },
+            error: function () {
+                alert('An error occurred.');
+            }
+        });
+    });
 
-            $('#newUsersTable').DataTable({
-                responsive: true,
-                pageLength: 20,
-                lengthChange: false,
-                searching: true,
-                ordering: true
-            });
-        })();
-    </script>
+    $('#addCompanySupervisorModal').on('shown.bs.modal', function () {
+        $.ajax({
+            url: '@Url.Action("AddCompanySupervisor", "Admin")',
+            type: 'GET',
+            success: function (data) {
+                $('#addCompanySupervisorModal .modal-body').html(data);
+            }
+        });
+    });
+
+    $('#addCompanySupervisorModal').on('submit', '#addCompanySupervisorForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.success) {
+                    $('#addCompanySupervisorModal').modal('hide');
+                    location.reload(); // Or update the table dynamically
+                } else {
+                    $('#addCompanySupervisorModal .modal-body').html(response);
+                }
+            },
+            error: function () {
+                alert('An error occurred.');
+            }
+        });
+    });
+});
+
+    $(document).ready(function () {
+    // Add University Supervisor
+    $('#addUniversitySupervisorModal').on('shown.bs.modal', function () {
+        $.ajax({
+            url: '@Url.Action("AddUniversitySupervisor", "Admin")',
+            type: 'GET',
+            success: function (data) {
+                $('#addUniversitySupervisorModal .modal-body').html(data);
+            }
+        });
+    });
+
+    $('#addUniversitySupervisorModal form').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (data) {
+                $('#addUniversitySupervisorModal .modal-body').html(data);
+            }
+        });
+    });
+});
+
+    (function () {
+        'use strict';
+
+        $('#universitySupervisorsTable').DataTable({
+            responsive: true,
+            pageLength: 20,
+            lengthChange: false,
+            searching: true,
+            ordering: true
+        });
+
+        $('#companySupervisorsTable').DataTable({
+            responsive: true,
+            pageLength: 20,
+            lengthChange: false,
+            searching: true,
+            ordering: true
+        });
+
+        $('#trainersTable').DataTable({
+            responsive: true,
+            pageLength: 20,
+            lengthChange: false,
+            searching: true,
+            ordering: true
+        });
+
+        $('#newUsersTable').DataTable({
+            responsive: true,
+            pageLength: 20,
+            lengthChange: false,
+            searching: true,
+            ordering: true
+        });
+
+
+    })();
+</script>
 </body>

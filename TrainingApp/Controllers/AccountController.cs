@@ -470,7 +470,7 @@ $"- **Password:** {user.Password}\n\n" +
                     {
                         var user = new Users
                         {
-                            Name = model.UniversitySupervisorViewModel.FullName,
+                            Name = model.UniversitySupervisorViewModel.SupervisorName,
                             Email = model.UniversitySupervisorViewModel.SupervisorEmail,
                             Password = model.UniversitySupervisorViewModel.SupervisorPassword,
                             UniversityName = model.UniversitySupervisorViewModel.UniversityName,

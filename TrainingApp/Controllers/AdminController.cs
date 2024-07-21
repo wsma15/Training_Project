@@ -65,7 +65,7 @@ namespace TrainingApp.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public ActionResult AddStudent(AddTrainerViewModel model)
+        public ActionResult AddStudent(DashboardViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -74,20 +74,20 @@ namespace TrainingApp.Controllers
                 {
                     // Retrieve the company name based on the selected supervisor ID
                     var companyName = context.Users
-                                             .Where(u => u.Id == model.CompanySupervisorID)
+                                             .Where(u => u.Id == model.addTrainerViewModel.CompanySupervisorID)
                                              .Select(u => u.CompanyName)
                                              .FirstOrDefault();
                     var UniName = context.Users
-                                 .Where(u => u.Id == model.UniversitySupervisorID)
+                                 .Where(u => u.Id == model.addTrainerViewModel.UniversitySupervisorID)
                                  .Select(u => u.UniversityName)
                                  .FirstOrDefault();
                     var user = new Users
                     {
-                        Name = model.TrainerName,
-                        Email = model.TrainerEmail,
-                        Password = model.TrainerPassword,
-                        UniversitySupervisorID = model.UniversitySupervisorID,
-                        CompanySupervisorID = model.CompanySupervisorID,
+                        Name = model.addTrainerViewModel.TrainerName,
+                        Email = model.addTrainerViewModel.TrainerEmail,
+                        Password = model.addTrainerViewModel.TrainerPassword,
+                        UniversitySupervisorID = model.addTrainerViewModel.UniversitySupervisorID,
+                        CompanySupervisorID = model.addTrainerViewModel.CompanySupervisorID,
                         CompanyName = companyName, // Save the company name
                         Roles = UserRole.Trainer,
                         UniversityName = UniName,
@@ -95,7 +95,7 @@ namespace TrainingApp.Controllers
 
                     context.Users.Add(user);
                     context.SaveChanges();
-                    MailHelper.SendEmail(
+/*                    MailHelper.SendEmail(
         user.Email,
         "Welcome to the Training Management System",
         $"Dear {user.Name},\n\n" +
@@ -107,7 +107,7 @@ namespace TrainingApp.Controllers
         "Best regards,\n" +
         "The TMS Team"
     );
-                }
+*/                }
 
                 // Redirect to the admin dashboard after adding the student
                 return RedirectToAction("Dashboard", "Admin");
@@ -122,98 +122,69 @@ namespace TrainingApp.Controllers
 
 
         }
-        public ActionResult AddUniversitySupervisor()
-        {
-            return View();
-        }
-        public ActionResult AddSupervisor()
-        {
-            return View();
-        }
-
+  
         [HttpPost]
+       // [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-
         public ActionResult AddUniversitySupervisor(DashboardViewModel model)
         {
-           // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                // Perform actions to add supervisor to database
                 using (var context = new TrainingAppDBContext())
                 {
-                    // Create a new user instance
                     var newUser = new Users
                     {
                         Name = model.addSupervisorViewModel.SupervisorName,
                         Email = model.addSupervisorViewModel.SupervisorEmail,
                         Password = model.addSupervisorViewModel.SupervisorPassword, // Ensure you are hashing passwords in a real application
-                        UniversityName = model.addSupervisorViewModel.UniversityName, // Assuming you have this property in your Users model
-                        Roles = UserRole.UniversitySupervisor // Adjust roles as per your application logic
+                        UniversityName = model.addSupervisorViewModel.UniversityName,
+                        Roles = UserRole.UniversitySupervisor
                     };
 
-                    // Add the user to the database and save changes
                     context.Users.Add(newUser);
                     context.SaveChanges();
 
-                    // Retrieve the ID of the newly added user
-  //                  int newUserId = newUser.Id;
-
-                    // Send the welcome email with the user ID and password
-/*                   MailHelper.SendEmail(
-                        model.SupervisorEmail,
-                        "Welcome to the Training Management System",
-                        $"Dear {model.SupervisorName},\n\n" +
-                        "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
-                        "Here are your account details:\n" +
-                        $"- **User ID:** {newUserId}\n" +
-                        $"- **Password:** {model.SupervisorPassword}\n\n" +
-                        "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
-                        "Best regards,\n" +
-                        "The TMS Team"
-                    );
-*/                }
-
-                // Redirect to appropriate action after adding supervisor
-                return RedirectToAction("Dashboard", "Admin");
+                    return RedirectToAction("Dashboard", "Admin");
+                }
             }
+            AddSupervisorViewModel mod = model.addSupervisorViewModel;
 
             // If model state is not valid, return view with errors
-            return View(model);
+            return View(model.addSupervisorViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin")]
-
         public ActionResult AddCompanySupervisor()
         {
+            // Return the view with the appropriate view model
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCompanySupervisor(AddCompanySupervisorViewModel model)
+        [Authorize(Roles = "Admin")]
+        public ActionResult AddCompanySupervisor(DashboardViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Map ViewModel data to the User entity
                 var user = new Users
                 {
-                    CompanyName = model.CompanyName,
-                    Name = model.Name,
-                    Email = model.Email,
-                    Password = model.Password,
+                    CompanyName = model.addCompanySupervisorViewModel.CompanyName,
+                    Name = model.addCompanySupervisorViewModel.Name,
+                    Email = model.addCompanySupervisorViewModel.Email,
+                    Password = model.addCompanySupervisorViewModel.Password, // Ensure you hash the password
                     Roles = UserRole.CompanySupervisor
                 };
 
-                // Save to database
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
                 return RedirectToAction("Dashboard");
             }
 
-            // If model state is not valid, return the view with errors
-            return View(model);
+            // Return the view with the errors
+            return View();
         }
 
         protected override void Dispose(bool disposing)

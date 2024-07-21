@@ -28,45 +28,45 @@ namespace TrainingApp.ViewModels
         public string Password { get; set; }
     }
 
-    public class AddSupervisorViewModel
-    {
-        [Required(ErrorMessage = "Full Name is Required")]
-        public string FullName { get; set; }
-        [Required(ErrorMessage = "Supervisor Name is required")]
-        public string SupervisorName { get; set; }
+public class AddSupervisorViewModel
+{
+    [Required(ErrorMessage = "University Name is required")]
+    public string UniversityName { get; set; }
 
-        [Required(ErrorMessage = "Supervisor Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        public string SupervisorEmail { get; set; }
+    [Required(ErrorMessage = "Supervisor Name is required")]
+    public string SupervisorName { get; set; }
 
-        [Required(ErrorMessage = "Supervisor Password is required")]
-        [DataType(DataType.Password)]
-        public string SupervisorPassword { get; set; }
+    [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Invalid email address")]
+    public string SupervisorEmail { get; set; }
 
-        [Required(ErrorMessage = "University Name is required")]
-        public string UniversityName { get; set; }
-    }
+    [Required(ErrorMessage = "Password is required")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long")]
+    public string SupervisorPassword { get; set; }
+}
 
     public class AddTrainerViewModel
     {
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Trainer Name is required.")]
+        [StringLength(50, ErrorMessage = "Trainer Name cannot exceed 50 characters.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Trainer Name can only contain letters and spaces.")]
         public string TrainerName { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        [EmailAddress]
+        [Required(ErrorMessage = "Trainer Email is required.")]
+        [StringLength(50, ErrorMessage = "Trainer Email cannot exceed 50 characters.")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address.")]
         public string TrainerEmail { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Trainer Password is required.")]
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 50 characters.")]
         [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$", ErrorMessage = "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
         public string TrainerPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "University Supervisor is required.")]
         public int UniversitySupervisorID { get; set; }
-       
-        [Required]
+
+        [Required(ErrorMessage = "Company Supervisor is required.")]
         public int CompanySupervisorID { get; set; }
 
         public IEnumerable<SelectListItem> UniversitySupervisors { get; set; }
@@ -80,50 +80,41 @@ namespace TrainingApp.ViewModels
         public List<Users> UniversitySupervisors { get; set; }
         public List<Users> CompanySupervisors { get; set; }
         public List<Users> NewUsers { get; set; }
+
         public AddSupervisorViewModel addSupervisorViewModel { get; set; }
-        private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
+        public AddCompanySupervisorViewModel addCompanySupervisorViewModel { get; set; }
+        public AddTrainerViewModel addTrainerViewModel { get; set; }
+
+        private readonly TrainingAppDBContext _context;
+
+        public DashboardViewModel()
+        {
+            _context = new TrainingAppDBContext();
+        }
 
         public string GetUniName(int supervisorId)
         {
-            // Assuming you have a method to retrieve supervisor details from the database
-            string supervisor = (from name in _context.Users where name.Roles == UserRole.UniversitySupervisor && name.Id == supervisorId select name.UniversityName).FirstOrDefault();
+            string supervisor = (from name in _context.Users
+                                 where name.Roles == UserRole.UniversitySupervisor && name.Id == supervisorId
+                                 select name.UniversityName).FirstOrDefault();
 
-            if (supervisor == null)
-            {
-                return "University not found"; // Or handle the case when supervisor is not found
-            }
-            else
-            {
-                return supervisor;
-            }
+            return supervisor ?? "University not found";
         }
+
         public string GetCompanyName(int supervisorId)
         {
-            // Assuming you have a method to retrieve supervisor details from the database
-            string supervisor = (from name in _context.Users where name.Roles == UserRole.CompanySupervisor && name.Id == supervisorId select name.CompanyName).FirstOrDefault();
+            string supervisor = (from name in _context.Users
+                                 where name.Roles == UserRole.CompanySupervisor && name.Id == supervisorId
+                                 select name.CompanyName).FirstOrDefault();
 
-            if (supervisor != null)
-            {
-                return supervisor;
-            }
-            else
-            {
-                return "Company not found"; // Or handle the case when supervisor is not found
-            }
+            return supervisor ?? "Company not found";
         }
+
         public string GetSupervisorName(int supervisorId)
         {
-            // Assuming you have a method to retrieve supervisor details from the database
             var supervisor = _context.Users.FirstOrDefault(s => s.Id == supervisorId);
 
-            if (supervisor != null)
-            {
-                return supervisor.Name;
-            }
-            else
-            {
-                return "Supervisor not found"; // Or handle the case when supervisor is not found
-            }
+            return supervisor?.Name ?? "Supervisor not found";
         }
     }
     public class ChatMessageViewModel

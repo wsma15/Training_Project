@@ -751,7 +751,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Admin\AddStudent.cshtml" />
-    <Content Include="Views\Admin\AddUniversitySupervisor.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Trainers\Dashboard.cshtml" />
     <Content Include="Views\Trainers\AddReport.cshtml" />
