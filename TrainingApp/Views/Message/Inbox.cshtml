@@ -9,27 +9,36 @@
 
 <head>
     <link href="~/css/styleChat1.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"></script>
     <script src="~/js/script.js"></script>
 </head>
 
-<div class="container">
+<div class="container-fluid mt-4">
     <div class="row">
         <!-- Left Panel: List of Unique Users -->
-        <div class="col-md-4 people-list" id="people-list">
-            <div class="search">
-                <input type="text" placeholder="Search" />
-                <i class="fa fa-search"></i>
+        <div class="col-md-4 people-list bg-light p-3 rounded-left" id="people-list">
+            <div class="search mb-3">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search users" />
+                    <div class="input-group-append">
+                        <button id="searchButton" class="btn btn-outline-secondary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <ul class="list">
+            <ul class="list-unstyled" id="userList">
                 @foreach (var user in Model)
                 {
-                    <li class="clearfix user-link" data-senderid="@user.Id">
-                        @*<img src="~/images/@user.Avatar" alt="avatar" />
-                        *@<div class="about">
-                            <div class="name">@user.Name</div>
-                            <div class="status">
-                                <i class="fa fa-circle @(user.IsOnline ? "online" : "offline")"></i> @(user.IsOnline ? "Online" : "Offline")
+                    <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id">
+                        @*<img src="~/images/@user.Avatar" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />*@
+                        <div class="about">
+                            <div class="name font-weight-bold">@user.Name</div>
+                            <div class="status text-muted">
+                                <i class="fa fa-circle @(user.IsOnline ? "text-success" : "text-danger")"></i> @(user.IsOnline ? "Online" : "Offline")
                             </div>
                         </div>
                     </li>
@@ -38,17 +47,17 @@
         </div>
 
         <!-- Right Panel: Chat History and Message Box -->
-        <div class="col-md-8 chat">
-            <div class="chat-header clearfix">
-@*                <img src="~/images/default-avatar.jpg" alt="avatar" id="chat-avatar" />
-*@                <div class="chat-about">
-                    <div class="chat-with">Chat with <span id="chat-user-name">Select a user</span></div>
-                    <div class="chat-num-messages">No messages yet</div>
+        <div class="col-md-8 chat bg-white p-3 rounded-right">
+            <div class="chat-header clearfix border-bottom pb-2 mb-3">
+                @*<img src="~/images/default-avatar.jpg" alt="avatar" id="chat-avatar" class="rounded-circle mr-2" width="50" height="50" />*@
+                <div class="chat-about">
+                    <h6 class="mb-0">Chat with <span id="chat-user-name" class="font-weight-bold">Select a user</span></h6>
+                    <small class="text-muted">No messages yet</small>
                 </div>
-                <i class="fa fa-star"></i>
+                <i class="fa fa-star float-right mt-2"></i>
             </div>
 
-            <div class="chat-history" id="chat-messages">
+            <div class="chat-history overflow-auto mb-3" id="chat-messages" style="height: 400px;">
                 <!-- Chat messages will be loaded here via AJAX -->
             </div>
 
@@ -57,8 +66,12 @@
                 {
                     @Html.AntiForgeryToken()
                     <input type="hidden" id="receiverId" name="ReceiverId" />
-                    <textarea name="MessageText" id="messageText" placeholder="Type your message" rows="3"></textarea>
-                    <button type="submit" class="btn-success">Send</button>
+                    <div class="input-group">
+                        <textarea name="MessageText" id="messageText" class="form-control" placeholder="Type your message" rows="1"></textarea>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-success">Send</button>
+                        </div>
+                    </div>
                 }
             </div>
         </div>
@@ -124,6 +137,7 @@ $(document).ready(function() {
         }
     });
 
+    // Function to format timestamps
     function formatTimestamp(timestamp) {
         var now = moment();
         var messageTime = moment.utc(timestamp).local();
@@ -136,12 +150,47 @@ $(document).ready(function() {
         }
     }
 
+    // Start polling for new messages
     function startPolling() {
         setInterval(function() {
             if (receiverId) {
                 loadChatHistory(receiverId);
             }
         }, 5000);
+    }
+
+    // Search users based on input
+    $('#searchButton').click(async function() {
+        const query = $('#searchInput').val().trim();
+        searchUsers(query);
+    });
+
+    // Also trigger search on input change for a better UX
+    $('#searchInput').on('input', function() {
+        const query = $(this).val().trim();
+        searchUsers(query);
+    });
+
+    async function searchUsers(query) {
+        try {
+            const response = await fetch('@Url.Action("SearchUsers", "Message")?query=' + encodeURIComponent(query));
+            if (!response.ok) throw new Error('Network response was not ok');
+            const users = await response.json();
+            const userList = $('#userList');
+            userList.empty();
+            users.forEach(user => {
+                userList.append(`<li class="clearfix user-link p-2 border-bottom" data-senderid="${user.Id}">
+                    <div class="about">
+                        <div class="name font-weight-bold">${user.Name}</div>
+                        <div class="status text-muted">
+                            <i class="fa fa-circle ${user.IsOnline ? "text-success" : "text-danger"}"></i> ${user.IsOnline ? "Online" : "Offline"}
+                        </div>
+                    </div>
+                </li>`);
+            });
+        } catch (error) {
+            console.error('Error searching users:', error);
+        }
     }
 });
 </script>

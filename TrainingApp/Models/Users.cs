@@ -31,6 +31,7 @@ namespace TrainingApp.Models
         public int CompanyID { get; set; }
 
         public UserRole Roles { get; set; }
+
     }
 
     public enum UserRole

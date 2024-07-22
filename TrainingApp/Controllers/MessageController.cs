@@ -30,6 +30,27 @@ namespace TrainingApp.Controllers
 
             return Json(messages, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult SearchUsers(string query)
+        {
+            //if (User.IsInRole("Admin"))
+
+            // Retrieve the current user's ID
+            var currentUserId = User.Identity.GetUserId<int>();
+
+            // Use the current user's ID in the LINQ query
+            var users = _context.Users
+                .Where(u => u.Name.Contains(query) && u.Id != currentUserId)
+                .Select(u => new
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    IsOnline = false,
+                    Avatar = "" //u.Avatar // Make sure to include avatar or other necessary fields
+                })
+                .ToList();
+            return Json(users, JsonRequestBehavior.AllowGet);
+            }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -126,7 +147,7 @@ namespace TrainingApp.Controllers
                                   .Select(user => new UsersPanelViewModels
                                   {
                                       Id = user.Id,
-                                      Name = user.Name
+                                      Name = $"({user.Name}) ({user.Roles})"
                                   })
                                   .ToList();
                 return View(supervisors);
@@ -210,16 +231,22 @@ if (userRole == UserRole.UniversitySupervisor)
             if (userRole == UserRole.Admin)
             {
 
-                var Users =
-           _context.Users.
-           Where(user => user.Id != userId)
-                             .Select(user => new UsersPanelViewModels
-                             {
-                                 Id = user.Id,
-                                 Name = user.Name,
-                                 //     CompId = user.CompanySupervisorID,
-                             }).ToList();
-                return View(Users);
+                var users = _context.Users
+                    .Where(user => user.Id != userId)
+                    .Select(user => new
+                    {
+                        user.Id,
+                        user.Name,
+                        user.Roles
+                    })
+                    .ToList()
+                    .Select(user => new UsersPanelViewModels
+                    {
+                        Id = user.Id,
+                        Name = $"{user.Name} ({user.Roles})"
+                        // CompId = user.CompanySupervisorID,
+                    }).ToList();
+                return View(users);
             }
 
             else
