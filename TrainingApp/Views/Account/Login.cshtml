@@ -11,39 +11,82 @@
     <link href="~/style/style.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="main">
-        <input type="checkbox" id="chk" aria-hidden="true">
+    <style>
+        .text-danger {
+            font-size: 0.8rem; /* Adjust the font size as needed */
+            color: #dc3545; /* Ensure the color matches your design */
+        }
+    </style>
 
-        <div class="signup">
-            @using (Html.BeginForm("RegisterNewUser", "Account", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <label for="chk" aria-hidden="true">Sign up</label>
+    <main>
+        <div class="main">
+            <input type="checkbox" id="chk" aria-hidden="true">
 
-                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Full Name" })
+            <div class="signup">
+                @using (Html.BeginForm("RegisterNewUser", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <label for="chk" aria-hidden="true">Sign up</label>
 
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Email Address" })
+                    @Html.TextBoxFor(m => m.FullName, new
+                    {
+                        @class = "form-control",
+                        style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;",
+                        placeholder = "Full Name"
+                    })
+                    @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
 
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Password" })
+                    @Html.TextBoxFor(m => m.Email, new
+                    {
+                        @class = "form-control",
+                        style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;",
+                        placeholder = "Email Address"
+                    })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
 
-                <button>Sign up</button>
-            }
-        </div>
+                    @Html.PasswordFor(m => m.Password, new
+                    {
+                        @class = "form-control",
+                        style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;",
+                        id = "RegisterPassword",
+                        placeholder = "Password"
+                    })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
 
-        <div class="login">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
-            {
-                <label for="chk" aria-hidden="true">Login</label>
-                @Html.AntiForgeryToken()
-                @Html.TextBoxFor(m => m.UserId, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "ID" })
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control", style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;", placeholder = "Password" })
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <button type="submit" value="Log in">Log in</button>
-            }
-        </div>
-    </div>
+                    <button type="submit">Sign up</button>
+                }
+            </div>
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+            <div class="login">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                {
+                    <label for="chk" aria-hidden="true">Login</label>
+                    @Html.AntiForgeryToken()
+
+                    @Html.TextBoxFor(m => m.UserId, new
+                    {
+                        @class = "form-control",
+                        style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;",
+                        placeholder = "ID"
+                    })
+                    @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+
+                    @Html.PasswordFor(m => m.Password, new
+                    {
+                        @class = "form-control",
+                        style = "width: 60%; height: 20px; background: #e0dede; justify-content: center; display: flex; margin: 20px auto; padding: 10px; border: none; outline: none; border-radius: 5px;",
+                        id = "LoginPassword",
+                        placeholder = "Password"
+                    })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <button type="submit" value="Log in">Log in</button>
+                }
+            </div>
+
+            </div>
+    </main>
 </body>

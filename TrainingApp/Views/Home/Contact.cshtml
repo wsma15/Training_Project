@@ -3,18 +3,30 @@
     ViewBag.Message = "Get in touch with us.";
 }
 <main aria-labelledby="title" class="container mt-5">
-    <h2 id="title">@ViewBag.Title</h2>
-    <h3>@ViewBag.Message</h3>
+    <h2 id="title" class="display-4 text-center mb-4">@ViewBag.Title</h2>
+    <p class="text-center mb-5">@ViewBag.Message</p>
 
-    <address>
-        One University Avenue<br />
-        University Town, UT 12345<br />
-        <abbr title="Phone">P:</abbr>
-        123.456.7890
-    </address>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <h4>Contact Information</h4>
+            <address class="mb-3">
+                <strong>University Address:</strong><br />
+                One University Avenue<br />
+                University Town, UT 12345<br />
+                <abbr title="Phone">P:</abbr> 123.456.7890
+            </address>
 
-    <address>
-        <strong>Email Support:</strong>   <a href="mailto:support@example.com">support@example.com</a><br />
-        <strong>Email Marketing:</strong> <a href="mailto:marketing@example.com">marketing@example.com</a>
-    </address>
+            <h4>Support & Marketing</h4>
+            <address>
+                <strong>Email Support:</strong> <a href="mailto:support@example.com">support@example.com</a><br />
+                <strong>Email Marketing:</strong> <a href="mailto:marketing@example.com">marketing@example.com</a>
+            </address>
+        </div>
+        <div class="col-md-6 mb-4">
+            <!-- Add an optional section for a contact form or map if needed -->
+            <h4>Get in Touch</h4>
+            <p>If you have any questions or need further assistance, feel free to reach out to us via the provided contact details.</p>
+        </div>
+    </div>
+
 </main>

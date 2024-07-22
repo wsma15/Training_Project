@@ -310,15 +310,15 @@ namespace TrainingApp.Controllers
                             ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
                         }
                     }
-                    return Content(FormatValidationErrors(ModelState)); // Return the formatted validation errors
+                    return View(model); // Return the formatted validation errors
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError("", "An error occurred while processing your request.");
-                    return Content(FormatValidationErrors(ModelState)); // Return the formatted general error message
+                    return View(model); // Return the formatted general error message
                 }
             }
-            return Content(FormatValidationErrors(ModelState)); // Return the formatted validation errors
+            return View(model); // Return the formatted validation errors
         }
 
         private string FormatValidationErrors(ModelStateDictionary modelState)
