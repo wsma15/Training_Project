@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Web.Mvc;
 using TrainingApp.Models;
@@ -99,12 +100,15 @@ public class AddSupervisorViewModel
     }
     public class DashboardViewModel
     {
+
         public List<Users> Trainers { get; set; }
         public List<Users> UniversitySupervisors { get; set; }
         public List<Users> CompanySupervisors { get; set; }
         public List<Users> NewUsers { get; set; }
         public IEnumerable<SelectListItem> UniversityNames { get; set; }
         public IEnumerable<SelectListItem> CompaniesNames { get; set; }
+        public IEnumerable<SelectListItem> UniSupervisors { get; set; }
+
 
         public AddSupervisorViewModel addSupervisorViewModel { get; set; }
         public AddCompanySupervisorViewModel addCompanySupervisorViewModel { get; set; }

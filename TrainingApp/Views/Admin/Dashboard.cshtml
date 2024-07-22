@@ -16,7 +16,13 @@
     <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/vendor/datatables/DataTables-1.10.25/css/dataTables.dataTables.min.css" rel="stylesheet" />
     <link href="~/vendor/datatables/DataTables-1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <script src="~/vendor/datatables/DataTables-1.10.25/js/jquery.dataTables.min.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/datatables/datatables.min.js"></script>
+    <script src="~/js/initiate-datatables.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
 </head>
 <body>
     <div class="container mt-4">
@@ -35,18 +41,15 @@
                             </div>
                             <div class="modal-body">
                                 <div>
-
-
                                     @using (Html.BeginForm("AddUniversitySupervisor", "Admin", FormMethod.Post, new { id = "addUniversitySupervisorForm" }))
                                     {
                                         @Html.AntiForgeryToken()
-
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.addSupervisorViewModel.UniversityID, "University Name", htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.DropDownListFor(model => model.addSupervisorViewModel.UniversityID,Model.UniversityNames, "Select University Name", new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.addSupervisorViewModel.UniversityID, "", new { @class = "text-danger" })
-                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addSupervisorViewModel.UniversityID, "University Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(model => model.addSupervisorViewModel.UniversityID, Model.UniversityNames, "Select University Name", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.UniversityID, "", new { @class = "text-danger" })
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -133,7 +136,7 @@
                             <div class="modal-body">
                                 <div>
                                     @using (Html.BeginForm("AddCompanySupervisor", "Admin", FormMethod.Post, new { id = "addCompanySupervisorForm" }))
-                                        {
+                                    {
 
                                         @Html.AntiForgeryToken()
                                         <div class="form-horizontal">
@@ -142,7 +145,7 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.CompanyID, "Company Name", htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.DropDownListFor(model => model.addCompanySupervisorViewModel.CompanyID, Model.CompaniesNames, "Select University Name", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(model => model.addCompanySupervisorViewModel.CompanyID, Model.CompaniesNames, "Select Company Name", new { @class = "form-control" })
                                                     @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.CompanyID, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -180,9 +183,9 @@
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             </div>
                                         </div>
-                                        }
-                                        
-                                    </div>
+                                    }
+
+                                </div>
 
                             </div>
                         </div>
@@ -197,7 +200,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Company</th>
-                            <th></th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -233,82 +236,177 @@
                             <div class="modal-body">
                                 <div>
 
-                                    @using (Html.BeginForm("AddCompanySupervisor", "Admin", FormMethod.Post))
+                                    @using (Html.BeginForm("", "", FormMethod.Post))
                                     {
                                         @Html.AntiForgeryToken()
                                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                        <div class="form-horizontal">
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.CompanyID, "Company Name", htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.DropDownListFor(model => model.addCompanySupervisorViewModel.CompanyID, Model.CompaniesNames, "Select Company Name", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.CompanyID, "", new { @class = "text-danger" })
-                                                </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addTrainerViewModel.UniversityID, "University Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(model => model.addTrainerViewModel.UniversityID, Model.UniversityNames, "Select University Name", new { @id = "UniversityID", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.addTrainerViewModel.UniversityID, "", new { @class = "text-danger" })
                                             </div>
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Name, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Name, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addCompanySupervisorViewModel.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Email, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Email, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>                                 
-
-                                            <div class="form-group">
-                                                @Html.LabelFor(model => model.addTrainerViewModel.TrainerPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-                                                <div class="col-md-10">
-                                                    @Html.PasswordFor(model => model.addTrainerViewModel.TrainerPassword, new { htmlAttributes = new { @class = "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerPassword, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="col-md-offset-2 col-md-10">
-                                                    <input type="submit" value="Add Supervisor" class="btn btn-default" />
-                                                </div>
-                                            </div>
-
-
                                         </div>
-                                      }
-                                    </div>
-                                    <div class="modal-footer">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addTrainerViewModel.UniversitySupervisorID, "University Supervisor Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(model => model.addTrainerViewModel.UniversitySupervisorID, new List<SelectListItem>(), "Select University Supervisor Name", new { @id = "UniversitySupervisorID", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.addTrainerViewModel.UniversityID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
 
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
+                                        @section Scripts {
+                                                                            <script>
+$(document).ready(function() {
+    $('#UniversityID').change(function() {
+        var universityId = $(this).val();
+        var supervisorDropdown = $('#UniversitySupervisorID');
+
+        // Clear existing options
+        supervisorDropdown.empty();
+
+        // Add default option
+        supervisorDropdown.append($('<option>').text('Select University Supervisor Name').attr('value', ''));
+        // If no university is selected, return
+        if (universityId === '') return;
+
+        // Fetch supervisors based on selected university
+$.ajax({
+    url: '@Url.Action("GetSupervisorsByUniversity", "AdminController")', // Adjust controller and action name
+    type: 'GET',
+    data: { universityId: universityId },
+    success: function(data) {
+        console.log('URL:', '@Url.Action("GetSupervisorsByUniversity", "AdminController")');
+        console.log('Data received:', data);
+
+        // Populate dropdown with new data
+        $.each(data, function(index, supervisor) {
+            supervisorDropdown.append($('<option>').text(supervisor.Text).attr('value', supervisor.Value));
+        });
+        // Trigger an update if using plugins like Select2
+        supervisorDropdown.trigger("change");
+        console.log('University ID:', universityId);
+    },
+    error: function(xhr, status, error) {
+        console.log('Error fetching supervisors:', error);
+        console.log('Response Text:', xhr.responseText); // Detailed error response
+        console.log('Status:', status);
+        console.log('Error:', error);
+    }
+});
+    });
+});
+                                                                            </script>
+                                        }
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addTrainerViewModel.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerName, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addTrainerViewModel.TrainerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerEmail, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.addTrainerViewModel.TrainerPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.PasswordFor(model => model.addTrainerViewModel.TrainerPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerPassword, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <input type="submit" value="Add Supervisor" class="btn btn-default" />
+                                            </div>
+                                        </div>
+
+
+                                    }
                                 </div>
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="card-body">
+                    <table class="table table-hover" id="trainersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>University</th>
+                                <th>University Supervisor</th>
+                                <th>Company</th>
+                                <th>Company Supervisor</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var trainer in Model.Trainers)
+                            {
+                                <tr>
+                                    <td>@trainer.Id</td>
+                                    <td>@trainer.Name</td>
+                                    <td>@trainer.Email</td>
+                                    <td>@trainer.CompanyID</td>
+                                    <td>@(trainer.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)trainer.UniversityID))</td>
+                                    <td>@(trainer.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)trainer.UniversitySupervisorID))</td>
+                                    <td>@(trainer.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)trainer.CompanyID))</td>
+                                    <td>@(trainer.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)trainer.CompanySupervisorID))</td>
+
+                                    <td class="text-end">
+                                        <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                        <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>New Users</h3>
             </div>
             <div class="card-body">
-                <table class="table table-hover" id="trainersTable">
+                <table class="table table-hover" id="newUsersTable">
                     <thead>
                         <tr>
-                            <th>Trainer ID</th>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>University</th>
+                            <th>University Supervisor</th>
                             <th>Company</th>
-                            <th>University Name</th>
-                            
+                            <th>Company Supervisor</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var trainer in Model.Trainers)
+                        @foreach (var student in Model.NewUsers)
                         {
                             <tr>
-                                <td>@trainer.Id</td>
-                                <td>@trainer.Name</td>
-                                <td>@trainer.Email</td>
-                                <td>@trainer.CompanyID</td>
+                                <td>@student.Id</td>
+                                <td>@student.Name</td>
+                                <td>@student.Email</td>
+                                <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)student.UniversitySupervisorID))</td>
+                                <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
+                                <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)student.CompanySupervisorID))</td>
+                                <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
                                 <td class="text-end">
                                     <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
                                     <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -319,47 +417,6 @@
                 </table>
             </div>
         </div>
-    </div>
-
-        <div class="card mb-4">
-        <div class="card-header">
-            <h3>New Users</h3>
-        </div>
-        <div class="card-body">
-            <table class="table table-hover" id="newUsersTable">
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>University</th>
-                        <th>University Supervisor</th>
-                        <th>Company</th>
-                        <th>Company Supervisor</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in Model.NewUsers)
-                    {
-                        <tr>
-                            <td>@student.Id</td>
-                            <td>@student.Name</td>
-                            <td>@student.Email</td>
-                            <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetUniName((int)student.UniversitySupervisorID))</td>
-                            <td>@(student.UniversitySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.UniversitySupervisorID))</td>
-                            <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetCompanyName((int)student.CompanySupervisorID))</td>
-                            <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
-                            <td class="text-end">
-                                <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
 
     </div>
     <script src="~/vendor/jquery/jquery.min.js"></script>
@@ -368,56 +425,58 @@
     <script src="~/js/initiate-datatables.js"></script>
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jqueryval.unobtrusive")
 
-    <script>
-        (function () {
-            'use strict';
+<script>
+    $(document).ready(function () {
+        'use strict';
 
-            // Function to initialize DataTable
-            function initializeDataTable(tableId) {
-                $(tableId).DataTable({
-                    responsive: true,
-                    pageLength: 20,
-                    lengthChange: false,
-                    searching: true,
-                    ordering: true
-                });
-            }
+        // Function to initialize DataTable
+        function initializeDataTable(tableId) {
+            $(tableId).DataTable({
+                responsive: true,
+                pageLength: 20,
+                lengthChange: false,
+                searching: true,
+                ordering: true
+            });
+        }
 
-            // Initialize DataTables
-            initializeDataTable('#universitySupervisorsTable');
-            initializeDataTable('#companySupervisorsTable');
-            initializeDataTable('#trainersTable');
-            initializeDataTable('#newUsersTable');
+        // Initialize DataTables
+        initializeDataTable('#universitySupervisorsTable');
+        initializeDataTable('#companySupervisorsTable');
+        initializeDataTable('#trainersTable');
+        initializeDataTable('#newUsersTable');
 
-            // Function to handle form submission
-            function handleFormSubmission(modalClass, formClass) {
-                $(document).on('submit', formClass, function (e) {
-                    e.preventDefault();
-                    var form = $(this);
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function (response) {
-                            if (response.success) {
-                                $(modalClass).modal('hide');
-                                location.reload(); // Or update the table dynamically
-                            } else {
-                                $(modalClass + ' .modal-body').html(response);
-                            }
-                        },
-                        error: function () {
-                            alert('An error occurred.');
+        // Function to handle form submission
+        function handleFormSubmission(modalId, formId) {
+            $(document).on('submit', formId, function (e) {
+                e.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            $(modalId).modal('hide');
+                            location.reload(); // Or update the table dynamically
+                        } else {
+                            $(modalId + ' .modal-body').html(response);
                         }
-                    });
+                    },
+                    error: function () {
+                        alert('An error occurred.');
+                    }
                 });
-            }
+            });
+        }
 
-            // Initialize form handling for different modals
-            handleFormSubmission('.addUniversitySupervisorModal', '.addUniversitySupervisorForm');
-            handleFormSubmission('.addCompanySupervisorModal', '.addCompanySupervisorForm');
-        })();
-    </script>
+        // Initialize form handling for different modals
+        handleFormSubmission('#addUniversitySupervisorModal', '#addUniversitySupervisorForm');
+        handleFormSubmission('#addCompanySupervisorModal', '#addCompanySupervisorForm');
+        handleFormSubmission('#addTrainerModal', '#addTrainerForm');
+
+        // Handle University ID change to populate University Supervisors dropdown
+    });
+</script>
 </body>

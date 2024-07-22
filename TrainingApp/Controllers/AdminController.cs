@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrainingApp.Models;
 using TrainingApp.ViewModels;
+using System.Data.Entity.Core.Metadata.Edm;
 namespace TrainingApp.Controllers
 {
     public class AdminController : Controller
@@ -37,13 +38,35 @@ namespace TrainingApp.Controllers
                 {
                     Value = u.Id.ToString(),
                     Text = u.CompanyName + " - " + u.City // Display company name and supervisor name
-                }).ToList()
+                }).ToList(),
+                UniSupervisors = _context.Users.Where(u=>u.Roles==UserRole.UniversitySupervisor).Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.Name + " - " + (from name in _context.Universities where name.Id == u.UniversityID select name.UniversityName).FirstOrDefault()
+                    // Display company name and supervisor name
+                }).ToList(),
 
         };
 
             return View(viewModel);
-        }
+        }// In AdminController
+        [HttpGet]
+        public JsonResult GetSupervisorsByUniversity(int universityId)
+        {
+            var supervisors = _context.Users
+                .Where(u => u.Roles == UserRole.UniversitySupervisor && u.UniversityID == universityId)
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.Name + " - " + _context.Universities
+                        .Where(name => name.Id == u.UniversityID)
+                        .Select(name => name.UniversityName)
+                        .FirstOrDefault()
+                })
+                .ToList();
 
+            return Json(supervisors, JsonRequestBehavior.AllowGet);
+        }
         [Authorize(Roles = "Admin")]
 
         public ActionResult AddStudent()
@@ -127,13 +150,15 @@ namespace TrainingApp.Controllers
             // If the model state is not valid, return the view with validation errors
             return View(model);
         }
-        public string GetUniName(int id)
+        public string GetUniversityName(int id)
         {
             return (from name in _context.Universities where name.Id == id select name.UniversityName).FirstOrDefault();
-
-
         }
-  
+        public string GetCompanyName(int id)
+        {
+            return (from name in _context.Companies where name.Id == id select name.CompanyName).FirstOrDefault();
+        }
+
         [HttpPost]
        // [HttpGet]
         [ValidateAntiForgeryToken]
@@ -177,7 +202,7 @@ namespace TrainingApp.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult AddCompanySupervisor(DashboardViewModel model)
         {
-            if (ModelState.IsValid)
+           // if (ModelState.IsValid)
             {
                 var user = new Users
                 {
@@ -185,7 +210,6 @@ namespace TrainingApp.Controllers
                     Name = model.addCompanySupervisorViewModel.Name,
                     Email = model.addCompanySupervisorViewModel.Email,
                     Password = model.addCompanySupervisorViewModel.Password, // Ensure you hash the password
-                    
                     Roles = UserRole.CompanySupervisor
                 };
 

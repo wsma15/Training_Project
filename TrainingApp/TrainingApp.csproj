@@ -297,6 +297,7 @@
     <Content Include="css\fontawesome-all.css" />
     <Content Include="css\master.css" />
     <Content Include="css\style.css" />
+    <Content Include="css\StyleChat.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
