@@ -3,35 +3,36 @@
 <head>
 
     @using Microsoft.AspNet.Identity
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   
+    
+    @*
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      @Styles.Render("~/Content/css")
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+              <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+          <style>
+              /* Optional: Custom styles */
+              .nav-dropdown {
+                  position: relative;
+              }
 
-    @*  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
-    *@
-    <!--<style>
-        /* Optional: Custom styles */
-        .nav-dropdown {
-            position: relative;
-        }
+              .nav-link-menu {
+                  position: absolute;
+                  top: 100%;
+                  left: 0;
+                  z-index: 1000;
+                  display: none; /* Hide by default */
+              }
 
-        .nav-link-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            z-index: 1000;
-            display: none; /* Hide by default */
-        }
+              .nav-dropdown.show .nav-link-menu {
+                  display: block; /* Show when parent .nav-dropdown has class .show */
+              }
+          </style>
+        *@
 
-        .nav-dropdown.show .nav-link-menu {
-            display: block; /* Show when parent .nav-dropdown has class .show */
-        }
-    </style>-->
 </head>
 <body>
     @if (Request.IsAuthenticated)
