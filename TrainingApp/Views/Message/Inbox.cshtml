@@ -7,113 +7,141 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<head>
+    <link href="~/css/styleChat1.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/js/script.js"></script>
+</head>
+
 <div class="container">
     <div class="row">
         <!-- Left Panel: List of Unique Users -->
-        <div class="col-md-4">
-            <h3>Users</h3>
-            <ul class="list-group">
+        <div class="col-md-4 people-list" id="people-list">
+            <div class="search">
+                <input type="text" placeholder="Search" />
+                <i class="fa fa-search"></i>
+            </div>
+            <ul class="list">
                 @foreach (var user in Model)
                 {
-                    <li class="list-group-item">
-                        <a href="#" class="user-link" data-senderid="@user.Id">@user.Name</a>
+                    <li class="clearfix user-link" data-senderid="@user.Id">
+                        @*<img src="~/images/@user.Avatar" alt="avatar" />
+                        *@<div class="about">
+                            <div class="name">@user.Name</div>
+                            <div class="status">
+                                <i class="fa fa-circle @(user.IsOnline ? "online" : "offline")"></i> @(user.IsOnline ? "Online" : "Offline")
+                            </div>
+                        </div>
                     </li>
                 }
             </ul>
         </div>
 
         <!-- Right Panel: Chat History and Message Box -->
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Chat History</h3>
+        <div class="col-md-8 chat">
+            <div class="chat-header clearfix">
+@*                <img src="~/images/default-avatar.jpg" alt="avatar" id="chat-avatar" />
+*@                <div class="chat-about">
+                    <div class="chat-with">Chat with <span id="chat-user-name">Select a user</span></div>
+                    <div class="chat-num-messages">No messages yet</div>
                 </div>
-                <div class="card-body chat-history">
-                    <!-- Chat Messages -->
-                    <div class="chat-messages" id="chat-messages">
-                        <!-- Messages will be loaded here via AJAX -->
-                    </div>
-                    <!-- Message Box -->
-                    <div class="chat-input">
-                        @using (Html.BeginForm("SendNewMessage", "Message", FormMethod.Post, new { id = "messageForm" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" id="receiverId" name="ReceiverId" />
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="messageText" name="MessageText" placeholder="Type a message..." />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit">Send</button>
-                                </span>
-                            </div>
-                        }
-                    </div>
-                </div>
+                <i class="fa fa-star"></i>
+            </div>
+
+            <div class="chat-history" id="chat-messages">
+                <!-- Chat messages will be loaded here via AJAX -->
+            </div>
+
+            <div class="chat-message clearfix">
+                @using (Html.BeginForm("SendNewMessage", "Message", FormMethod.Post, new { id = "messageForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="receiverId" name="ReceiverId" />
+                    <textarea name="MessageText" id="messageText" placeholder="Type your message" rows="3"></textarea>
+                    <button type="submit" class="btn-success">Send</button>
+                }
             </div>
         </div>
     </div>
 </div>
 
 <!-- Scripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
 <script>
-    $(document).ready(function() {
-        var receiverId;
+$(document).ready(function() {
+    var receiverId;
 
-        // Load chat history when a user is clicked
-        $('.user-link').click(function(e) {
-            e.preventDefault();
-            receiverId = $(this).data('senderid');
-            $('#receiverId').val(receiverId);
-            loadChatHistory(receiverId);
-            startPolling();
-        });
+    // Load chat history when a user is clicked
+    $('.user-link').click(function(e) {
+        e.preventDefault();
+        receiverId = $(this).data('senderid');
+        $('#receiverId').val(receiverId);
+        $('#chat-user-name').text($(this).find('.name').text());
+        $('#chat-avatar').attr('src', $(this).find('img').attr('src'));
+        loadChatHistory(receiverId);
+        startPolling();
+    });
 
-        // Function to load chat history via AJAX
-        function loadChatHistory(receiverId) {
-            $.get('@Url.Action("GetChatHistory", "Message")', { receiverId: receiverId }, function(data) {
-                var chatMessages = $('#chat-messages');
-                chatMessages.empty();
-                $.each(data, function(index, message) {
-                    var formattedTime = formatTimestamp(message.Timestamp);
-                    chatMessages.append('<div><strong>' + message.SenderName + ':</strong> ' + message.MessageText + ' <span class="text-muted small">' + formattedTime + '</span></div>');
-                });
+    // Function to load chat history
+    async function loadChatHistory(receiverId) {
+        try {
+            const response = await fetch('@Url.Action("GetChatHistory", "Message")?receiverId=' + receiverId);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            const chatMessages = $('#chat-messages');
+            chatMessages.empty();
+            data.forEach(message => {
+                const formattedTime = formatTimestamp(message.Timestamp);
+                chatMessages.append(`<div class="message-item ${message.IsMine ? 'my-message' : 'other-message'}"><strong>${message.SenderName}:</strong> ${message.MessageText} <span class="text-muted small">${formattedTime}</span></div>`);
             });
+            chatMessages.scrollTop(chatMessages[0].scrollHeight);
+        } catch (error) {
+            console.error('Error loading chat history:', error);
         }
+    }
 
-        // Handle form submission for sending a new message
-        $('#messageForm').submit(function(e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            var form = $(this);
-            $.post(form.attr('action'), form.serialize(), function() {
-                loadChatHistory(receiverId); // Reload chat history
-                $('#messageText').val(''); // Clear the message box
-            });
-        });
-
-        // Function to format the timestamp
-        function formatTimestamp(timestamp) {
-            var now = moment();
-            var messageTime = moment.utc(timestamp).local(); // Convert UTC to local time
-
-            if (messageTime.isSame(now, 'day')) {
-                return messageTime.format('h:mm A') + ' (Today)';
-            } else if (messageTime.isSame(now.subtract(1, 'days'), 'day')) {
-                return messageTime.format('h:mm A') + ' (Yesterday)';
-            } else {
-                return messageTime.format('h:mm A, MMM D, YYYY');
-            }
-        }
-
-        // Polling for new messages
-        function startPolling() {
-            setInterval(function() {
-                if (receiverId) {
-                    loadChatHistory(receiverId);
+    // Handle form submission for sending a new message
+    $('#messageForm').submit(async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
-            }, 100); // Poll every 3 seconds
+            });
+            const result = await response.json();
+            if (result.success) {
+                loadChatHistory(receiverId);
+                $('#messageText').val('');
+            } else {
+                alert('Error sending message: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
         }
     });
+
+    function formatTimestamp(timestamp) {
+        var now = moment();
+        var messageTime = moment.utc(timestamp).local();
+        if (messageTime.isSame(now, 'day')) {
+            return messageTime.format('h:mm A') + ' (Today)';
+        } else if (messageTime.isSame(now.subtract(1, 'days'), 'day')) {
+            return messageTime.format('h:mm A') + ' (Yesterday)';
+        } else {
+            return messageTime.format('h:mm A, MMM D, YYYY');
+        }
+    }
+
+    function startPolling() {
+        setInterval(function() {
+            if (receiverId) {
+                loadChatHistory(receiverId);
+            }
+        }, 5000);
+    }
+});
 </script>

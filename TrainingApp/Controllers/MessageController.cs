@@ -35,23 +35,39 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendNewMessage(int ReceiverId, string MessageText)
         {
-            int senderId = User.Identity.GetUserId<int>();
-            var senderName = User.Identity.GetUserName();
-
-            var message = new Message
+            try
             {
-                SenderId = senderId,
-                ReceiverId = ReceiverId,
-                SenderName = senderName,
-                MessageText = MessageText,
-                Timestamp = DateTime.Now
-            };
+                if (string.IsNullOrEmpty(MessageText))
+                {
+                    return Json(new { success = false, message = "Message text cannot be empty" });
+                }
 
-            _context.ChatMessages.Add(message);
-            await _context.SaveChangesAsync();
+                int senderId = User.Identity.GetUserId<int>();
+                var senderName = User.Identity.GetUserName();
 
-            return Json(new { success = true });
+                var message = new Message
+                {
+                    SenderId = senderId,
+                    ReceiverId = ReceiverId,
+                    SenderName = senderName,
+                    MessageText = MessageText,
+                    Timestamp = DateTime.Now
+                };
+
+                _context.ChatMessages.Add(message);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Log exception details for debugging
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+
+                return Json(new { success = false, message = "An error occurred while sending the message. Please try again later." });
+            }
         }
+
         [HttpGet]
         public ActionResult Inbox(int userId)
         {

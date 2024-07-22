@@ -296,8 +296,10 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="css\fontawesome-all.css" />
     <Content Include="css\master.css" />
+    <Content Include="css\script.js" />
     <Content Include="css\style.css" />
     <Content Include="css\StyleChat.css" />
+    <Content Include="css\styleChat1.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
