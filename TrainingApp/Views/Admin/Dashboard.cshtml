@@ -111,7 +111,13 @@
                                     <td>@Model.GetUniName(@supervisor.UniversityID)</td>
                                     <td class="text-end">
                                         <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                        <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                        <form action="@Url.Action("DeleteUser")" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@supervisor.Id" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             }
@@ -212,7 +218,13 @@
                                 <td>@Model.GetCompanyName(supervisor.CompanyID)</td>
                                 <td class="text-end">
                                     <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                    <form action="@Url.Action("DeleteUser")" method="post" style="display:inline;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@supervisor.Id" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }
@@ -255,7 +267,7 @@
                                         </div>
 
                                         @section Scripts {
-                                                                            <script>
+                                            <script>
 $(document).ready(function() {
     $('#UniversityID').change(function() {
         var universityId = $(this).val();
@@ -295,7 +307,7 @@ $.ajax({
 });
     });
 });
-                                                                            </script>
+                                            </script>
                                         }
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addTrainerViewModel.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -367,7 +379,13 @@ $.ajax({
 
                                     <td class="text-end">
                                         <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                        <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                        <form action="@Url.Action("DeleteUser")" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@trainer.Id" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             }
@@ -408,7 +426,13 @@ $.ajax({
                                 <td>@(student.CompanySupervisorID is null ? "Not Found" : Model.GetSupervisorName((int)student.CompanySupervisorID))</td>
                                 <td class="text-end">
                                     <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                    <a href="" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                    <form action="@Url.Action("DeleteUser")" method="post" style="display:inline;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@student.Id" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }
@@ -425,7 +449,7 @@ $.ajax({
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryval")
 
-<script>
+    <script>
     $(document).ready(function () {
         'use strict';
 
@@ -476,6 +500,65 @@ $.ajax({
         handleFormSubmission('#addTrainerModal', '#addTrainerForm');
 
         // Handle University ID change to populate University Supervisors dropdown
+        $('#UniversityID').change(function () {
+            var universityId = $(this).val();
+            var supervisorDropdown = $('#UniversitySupervisorID');
+
+            // Clear existing options
+            supervisorDropdown.empty();
+            supervisorDropdown.append($('<option>').text('Select University Supervisor Name').attr('value', ''));
+            if (universityId === '') return;
+
+            // Fetch supervisors based on selected university
+            $.ajax({
+                url: '@Url.Action("GetSupervisorsByUniversity", "AdminController")', // Adjust controller and action name
+                type: 'GET',
+                data: { universityId: universityId },
+                success: function (data) {
+                    $.each(data, function (index, supervisor) {
+                        supervisorDropdown.append($('<option>').text(supervisor.Text).attr('value', supervisor.Value));
+                    });
+                    supervisorDropdown.trigger("change");
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error fetching supervisors:', error);
+                    console.log('Response Text:', xhr.responseText);
+                }
+            });
+        });
     });
-</script>
+        $.ajax({
+            url: '/Controller/DeleteUser',
+            type: 'POST',
+            data: { id: userId },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message); // Show success message
+                } else {
+                    alert(response.message); // Show error message
+                }
+            }
+        });
+
+    function deleteUser(id) {
+        if (confirm("Are you sure you want to delete this user?")) {
+            $.ajax({
+                url: '@Url.Action("DeleteUser")',
+                type: 'POST',
+                data: { id: id },
+                success: function (response) {
+                    if (response.success) {
+                        alert('User deleted successfully.');
+                        location.reload(); // Reload the page or update the table dynamically
+                    } else {
+                        alert('Failed to delete user.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred.');
+                }
+            });
+        }
+    }
+    </script>
 </body>

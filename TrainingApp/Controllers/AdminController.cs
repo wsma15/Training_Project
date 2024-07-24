@@ -50,6 +50,32 @@ namespace TrainingApp.Controllers
 
             return View(viewModel);
         }// In AdminController
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteUser(int id)
+        {
+            // Find the user by ID
+            var user = _context.Users.Find(id);
+
+            if (user == null)
+            {
+                // Handle the error (e.g., log it or show a message)
+                // For demonstration purposes, you might log an error or use TempData/ViewBag
+                TempData["ErrorMessage"] = "User not found";
+                return RedirectToAction("Dashboard"); // Redirects to the Index page after deletion
+            }
+
+            // Remove the user from the context
+            _context.Users.Remove(user);
+
+            // Save changes to the database
+            _context.SaveChanges();
+
+            // Handle success (e.g., log it or show a message)
+            TempData["SuccessMessage"] = "User deleted successfully";
+            return RedirectToAction("Dashboard"); // Redirects to the Index page after deletion
+        }
+
         [HttpGet]
         public JsonResult GetSupervisorsByUniversity(int universityId)
         {

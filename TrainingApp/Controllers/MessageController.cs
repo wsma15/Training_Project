@@ -32,25 +32,32 @@ namespace TrainingApp.Controllers
         }
         public JsonResult SearchUsers(string query)
         {
-            //if (User.IsInRole("Admin"))
-
             // Retrieve the current user's ID
             var currentUserId = User.Identity.GetUserId<int>();
 
-            // Use the current user's ID in the LINQ query
+            // Fetch users from the database
             var users = _context.Users
                 .Where(u => u.Name.Contains(query) && u.Id != currentUserId)
                 .Select(u => new
                 {
-                    Id = u.Id,
-                    Name = u.Name,
+                    u.Id,
+                    u.Name,
+                    Roles = u.Roles, // Assuming Roles is a navigation property
+                    Avatar = ""
+                })
+                .ToList()
+                .Select(u => new
+                {
+                    u.Id,
+                    Name = $"{u.Name} ({string.Join(", ", u.Roles)})",
                     IsOnline = false,
-                    Avatar = "" //u.Avatar // Make sure to include avatar or other necessary fields
+                    u.Avatar
                 })
                 .ToList();
+
             return Json(users, JsonRequestBehavior.AllowGet);
-            }
-        
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
