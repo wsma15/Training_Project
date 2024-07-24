@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="~/ProfileStyle/Style.css" rel="stylesheet" />
+    <style>
+        .content-section {
+            display: none;
+        }
+
+            .content-section.active {
+                display: block;
+            }
+
+        .profile-nav a.active {
+            font-weight: bold;
+        }
+
+        /* Style for profile picture upload */
+        .profile-picture {
+            position: relative;
+            display: inline-block;
+        }
+
+            .profile-picture img {
+                cursor: pointer;
+                width: 100px; /* Adjust as needed */
+                height: 100px; /* Adjust as needed */
+                border-radius: 50%;
+                transition: opacity 0.3s;
+            }
+
+            .profile-picture input[type="file"] {
+                display: none;
+            }
+
+            .profile-picture .pen-icon {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                width: 24px;
+                height: 24px;
+                background: url('/path/to/pen-icon.png') no-repeat center center;
+                background-size: cover;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .profile-picture:hover .pen-icon {
+                opacity: 1;
+            }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-picture">
+                <img src="@Model.ProfilePicturePath" alt="Profile Picture" id="profilePicture">
+                <div class="pen-icon"></div> <!-- Pen icon container -->
+                <form id="uploadForm" action="@Url.Action("UploadProfilePicture", "Profile")" method="post" enctype="multipart/form-data" style="display:none;">
+                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
+                    <button type="submit">Upload</button>
+                </form>
+            </div>
+            <div class="profile-info">
+                <h1>@Model.Name</h1>
+                <p>Email: @Model.Email</p>
+                <p>Role: @Model.Roles</p>
+            </div>
+        </div>
+        <div class="profile-body">
+            <div class="profile-nav">
+                <ul>
+                    <li><a href="#details" class="active">Details</a></li>
+                    <li><a href="#activities">Recent Activities</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                </ul>
+            </div>
+            <div class="profile-content">
+                <div id="details" class="content-section active">
+                    <h2>Details</h2>
+                    <p>Full Name: @Model.Name</p>
+                    <p>Email: @Model.Email</p>
+                    <p>Role: @Model.Roles</p>
+                </div>
+                <div id="activities" class="content-section">
+                    <h2>Recent Activities</h2>
+                    <ul>
+                        <li>Submitted report to Supervisor A</li>
+                        <li>Received feedback from Supervisor B</li>
+                        <li>Last Login: @(Model.LastLogin == DateTime.MinValue ? "Never" : Model.LastLogin.ToString("f"))</li>
+                    </ul>
+                </div>
+                <div id="settings" class="content-section">
+                    <h2>Settings</h2>
+                    <form>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="@Model.Email">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password">
+                        <button type="submit">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.profile-nav a');
+            const sections = document.querySelectorAll('.content-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+
+                    sections.forEach(section => section.classList.remove('active'));
+                    const target = document.querySelector(this.getAttribute('href'));
+                    target.classList.add('active');
+                });
+            });
+
+            document.querySelector('.profile-nav a[href="#details"]').click();
+
+            const profilePicture = document.getElementById('profilePicture');
+            const fileInput = document.getElementById('profilePictureInput');
+            const uploadForm = document.getElementById('uploadForm');
+
+            profilePicture.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function () {
+                uploadForm.submit();
+            });
+        });
+    </script>
+</body>
+</html>

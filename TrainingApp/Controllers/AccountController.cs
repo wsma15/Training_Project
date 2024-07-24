@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Linq;
@@ -80,14 +81,20 @@ namespace TrainingApp.Controllers
                 {
                     var user = context.Users.FirstOrDefault(a => a.Id.ToString() == model.UserId && a.Password == model.Password);
                     if (user != null)
+                    {
+                        user.LastLogin = DateTime.Now;
+                        context.Users.AddOrUpdate(user);
+                        await context.SaveChangesAsync();
                         switch (user.Roles)
                         {
+
                             case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Admin");
                             case UserRole.UniversitySupervisor: await SignInUniversitySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "UniversitySupervisor");
                             case UserRole.Trainer: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Trainers");
                             case UserRole.CompanySupervisor: await SignInCompanySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "CompanySupervisor");
 
                         }
+                    }
 
 
                     ModelState.AddModelError("", "Invalid login attempt.");

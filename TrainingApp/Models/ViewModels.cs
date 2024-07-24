@@ -33,8 +33,36 @@ namespace TrainingApp.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }
+    public class UserViewModel
+    {
+        public int Id { get; set; }
 
-public class AddSupervisorViewModel
+        [Required]
+        [StringLength(50)]
+        public string Name { get; set; }
+        public string ProfilePicturePath { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        public int? UniversitySupervisorID { get; set; }
+        public int? CompanySupervisorID { get; set; }
+
+        public int UniversityID { get; set; }
+
+        public int CompanyID { get; set; }
+
+        public UserRole Roles { get; set; }
+        public DateTime LastLogin { get; set; }
+
+    }
+    public class AddSupervisorViewModel
 {
         [Display(Name = "University ID")]
         [Required(ErrorMessage = "University ID is required")]

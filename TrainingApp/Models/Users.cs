@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrainingApp.Models
@@ -31,7 +32,8 @@ namespace TrainingApp.Models
         public int CompanyID { get; set; }
 
         public UserRole Roles { get; set; }
-
+        public DateTime LastLogin { get; set; } 
+        public string ProfilePicturePath { get; set; }
     }
 
     public enum UserRole

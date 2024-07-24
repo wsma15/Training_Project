@@ -76,7 +76,7 @@
                                 {
                                     <a class="dropdown-item" href="@Url.Action("Dashboard", "Trainers")">Trainer Dashboard</a>
                                 }
-                                <a class="dropdown-item" href="#">Profile</a>
+                                <a class="dropdown-item" href="@Url.Action("Profile", "Profile", new { userId = User.Identity.GetUserId() })">Profile</a>
                                 <a class="dropdown-item" href="@Url.Action("Inbox", "Message", new { userId = User.Identity.GetUserId() })">Messages</a>
                                 <a class="dropdown-item" href="#">Settings</a>
                                 <div class="dropdown-divider"></div>

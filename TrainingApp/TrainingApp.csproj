@@ -214,6 +214,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\UniversitySupervisorController.cs" />
     <Compile Include="Global.asax.cs">
@@ -258,6 +259,18 @@
     <Compile Include="Migrations\202407211323118_Init9.cs" />
     <Compile Include="Migrations\202407211323118_Init9.Designer.cs">
       <DependentUpon>202407211323118_Init9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407241235344_Init10.cs" />
+    <Compile Include="Migrations\202407241235344_Init10.Designer.cs">
+      <DependentUpon>202407241235344_Init10.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407241239461_Init11.cs" />
+    <Compile Include="Migrations\202407241239461_Init11.Designer.cs">
+      <DependentUpon>202407241239461_Init11.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202407241249065_Init12.cs" />
+    <Compile Include="Migrations\202407241249065_Init12.Designer.cs">
+      <DependentUpon>202407241249065_Init12.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -344,6 +357,7 @@
     <Content Include="Login\vendor\select2\select2.min.css" />
     <Content Include="Login\vendor\select2\select2.min.js" />
     <Content Include="Login\vendor\tilt\tilt.jquery.min.js" />
+    <Content Include="ProfileStyle\Style.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -930,10 +944,11 @@
     <Content Include="vendor\fontawesome\webfonts\fa-v4compatibility.woff2" />
     <Content Include="vendor\jquery\LICENSE.md" />
     <Content Include="vendor\mdtimepicker\LICENSE.md" />
+    <Content Include="Views\Profile\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="imsages\" />
+    <Folder Include="Content\Images\" />
     <Folder Include="Views\Reports\" />
   </ItemGroup>
   <ItemGroup>
@@ -993,6 +1008,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202407211323118_Init9.resx">
       <DependentUpon>202407211323118_Init9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407241235344_Init10.resx">
+      <DependentUpon>202407241235344_Init10.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407241239461_Init11.resx">
+      <DependentUpon>202407241239461_Init11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202407241249065_Init12.resx">
+      <DependentUpon>202407241249065_Init12.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
