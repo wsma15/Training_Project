@@ -357,6 +357,8 @@
     <Content Include="Login\vendor\select2\select2.min.css" />
     <Content Include="Login\vendor\select2\select2.min.js" />
     <Content Include="Login\vendor\tilt\tilt.jquery.min.js" />
+    <Content Include="ProfileStyle\delete-icon.png.png" />
+    <Content Include="ProfileStyle\pen-icon.png.png" />
     <Content Include="ProfileStyle\Style.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />

@@ -19,42 +19,55 @@
     border-bottom: 1px solid #ddd;
     padding-bottom: 20px;
     margin-bottom: 20px;
-    position: relative;
 }
 
 .profile-picture {
     position: relative;
+    display: inline-block;
 }
 
     .profile-picture img {
+        cursor: pointer;
+        width: 150px; /* Adjusted size */
+        height: 150px; /* Adjusted size */
         border-radius: 50%;
-        width: 100px;
-        height: 100px;
-        margin-right: 20px;
-        display: block;
+        transition: opacity 0.3s;
     }
 
-    .profile-picture .pen-icon {
+    .profile-picture input[type="file"] {
+        display: none;
+    }
+
+    .profile-picture .pen-icon,
+    .profile-picture .delete-icon {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 24px;
-        height: 24px;
-        font-size: 24px;
-        color: #333;
+        bottom: 30px;
         background: rgba(255, 255, 255, 0.7);
-        border-radius: 50%;
+        border-radius: 100%;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s, background-color 0.3s;
+        align-items: flex-end;
+        justify-content: left;
+        width: 30px; /* Adjusted size */
+        height: 30px; /* Adjusted size */
+        background-size: cover;
+        opacity: 50; /* Hidden by default */
+        transition: opacity 0.3s;
         cursor: pointer;
     }
 
-    .profile-picture:hover .pen-icon {
-        opacity: 1;
-        background-color: rgba(255, 255, 255, 0.9);
+    .profile-picture .pen-icon {
+        right: 10px; /* Adjusted position */
+        background: url('pen-icon.png') no-repeat center center;
+    }
+
+    .profile-picture .delete-icon {
+        left: 10px; /* Adjusted position */
+        background: url('delete-icon.png') no-repeat center center;
+    }
+
+    .profile-picture:hover .pen-icon,
+    .profile-picture:hover .delete-icon {
+        opacity: 1; /* Show icons on hover */
     }
 
 .profile-info h1 {
@@ -87,7 +100,9 @@
             border-bottom: 2px solid transparent;
         }
 
-            .profile-nav ul li a:hover, .profile-nav ul li a:focus, .profile-nav ul li a:active {
+            .profile-nav ul li a:hover,
+            .profile-nav ul li a:focus,
+            .profile-nav ul li a:active {
                 border-bottom: 2px solid #333;
             }
 
@@ -127,3 +142,7 @@ form {
         border-radius: 4px;
         cursor: pointer;
     }
+
+        form button:hover {
+            background-color: #555;
+        }

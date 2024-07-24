@@ -5,62 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link href="~/ProfileStyle/Style.css" rel="stylesheet" />
-    <style>
-        .content-section {
-            display: none;
-        }
-
-            .content-section.active {
-                display: block;
-            }
-
-        .profile-nav a.active {
-            font-weight: bold;
-        }
-
-        /* Style for profile picture upload */
-        .profile-picture {
-            position: relative;
-            display: inline-block;
-        }
-
-            .profile-picture img {
-                cursor: pointer;
-                width: 100px; /* Adjust as needed */
-                height: 100px; /* Adjust as needed */
-                border-radius: 50%;
-                transition: opacity 0.3s;
-            }
-
-            .profile-picture input[type="file"] {
-                display: none;
-            }
-
-            .profile-picture .pen-icon {
-                position: absolute;
-                bottom: 10px;
-                right: 10px;
-                width: 24px;
-                height: 24px;
-                background: url('/path/to/pen-icon.png') no-repeat center center;
-                background-size: cover;
-                opacity: 0;
-                transition: opacity 0.3s;
-            }
-
-            .profile-picture:hover .pen-icon {
-                opacity: 1;
-            }
-    </style>
 </head>
 <body>
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-picture">
-                <img src="@Model.ProfilePicturePath" alt="Profile Picture" id="profilePicture">
-                <div class="pen-icon"></div> <!-- Pen icon container -->
+                <img src="@Model.ProfilePicturePath" alt="Profile Picture" id="">
+                <div class="pen-icon" onclick="document.getElementById('profilePictureInput').click();"></div>
+                <div class="delete-icon" onclick="deleteProfilePicture();"></div>
                 <form id="uploadForm" action="@Url.Action("UploadProfilePicture", "Profile")" method="post" enctype="multipart/form-data" style="display:none;">
-                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
+                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" onchange="document.getElementById('uploadForm').submit();">
                     <button type="submit">Upload</button>
                 </form>
             </div>
@@ -108,37 +62,62 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const navLinks = document.querySelectorAll('.profile-nav a');
-            const sections = document.querySelectorAll('.content-section');
+document.addEventListener('DOMContentLoaded', function () {
+    const navLinks = document.querySelectorAll('.profile-nav a');
+    const sections = document.querySelectorAll('.content-section');
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', function (event) {
-                    event.preventDefault();
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
 
-                    navLinks.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
+            navLinks.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
 
-                    sections.forEach(section => section.classList.remove('active'));
-                    const target = document.querySelector(this.getAttribute('href'));
-                    target.classList.add('active');
-                });
-            });
-
-            document.querySelector('.profile-nav a[href="#details"]').click();
-
-            const profilePicture = document.getElementById('profilePicture');
-            const fileInput = document.getElementById('profilePictureInput');
-            const uploadForm = document.getElementById('uploadForm');
-
-            profilePicture.addEventListener('click', function () {
-                fileInput.click();
-            });
-
-            fileInput.addEventListener('change', function () {
-                uploadForm.submit();
-            });
+            sections.forEach(section => section.classList.remove('active'));
+            const target = document.querySelector(this.getAttribute('href'));
+            target.classList.add('active');
         });
+    });
+
+    document.querySelector('.profile-nav a[href="#details"]').click();
+
+    const profilePicture = document.getElementById('profilePicture');
+    const fileInput = document.getElementById('profilePictureInput');
+    const uploadForm = document.getElementById('uploadForm');
+
+    profilePicture.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function () {
+        uploadForm.submit();
+    });
+});
+
+function deleteProfilePicture() {
+    if (confirm('Are you sure you want to delete your profile picture?')) {
+        fetch('@Url.Action("DeleteProfilePicture", "Profile")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                profilePicturePath: '@Model.ProfilePicturePath'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Failed to delete profile picture.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
     </script>
 </body>
 </html>
