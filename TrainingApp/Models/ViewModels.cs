@@ -20,7 +20,7 @@ namespace TrainingApp.ViewModels
         [Required(ErrorMessage = "Company Name is required")]
         public string CompanyName { get; set; }
         [Display(Name = "Full Name")]
-        [Required(ErrorMessage = "Name is required")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Full Name can only contain letters and spaces.")]
         public string Name { get; set; }
 
         [Display(Name = "Email")]
@@ -45,7 +45,9 @@ public class AddSupervisorViewModel
         [Display(Name = "Full Name")]
 
         [Required(ErrorMessage = "Supervisor Name is required")]
-    public string SupervisorName { get; set; }
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Full Name can only contain letters and spaces.")]
+
+        public string SupervisorName { get; set; }
         [Display(Name = "Email")]
 
         [Required(ErrorMessage = "Email is required")]

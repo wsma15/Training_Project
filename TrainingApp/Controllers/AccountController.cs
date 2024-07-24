@@ -232,25 +232,27 @@ namespace TrainingApp.Controllers
             }
         }
 
-
-
-
-
         //
         // GET: /Account/Register
         TrainingAppDBContext db = new TrainingAppDBContext();
 
         [AllowAnonymous]
-        public ActionResult Register()
+/*        public ActionResult Register()
         {
-            var viewModel = new CombinedRegistrationViewModel
+            var viewModel = new RegisterViewModel
             {
-                UniversitySupervisors = GetUniversitySupervisorsSelectList(),
+                Roles = new List<SelectListItem>
+        {
+            new SelectListItem { Value = UserRole.Trainer.ToString(), Text = "Trainer" },
+            new SelectListItem { Value = UserRole.UniversitySupervisor.ToString(), Text = "University Supervisor" },
+            new SelectListItem { Value = UserRole.CompanySupervisor.ToString(), Text = "Company Supervisor" }
+        }*//*                UniversitySupervisors = GetUniversitySupervisorsSelectList(),
                 CompanySupervisors = GetCompanySupervisorsSelectList()
+*//*
             };
             return View(viewModel);
         }
-
+*/
         private IEnumerable<SelectListItem> GetUniversitySupervisorsSelectList()
         {
             var supervisors = db.Users
@@ -276,16 +278,41 @@ namespace TrainingApp.Controllers
                 .ToList();
             return supervisors;
         }
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            var viewModel = new RegisterViewModel
+            {
+                Roles = new List<SelectListItem>
+        {
+            new SelectListItem { Value = UserRole.Trainer.ToString(), Text = "Trainer" },
+            new SelectListItem { Value = UserRole.UniversitySupervisor.ToString(), Text = "University Supervisor" },
+            new SelectListItem { Value = UserRole.CompanySupervisor.ToString(), Text = "Company Supervisor" }
+        },
+            };
+
+            return View(viewModel);
+        }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterNewUser(LoginViewModel model)
+        public ActionResult Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+           // if (ModelState.IsValid)
             {
+                TempData["SuccessMessage"] = "";
+
                 try
                 {
+                    UserRole role;
+                    if (!Enum.TryParse(model.SelectedRole, out role))
+                    {
+                        ModelState.AddModelError("SelectedRole", "Invalid role selected.");
+                     //   return Content("hel");//View(model);
+                        
+                    }
+
                     using (var context = new TrainingAppDBContext())
                     {
                         var user = new Users
@@ -293,34 +320,24 @@ namespace TrainingApp.Controllers
                             Name = model.FullName,
                             Email = model.Email,
                             Password = model.Password,
-                            Roles = UserRole.NewUser,
+                            Roles = UserRole.NewUser // Use the parsed enum value here
                         };
                         context.Users.Add(user);
                         context.SaveChanges();
                     }
-                    TempData["SuccessMessage"] = "Student registered successfully!";
-                    return RedirectToAction("RegistrationSuccess");
-                }
-                catch (DbEntityValidationException ex)
-                {
-                    foreach (var validationErrors in ex.EntityValidationErrors)
-                    {
-                        foreach (var validationError in validationErrors.ValidationErrors)
-                        {
-                            ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
-                        }
-                    }
-                    return View(model); // Return the formatted validation errors
+
+                    TempData["SuccessMessage"] = "registered successfully!";
+                    return View(model);//RedirectToAction("RegistrationSuccess");
                 }
                 catch (Exception ex)
                 {
+                    // Log the exception (use a logging library or framework here)
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
                     ModelState.AddModelError("", "An error occurred while processing your request.");
-                    return View(model); // Return the formatted general error message
                 }
             }
-            return View(model); // Return the formatted validation errors
+            return View(model); // Return the view with validation errors
         }
-
         private string FormatValidationErrors(ModelStateDictionary modelState)
         {
             var errors = modelState
@@ -333,7 +350,7 @@ namespace TrainingApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterStudent(LoginViewModel model)
+        public ActionResult RegisterStudent(RegisterViewModel model)
         {
             //    return Content(model.StudentViewModel.TrainerPassword.ToString());
             /*            if (ModelState.IsValid)

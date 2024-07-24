@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
+using System.Web.Mvc;
 
 namespace TrainingApp.Models
 {
@@ -76,6 +77,10 @@ namespace TrainingApp.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+        [Required]
+        
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -85,8 +90,12 @@ namespace TrainingApp.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "The Type of user is required")]
+        [Display(Name = "Type of User")]
+        public string SelectedRole { get; set; }
+        public IEnumerable<SelectListItem> Roles { get; set; }
     }
 
     public class ResetPasswordViewModel
@@ -104,7 +113,7 @@ namespace TrainingApp.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }

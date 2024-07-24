@@ -5,27 +5,77 @@
 }
 
 <h2>Trainers</h2>
+<head>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="~/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="~/vendor/fontawesome/css/solid.css" rel="stylesheet" />
+    <link href="~/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/vendor/datatables/DataTables-1.10.25/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <link href="~/vendor/datatables/DataTables-1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/datatables/datatables.min.js"></script>
+    <script src="~/js/initiate-datatables.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+</head>
+<body>
+    <div class="card-body">
+        <table class="table table-hover" id="universitySupervisorsTable">
+            <thead>
+                <tr>
+                    <th>Supervisor ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>University</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model)
+                {
+                    <tr>
+                        <td>@student.Id</td>
+                        <td>@student.Name</td>
+                        <td>@student.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Student ID</th>
-            <th>Student Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var student in Model)
-        {
-            <tr>
-                <td>@student.Id</td>
-                <td>@student.Name</td>
-                <td>@student.Email</td>
-                <td>
-                    @Html.ActionLink("View Reports", "StudentReports", new { id = student.Id }, new { @class = "btn btn-primary" })
-                </td>
-            </tr>
+    <table class="table table-striped">
+        <thead>
+        </thead>
+    </table>
+</body>
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/vendor/datatables/datatables.min.js"></script>
+<script src="~/js/initiate-datatables.js"></script>
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        'use strict';
+
+        // Function to initialize DataTable
+        function initializeDataTable(tableId) {
+            $(tableId).DataTable({
+                responsive: true,
+                pageLength: 20,
+                lengthChange: false,
+                searching: true,
+                ordering: true
+            });
         }
-    </tbody>
-</table>
+
+        // Initialize DataTables
+        initializeDataTable('#universitySupervisorsTable');
+    });
+    
+</script>

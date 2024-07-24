@@ -53,15 +53,27 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorName, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control",
+                                               placeholder = "Full Name",
+                                               type = "text",
+                                               pattern = "[a-zA-Z ]+"
+                                           } })
+                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorName, "", new {
+                                               @class = "text-danger",
+                                              
+                                           })
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorEmail, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorEmail, new { htmlAttributes = new { @class = "form-control" ,
+
+                                               placeholder = "Email",
+                                               type = "email"
+
+                                           } })
                                                 @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorEmail, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -69,7 +81,13 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.PasswordFor(model => model.addSupervisorViewModel.SupervisorPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.PasswordFor(model => model.addSupervisorViewModel.SupervisorPassword, new { htmlAttributes = new { @class = "form-control" }
+                                            ,placeholder = "Password",
+                                               type = "password"
+
+
+
+                                           })
                                                 @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorPassword, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -157,7 +175,11 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Name, new { htmlAttributes = new { @class = "form-control",
+                                                   placeholder = "Full Name",
+                                                   type = "text",
+                                                   pattern = "[a-zA-Z ]+"
+                                               } })
                                                     @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Name, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -165,7 +187,11 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.Email, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Email, new { htmlAttributes = new { @class = "form-control" ,
+                                                   placeholder = "Email",
+                                                   type = "email"
+
+                                               } })
                                                     @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Email, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -173,7 +199,10 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.Password, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.PasswordFor(model => model.addCompanySupervisorViewModel.Password, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.PasswordFor(model => model.addCompanySupervisorViewModel.Password, new { htmlAttributes = new { @class = "form-control",
+                                                   placeholder = "Password",
+                                                   type = "password"
+                                               } })
                                                     @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Password, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -262,7 +291,7 @@
                                             @Html.LabelFor(model => model.addTrainerViewModel.UniversitySupervisorID, "University Supervisor Name", htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
                                                 @Html.DropDownListFor(model => model.addTrainerViewModel.UniversitySupervisorID, new List<SelectListItem>(), "Select University Supervisor Name", new { @id = "UniversitySupervisorID", @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.addTrainerViewModel.UniversityID, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.addTrainerViewModel.UniversitySupervisorID, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
@@ -312,7 +341,12 @@ $.ajax({
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addTrainerViewModel.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerName, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerName, new { htmlAttributes = new { @class = "form-control",
+                                               placeholder = "Full Name",
+
+                                               type = "text",
+                                               pattern = "[a-zA-Z ]+"
+                                           } })
                                                 @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerName, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -320,7 +354,10 @@ $.ajax({
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addTrainerViewModel.TrainerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerEmail, new { htmlAttributes = new { @class = "form-control",
+                                               placeholder = "Email",
+                                               type = "email"
+                                           } })
                                                 @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerEmail, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -328,7 +365,10 @@ $.ajax({
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addTrainerViewModel.TrainerPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.PasswordFor(model => model.addTrainerViewModel.TrainerPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.PasswordFor(model => model.addTrainerViewModel.TrainerPassword, new { htmlAttributes = new { @class = "form-control" ,
+                                               placeholder = "Password",
+                                               type = "password"
+                                           } })
                                                 @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerPassword, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
