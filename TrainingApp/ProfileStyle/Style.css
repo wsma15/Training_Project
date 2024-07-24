@@ -50,19 +50,20 @@
         width: 30px; /* Adjusted size */
         height: 30px; /* Adjusted size */
         background-size: cover;
-        opacity: 50; /* Hidden by default */
+        opacity: 10; /* Hidden by default */
+        
         transition: opacity 0.3s;
         cursor: pointer;
     }
 
     .profile-picture .pen-icon {
         right: 10px; /* Adjusted position */
-        background: url('pen-icon.png') no-repeat center center;
+        background: url('/ProfileStyle/pen-icon.png.png') no-repeat center center;
     }
 
     .profile-picture .delete-icon {
         left: 10px; /* Adjusted position */
-        background: url('delete-icon.png') no-repeat center center;
+        background: url('/ProfileStyle/delete-icon.png.png') no-repeat center center;
     }
 
     .profile-picture:hover .pen-icon,
