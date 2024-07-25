@@ -1,79 +1,88 @@
 ﻿using System.Collections.Generic;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TrainingApp.Models;
 using TrainingApp.ViewModels;
-using System.Data.Entity.Core.Metadata.Edm;
+using PagedList;
+
 namespace TrainingApp.Controllers
 {
     public class AdminController : Controller
     {
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
-        // GET: /Admin/Dashboard
-          [Authorize(Roles = "Admin")]
-        public ActionResult Dashboard()
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Dashboard(int page = 1)
         {
-        var viewModel = new DashboardViewModel
+            int pageSize = 10; // Number of items per page
+
+            var viewModel = new DashboardViewModel
             {
                 Trainers = _context.Users
-                                  .Where(super => super.Roles == UserRole.Trainer)
-                                  .ToList(),
+                    .Where(u => u.Roles == UserRole.Trainer)
+                    .OrderBy(u => u.Id)
+                    .ToPagedList(page, pageSize),
+
                 UniversitySupervisors = _context.Users
-                                  .Where(super => super.Roles == UserRole.UniversitySupervisor)
-                                  .ToList(),
-                CompanySupervisors = _context.Users.Where(
-                    super => super.Roles == UserRole.CompanySupervisor
-                    ).ToList(),
-                NewUsers = _context.Users.Where(
-                    super => super.Roles == UserRole.NewUser
-                    ).ToList(),
-                UniversityNames= _context.Universities.Select(u => new SelectListItem
+                    .Where(u => u.Roles == UserRole.UniversitySupervisor)
+                    .OrderBy(u => u.Id)
+                    .ToPagedList(page, pageSize),
+
+                CompanySupervisors = _context.Users
+                    .Where(u => u.Roles == UserRole.CompanySupervisor)
+                    .OrderBy(u => u.Id)
+                    .ToPagedList(page, pageSize),
+
+                NewUsers = _context.Users
+                    .Where(u => u.Roles == UserRole.NewUser)
+                    .OrderBy(u => u.Id)
+                    .ToPagedList(page, pageSize),
+
+                UniversityNames = _context.Universities.Select(u => new SelectListItem
                 {
                     Value = u.Id.ToString(),
-                    Text = u.UniversityName + " - " + u.City // Display company name and supervisor name
-                }).ToList(),
-                CompaniesNames= _context.Companies.Select(u => new SelectListItem
-                {
-                    Value = u.Id.ToString(),
-                    Text = u.CompanyName + " - " + u.City // Display company name and supervisor name
-                }).ToList(),
-                UniSupervisors = _context.Users.Where(u=>u.Roles==UserRole.UniversitySupervisor).Select(u => new SelectListItem
-                {
-                    Value = u.Id.ToString(),
-                    Text = u.Name + " - " + (from name in _context.Universities where name.Id == u.UniversityID select name.UniversityName).FirstOrDefault()
-                    // Display company name and supervisor name
+                    Text = u.UniversityName + " - " + u.City
                 }).ToList(),
 
-        };
+                CompaniesNames = _context.Companies.Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.CompanyName + " - " + u.City
+                }).ToList(),
+
+                UniSupervisors = _context.Users
+                    .Where(u => u.Roles == UserRole.UniversitySupervisor)
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id.ToString(),
+                        Text = u.Name + " - " + _context.Universities
+                            .Where(name => name.Id == u.UniversityID)
+                            .Select(name => name.UniversityName)
+                            .FirstOrDefault()
+                    }).ToList(),
+            };
 
             return View(viewModel);
-        }// In AdminController
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteUser(int id)
         {
-            // Find the user by ID
             var user = _context.Users.Find(id);
 
             if (user == null)
             {
-                // Handle the error (e.g., log it or show a message)
-                // For demonstration purposes, you might log an error or use TempData/ViewBag
                 TempData["ErrorMessage"] = "User not found";
-                return RedirectToAction("Dashboard"); // Redirects to the Index page after deletion
+                return RedirectToAction("Dashboard");
             }
 
-            // Remove the user from the context
             _context.Users.Remove(user);
-
-            // Save changes to the database
             _context.SaveChanges();
 
-            // Handle success (e.g., log it or show a message)
             TempData["SuccessMessage"] = "User deleted successfully";
-            return RedirectToAction("Dashboard"); // Redirects to the Index page after deletion
+            return RedirectToAction("Dashboard");
         }
 
         [HttpGet]
@@ -93,30 +102,29 @@ namespace TrainingApp.Controllers
 
             return Json(supervisors, JsonRequestBehavior.AllowGet);
         }
-        [Authorize(Roles = "Admin")]
 
+        [Authorize(Roles = "Admin")]
         public ActionResult AddStudent()
         {
             var viewModel = new AddTrainerViewModel
             {
                 UniversitySupervisors = _context.Users
-                                      .Where(u => u.Roles == UserRole.UniversitySupervisor)
-                                      .Select(u => new SelectListItem
-                                      {
-                                          Value = u.Id.ToString(),
-                                          Text = u.Name
-                                      })
-                                      .ToList(),
+                    .Where(u => u.Roles == UserRole.UniversitySupervisor)
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id.ToString(),
+                        Text = u.Name
+                    })
+                    .ToList(),
 
-                // Retrieve list of company supervisors along with their company names
                 CompanySupervisors = _context.Users
-                                    .Where(u => u.Roles == UserRole.CompanySupervisor)
-                                    .Select(u => new SelectListItem
-                                    {
-                                        Value = u.Id.ToString(),
-                                        Text = u.CompanyID + " - " + u.Name // Display company name and supervisor name
-                                    })
-                                    .ToList()
+                    .Where(u => u.Roles == UserRole.CompanySupervisor)
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id.ToString(),
+                        Text = u.CompanyID + " - " + u.Name
+                    })
+                    .ToList()
             };
 
             return View(viewModel);
@@ -129,97 +137,79 @@ namespace TrainingApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                var companyName = _context.Users
+                    .Where(u => u.Id == model.addTrainerViewModel.CompanySupervisorID)
+                    .Select(u => u.CompanyID)
+                    .FirstOrDefault();
+                var uniName = _context.Users
+                    .Where(u => u.Id == model.addTrainerViewModel.UniversitySupervisorID)
+                    .Select(u => u.UniversityID)
+                    .FirstOrDefault();
 
-                using (var context = new TrainingAppDBContext())
+                var user = new Users
                 {
-                    // Retrieve the company name based on the selected supervisor ID
-                    var companyName = context.Users
-                                             .Where(u => u.Id == model.addTrainerViewModel.CompanySupervisorID)
-                                             .Select(u => u.CompanyID)
-                                             .FirstOrDefault();
-                    var UniName = context.Users
-                                 .Where(u => u.Id == model.addTrainerViewModel.UniversitySupervisorID)
-                                 .Select(u => u.UniversityID)
-                                 .FirstOrDefault();
-                    var user = new Users
-                    {
-                        Name = model.addTrainerViewModel.TrainerName,
-                        Email = model.addTrainerViewModel.TrainerEmail,
-                        Password = model.addTrainerViewModel.TrainerPassword,
-                        UniversitySupervisorID = model.addTrainerViewModel.UniversitySupervisorID,
-                        CompanySupervisorID = model.addTrainerViewModel.CompanySupervisorID,
-                        CompanyID = companyName, // Save the company name
-                        Roles = UserRole.Trainer,
-                        UniversityID = UniName,
-                    };
+                    Name = model.addTrainerViewModel.TrainerName,
+                    Email = model.addTrainerViewModel.TrainerEmail,
+                    Password = model.addTrainerViewModel.TrainerPassword,
+                    UniversitySupervisorID = model.addTrainerViewModel.UniversitySupervisorID,
+                    CompanySupervisorID = model.addTrainerViewModel.CompanySupervisorID,
+                    CompanyID = companyName,
+                    Roles = UserRole.Trainer,
+                    UniversityID = uniName,
+                };
 
-                    context.Users.Add(user);
-                    context.SaveChanges();
-/*                    MailHelper.SendEmail(
-        user.Email,
-        "Welcome to the Training Management System",
-        $"Dear {user.Name},\n\n" +
-        "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
-        "Here are your account details:\n" +
-        $"- **User ID:** {user.Id}\n" +
-        $"- **Password:** {user.Password}\n\n" +
-        "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
-        "Best regards,\n" +
-        "The TMS Team"
-    );
-*/                }
+                _context.Users.Add(user);
+                _context.SaveChanges();
 
-                // Redirect to the admin dashboard after adding the student
-                return RedirectToAction("Dashboard", "Admin");
+                // Uncomment if you want to send a welcome email
+                /* MailHelper.SendEmail(
+                    user.Email,
+                    "Welcome to the Training Management System",
+                    $"Dear {user.Name},\n\n" +
+                    "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+                    "Here are your account details:\n" +
+                    $"- **User ID:** {user.Id}\n" +
+                    $"- **Password:** {user.Password}\n\n" +
+                    "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+                    "Best regards,\n" +
+                    "The TMS Team"
+                ); */
+
+                return RedirectToAction("Dashboard");
             }
 
-            // If the model state is not valid, return the view with validation errors
             return View(model);
-        }
-        public string GetUniversityName(int id)
-        {
-            return (from name in _context.Universities where name.Id == id select name.UniversityName).FirstOrDefault();
-        }
-        public string GetCompanyName(int id)
-        {
-            return (from name in _context.Companies where name.Id == id select name.CompanyName).FirstOrDefault();
         }
 
         [HttpPost]
-       // [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult AddUniversitySupervisor(DashboardViewModel model)
         {
             if (ModelState.IsValid)
             {
-                using (var context = new TrainingAppDBContext())
+                var newUser = new Users
                 {
-                    var newUser = new Users
-                    {
-                        Name = model.addSupervisorViewModel.SupervisorName,
-                        Email = model.addSupervisorViewModel.SupervisorEmail,
-                        Password = model.addSupervisorViewModel.SupervisorPassword, // Ensure you are hashing passwords in a real application
-                        UniversityID = model.addSupervisorViewModel.UniversityID,
-                        Roles = UserRole.UniversitySupervisor
-                    };
+                    Name = model.addSupervisorViewModel.SupervisorName,
+                    Email = model.addSupervisorViewModel.SupervisorEmail,
+                    Password = model.addSupervisorViewModel.SupervisorPassword,
+                    UniversityID = model.addSupervisorViewModel.UniversityID,
+                    Roles = UserRole.UniversitySupervisor
+                };
 
-                    context.Users.Add(newUser);
-                    context.SaveChanges();
+                _context.Users.Add(newUser);
+                _context.SaveChanges();
 
-                    return RedirectToAction("Dashboard", "Admin");
-                }
+                return RedirectToAction("Dashboard");
             }
-            AddSupervisorViewModel mod = model.addSupervisorViewModel;
 
-            // If model state is not valid, return view with errors
             return View(model.addSupervisorViewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public ActionResult AddCompanySupervisor()
         {
-            // Return the view with the appropriate view model
             return View();
         }
 
@@ -228,14 +218,14 @@ namespace TrainingApp.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult AddCompanySupervisor(DashboardViewModel model)
         {
-           // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var user = new Users
                 {
                     CompanyID = model.addCompanySupervisorViewModel.CompanyID,
                     Name = model.addCompanySupervisorViewModel.Name,
                     Email = model.addCompanySupervisorViewModel.Email,
-                    Password = model.addCompanySupervisorViewModel.Password, // Ensure you hash the password
+                    Password = model.addCompanySupervisorViewModel.Password,
                     Roles = UserRole.CompanySupervisor
                 };
 
@@ -245,7 +235,6 @@ namespace TrainingApp.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            // Return the view with the errors
             return View();
         }
 

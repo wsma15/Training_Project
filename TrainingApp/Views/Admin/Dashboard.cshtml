@@ -5,27 +5,93 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <head>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="~/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
-    <link href="~/vendor/fontawesome/css/solid.css" rel="stylesheet" />
-    <link href="~/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
-    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/vendor/datatables/DataTables-1.10.25/css/dataTables.dataTables.min.css" rel="stylesheet" />
-    <link href="~/vendor/datatables/DataTables-1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/vendor/datatables/datatables.min.js"></script>
-    <script src="~/js/initiate-datatables.js"></script>
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/jqueryval")
+    @*
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link href="~/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+        <link href="~/vendor/fontawesome/css/solid.css" rel="stylesheet" />
+        <link href="~/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
+        <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/vendor/datatables/DataTables-1.10.25/css/dataTables.dataTables.min.css" rel="stylesheet" />
+        <link href="~/vendor/datatables/DataTables-1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/vendor/datatables/datatables.min.js"></script>
+        <script src="~/js/initiate-datatables.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/jqueryval")*@
+@*    <link href="assets/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet">
+    <link href="assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet">
+    <link href="assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+*@
+    <link href="~/vendor/datatables/datatables.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="container mt-4">
         <h1 class="mb-4">Admin Dashboard</h1>
+
+        <div class="active">
+            <div class="content">
+                <div class="container">
+                    <div class="page-title">
+                        <h3>
+                            University Supervisors
+                            <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" data-bs-target="#addUniversitySupervisorModal">Add University Supervisor</button>
+
+                        </h3>
+                    </div>
+                    <div class="box box-primary">
+                        <div class="box-body">
+                            <table width="100%" class="table table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>University</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    @if (Model.UniversitySupervisors != null)
+                                    {
+                                        foreach (var supervisor in Model.UniversitySupervisors)
+                                        {
+                                            <tr>
+                                                <td>@supervisor.Id</td>
+                                                <td>@supervisor.Name</td>
+                                                <td>@supervisor.Email</td>
+                                                <td>@Model.GetUniName(@supervisor.UniversityID)</td>
+                                                <td class="text-end">
+                                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                                    <form action="@Url.Action("DeleteUser")" method="post" style="display:inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@supervisor.Id" />
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card mb-4">
             <div class="card-header">
                 <h3>University Supervisors</h3>
@@ -53,14 +119,20 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorName, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorName, new { htmlAttributes = new { @class = "form-control",
+                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorName, new
+                                                {
+                                                    htmlAttributes = new
+                                                    {
+                                                        @class = "form-control",
                                                placeholder = "Full Name",
                                                type = "text",
                                                pattern = "[a-zA-Z ]+"
-                                           } })
-                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorName, "", new {
+                                           }
+                                                })
+                                                @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorName, "", new
+                                                {
                                                @class = "text-danger",
-                                              
+
                                            })
                                             </div>
                                         </div>
@@ -68,12 +140,17 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorEmail, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorEmail, new { htmlAttributes = new { @class = "form-control" ,
+                                                @Html.EditorFor(model => model.addSupervisorViewModel.SupervisorEmail, new
+                                                {
+                                                    htmlAttributes = new
+                                                    {
+                                                        @class = "form-control",
 
                                                placeholder = "Email",
                                                type = "email"
 
-                                           } })
+                                           }
+                                                })
                                                 @Html.ValidationMessageFor(model => model.addSupervisorViewModel.SupervisorEmail, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -81,8 +158,11 @@
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addSupervisorViewModel.SupervisorPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.PasswordFor(model => model.addSupervisorViewModel.SupervisorPassword, new { htmlAttributes = new { @class = "form-control" }
-                                            ,placeholder = "Password",
+                                                @Html.PasswordFor(model => model.addSupervisorViewModel.SupervisorPassword, new
+                                                {
+                                                    htmlAttributes = new { @class = "form-control" }
+                                            ,
+                                                    placeholder = "Password",
                                                type = "password"
 
 
@@ -94,6 +174,7 @@
 
                                         <div class="form-group">
                                             <div class="col-md-offset-2 col-md-10">
+                                                
                                                 <input type="submit" value="Add Supervisor" class="btn btn-default" />
                                             </div>
                                         </div>
@@ -107,10 +188,10 @@
 
             </div>
             <div class="card-body">
-                <table class="table table-hover" id="universitySupervisorsTable">
+                <table width="100%" class="table table-hover" id="dataTables-example">
                     <thead>
                         <tr>
-                            <th>Supervisor ID</th>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>University</th>
@@ -175,11 +256,16 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Name, new { htmlAttributes = new { @class = "form-control",
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Name, new
+                                                    {
+                                                        htmlAttributes = new
+                                                        {
+                                                            @class = "form-control",
                                                    placeholder = "Full Name",
                                                    type = "text",
                                                    pattern = "[a-zA-Z ]+"
-                                               } })
+                                               }
+                                                    })
                                                     @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Name, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -187,11 +273,16 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.Email, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Email, new { htmlAttributes = new { @class = "form-control" ,
+                                                    @Html.EditorFor(model => model.addCompanySupervisorViewModel.Email, new
+                                                    {
+                                                        htmlAttributes = new
+                                                        {
+                                                            @class = "form-control",
                                                    placeholder = "Email",
                                                    type = "email"
 
-                                               } })
+                                               }
+                                                    })
                                                     @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Email, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -199,10 +290,15 @@
                                             <div class="form-group">
                                                 @Html.LabelFor(model => model.addCompanySupervisorViewModel.Password, htmlAttributes: new { @class = "control-label col-md-2" })
                                                 <div class="col-md-10">
-                                                    @Html.PasswordFor(model => model.addCompanySupervisorViewModel.Password, new { htmlAttributes = new { @class = "form-control",
+                                                    @Html.PasswordFor(model => model.addCompanySupervisorViewModel.Password, new
+                                                    {
+                                                        htmlAttributes = new
+                                                        {
+                                                            @class = "form-control",
                                                    placeholder = "Password",
                                                    type = "password"
-                                               } })
+                                               }
+                                                    })
                                                     @Html.ValidationMessageFor(model => model.addCompanySupervisorViewModel.Password, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -341,12 +437,17 @@ $.ajax({
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addTrainerViewModel.TrainerName, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerName, new { htmlAttributes = new { @class = "form-control",
+                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerName, new
+                                                {
+                                                    htmlAttributes = new
+                                                    {
+                                                        @class = "form-control",
                                                placeholder = "Full Name",
 
                                                type = "text",
                                                pattern = "[a-zA-Z ]+"
-                                           } })
+                                           }
+                                                })
                                                 @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerName, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -354,10 +455,15 @@ $.ajax({
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addTrainerViewModel.TrainerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerEmail, new { htmlAttributes = new { @class = "form-control",
+                                                @Html.EditorFor(model => model.addTrainerViewModel.TrainerEmail, new
+                                                {
+                                                    htmlAttributes = new
+                                                    {
+                                                        @class = "form-control",
                                                placeholder = "Email",
                                                type = "email"
-                                           } })
+                                           }
+                                                })
                                                 @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerEmail, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -365,10 +471,15 @@ $.ajax({
                                         <div class="form-group">
                                             @Html.LabelFor(model => model.addTrainerViewModel.TrainerPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                                             <div class="col-md-10">
-                                                @Html.PasswordFor(model => model.addTrainerViewModel.TrainerPassword, new { htmlAttributes = new { @class = "form-control" ,
+                                                @Html.PasswordFor(model => model.addTrainerViewModel.TrainerPassword, new
+                                                {
+                                                    htmlAttributes = new
+                                                    {
+                                                        @class = "form-control",
                                                placeholder = "Password",
                                                type = "password"
-                                           } })
+                                           }
+                                                })
                                                 @Html.ValidationMessageFor(model => model.addTrainerViewModel.TrainerPassword, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -482,6 +593,8 @@ $.ajax({
         </div>
 
     </div>
+
+    <script src="~/js/script.js"></script>
     <script src="~/vendor/jquery/jquery.min.js"></script>
     <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/vendor/datatables/datatables.min.js"></script>
@@ -493,23 +606,8 @@ $.ajax({
     $(document).ready(function () {
         'use strict';
 
-        // Function to initialize DataTable
-        function initializeDataTable(tableId) {
-            $(tableId).DataTable({
-                responsive: true,
-                pageLength: 20,
-                lengthChange: false,
-                searching: true,
-                ordering: true
-            });
-        }
-
-        // Initialize DataTables
-        initializeDataTable('#universitySupervisorsTable');
-        initializeDataTable('#companySupervisorsTable');
-        initializeDataTable('#trainersTable');
-        initializeDataTable('#newUsersTable');
-
+  
+   
         // Function to handle form submission
         function handleFormSubmission(modalId, formId) {
             $(document).on('submit', formId, function (e) {

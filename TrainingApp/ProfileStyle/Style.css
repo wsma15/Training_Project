@@ -38,39 +38,6 @@
         display: none;
     }
 
-    .profile-picture .pen-icon,
-    .profile-picture .delete-icon {
-        position: absolute;
-        bottom: 30px;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 100%;
-        display: flex;
-        align-items: flex-end;
-        justify-content: left;
-        width: 30px; /* Adjusted size */
-        height: 30px; /* Adjusted size */
-        background-size: cover;
-        opacity: 10; /* Hidden by default */
-        
-        transition: opacity 0.3s;
-        cursor: pointer;
-    }
-
-    .profile-picture .pen-icon {
-        right: 10px; /* Adjusted position */
-        background: url('/ProfileStyle/pen-icon.png.png') no-repeat center center;
-    }
-
-    .profile-picture .delete-icon {
-        left: 10px; /* Adjusted position */
-        background: url('/ProfileStyle/delete-icon.png.png') no-repeat center center;
-    }
-
-    .profile-picture:hover .pen-icon,
-    .profile-picture:hover .delete-icon {
-        opacity: 1; /* Show icons on hover */
-    }
-
 .profile-info h1 {
     margin: 0;
     font-size: 24px;

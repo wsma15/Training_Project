@@ -1,4 +1,5 @@
 ﻿using Microsoft.Ajax.Utilities;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -131,10 +132,10 @@ namespace TrainingApp.ViewModels
     public class DashboardViewModel
     {
 
-        public List<Users> Trainers { get; set; }
-        public List<Users> UniversitySupervisors { get; set; }
-        public List<Users> CompanySupervisors { get; set; }
-        public List<Users> NewUsers { get; set; }
+        public IPagedList<Users> Trainers { get; set; }
+        public IPagedList<Users> UniversitySupervisors { get; set; }
+        public IPagedList<Users> CompanySupervisors { get; set; }
+        public IPagedList<Users> NewUsers { get; set; }
         public IEnumerable<SelectListItem> UniversityNames { get; set; }
         public IEnumerable<SelectListItem> CompaniesNames { get; set; }
         public IEnumerable<SelectListItem> UniSupervisors { get; set; }

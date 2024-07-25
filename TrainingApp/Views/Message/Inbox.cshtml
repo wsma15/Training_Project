@@ -33,8 +33,8 @@
             <ul class="list-unstyled" id="userList">
                 @foreach (var user in Model)
                 {
-                    <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id">
-                        @*<img src="~/images/@user.Avatar" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />*@
+                    <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id" data-avatar="@user.Avatar">
+                        <img src="~/images/@user.Avatar" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
                         <div class="about">
                             <div class="name font-weight-bold">@user.Name</div>
                             <div class="status text-muted">
@@ -49,7 +49,8 @@
         <!-- Right Panel: Chat History and Message Box -->
         <div class="col-md-8 chat bg-white p-3 rounded-right">
             <div class="chat-header clearfix border-bottom pb-2 mb-3">
-                @*<img src="~/images/default-avatar.jpg" alt="avatar" id="chat-avatar" class="rounded-circle mr-2" width="50" height="50" />*@
+                <img src="~/Content/Images/default.jpg" alt="avatar" id="chat-avatar" class="rounded-circle mr-2" width="50" height="50">
+
                 <div class="chat-about">
                     <h6 class="mb-0"><span id="chat-user-name" class="font-weight-bold">Select a user</span></h6>
                     <small class="text-muted">No messages yet</small>
@@ -89,7 +90,8 @@ $(document).ready(function() {
         receiverId = $(this).data('senderid');
         $('#receiverId').val(receiverId);
         $('#chat-user-name').text($(this).find('.name').text());
-        $('#chat-avatar').attr('src', $(this).find('img').attr('src'));
+        var avatarSrc = $(this).data('avatar') ? '~/images/' + $(this).data('avatar') : '~/Content/Images/default.jpg';
+        $('#chat-avatar').attr('src', avatarSrc);
         loadChatHistory(receiverId);
         startPolling();
     });
@@ -178,7 +180,8 @@ $(document).ready(function() {
             const userList = $('#userList');
             userList.empty();
             users.forEach(user => {
-                userList.append(`<li class="clearfix user-link p-2 border-bottom" data-senderid="${user.Id}">
+                userList.append(`<li class="clearfix user-link p-2 border-bottom" data-senderid="${user.Id}" data-avatar="${user.Avatar}">
+                    <img src="~/images/${user.Avatar}" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
                     <div class="about">
                         <div class="name font-weight-bold">${user.Name}</div>
                         <div class="status text-muted">

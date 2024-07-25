@@ -154,7 +154,8 @@ namespace TrainingApp.Controllers
                                   .Select(user => new UsersPanelViewModels
                                   {
                                       Id = user.Id,
-                                      Name = $"({user.Name}) ({user.Roles})"
+                                      Name = $"({user.Name}) ({user.Roles})",
+                                      Avatar=user.ProfilePicturePath,
                                   })
                                   .ToList();
                 return View(supervisors);
@@ -173,13 +174,16 @@ if (userRole == UserRole.UniversitySupervisor)
              {
                  user.Id,
                  user.Name,
-                 user.Roles
+                 user.Roles,
+                 user.ProfilePicturePath
              })
              .ToList() // Fetch data into memory
              .Select(user => new UsersPanelViewModels
              {
                  Id = user.Id,
-                 Name = $"({user.Name}) ({user.Roles})"
+                 Name = $"({user.Name}) ({user.Roles})",
+                 Avatar = user.ProfilePicturePath,
+
              })
              .ToList();
 
@@ -217,6 +221,8 @@ if (userRole == UserRole.UniversitySupervisor)
                            {
                                Id = user.Id,
                                Name = user.Name,
+                               Avatar = user.ProfilePicturePath,
+
                                // CompanySupervisorID = user.CompanySupervisorID
                            })
                            .Distinct() // Ensure no duplicate users
@@ -229,6 +235,8 @@ if (userRole == UserRole.UniversitySupervisor)
                               {
                                   Id = user.Id,
                                   Name = user.Name,
+                                  Avatar = user.ProfilePicturePath,
+
                                   //     CompId = user.CompanySupervisorID,
                               }).ToList();
                 var USERS = Trainers.Union(relatedUsers);
@@ -244,13 +252,16 @@ if (userRole == UserRole.UniversitySupervisor)
                     {
                         user.Id,
                         user.Name,
-                        user.Roles
+                        user.Roles,
+                        user.ProfilePicturePath
                     })
                     .ToList()
                     .Select(user => new UsersPanelViewModels
                     {
                         Id = user.Id,
-                        Name = $"{user.Name} ({user.Roles})"
+                        Name = $"{user.Name} ({user.Roles})",
+                        Avatar = user.ProfilePicturePath,
+
                         // CompId = user.CompanySupervisorID,
                     }).ToList();
                 return View(users);
