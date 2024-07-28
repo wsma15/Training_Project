@@ -131,11 +131,32 @@ namespace TrainingApp.ViewModels
     }
     public class DashboardViewModel
     {
+        [Required]
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Required]
+        public UserRole UserRole { get; set; }
+
+        public int? UniversitySupervisorID { get; set; }
+        public int? CompanySupervisorID { get; set; }
+        public int UniversityID { get; set; }
+        public int CompanyID { get; set; }
+        public List<Users> users { get; set; }
 
         public IPagedList<Users> Trainers { get; set; }
         public IPagedList<Users> UniversitySupervisors { get; set; }
         public IPagedList<Users> CompanySupervisors { get; set; }
-        public IPagedList<Users> NewUsers { get; set; }
+        public List<Users> NewUsers { get; set; }
         public IEnumerable<SelectListItem> UniversityNames { get; set; }
         public IEnumerable<SelectListItem> CompaniesNames { get; set; }
         public IEnumerable<SelectListItem> UniSupervisors { get; set; }
@@ -158,7 +179,7 @@ namespace TrainingApp.ViewModels
                                  where name.Id == supervisorId
                                  select name.UniversityName).FirstOrDefault();
 
-            return supervisor ?? "University not found";
+            return supervisor ?? "Not Found";
         }
 
         public string GetCompanyName(int supervisorId)
@@ -167,7 +188,7 @@ namespace TrainingApp.ViewModels
                                  where  name.Id == supervisorId
                                  select name.CompanyName).FirstOrDefault();
 
-            return supervisor ?? "Company not found";
+            return supervisor ?? "Not Found";
         }
 
         public string GetSupervisorName(int supervisorId)

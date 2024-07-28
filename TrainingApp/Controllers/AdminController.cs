@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using TrainingApp.Models;
 using TrainingApp.ViewModels;
 using PagedList;
+using Microsoft.AspNet.Identity;
 
 namespace TrainingApp.Controllers
 {
@@ -13,31 +14,31 @@ namespace TrainingApp.Controllers
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
 
         [Authorize(Roles = "Admin")]
-        public ActionResult Dashboard(int page = 1)
+        public ActionResult Dashboard()
         {
-            int pageSize = 10; // Number of items per page
-
             var viewModel = new DashboardViewModel
             {
-                Trainers = _context.Users
-                    .Where(u => u.Roles == UserRole.Trainer)
-                    .OrderBy(u => u.Id)
-                    .ToPagedList(page, pageSize),
+                /*         Trainers = _context.Users
+                             .Where(u => u.Roles == UserRole.Trainer)
+                             .OrderBy(u => u.Id)
+                             .ToPagedList(page, pageSize),
 
-                UniversitySupervisors = _context.Users
-                    .Where(u => u.Roles == UserRole.UniversitySupervisor)
-                    .OrderBy(u => u.Id)
-                    .ToPagedList(page, pageSize),
+                         UniversitySupervisors = _context.Users
+                             .Where(u => u.Roles == UserRole.UniversitySupervisor)
+                             .OrderBy(u => u.Id)
+                             .ToPagedList(page, pageSize),
 
-                CompanySupervisors = _context.Users
-                    .Where(u => u.Roles == UserRole.CompanySupervisor)
-                    .OrderBy(u => u.Id)
-                    .ToPagedList(page, pageSize),
+                         CompanySupervisors = _context.Users
+                             .Where(u => u.Roles == UserRole.CompanySupervisor)
+                             .OrderBy(u => u.Id)
+                             .ToPagedList(page, pageSize),
 
-                NewUsers = _context.Users
-                    .Where(u => u.Roles == UserRole.NewUser)
-                    .OrderBy(u => u.Id)
-                    .ToPagedList(page, pageSize),
+                         NewUsers = _context.Users
+                             .Where(u => u.Roles == UserRole.NewUser)
+                             .OrderBy(u => u.Id)
+                             .ToPagedList(page, pageSize),
+         */
+                users = _context.Users.Select(x => x).ToList(),
 
                 UniversityNames = _context.Universities.Select(u => new SelectListItem
                 {
@@ -61,6 +62,7 @@ namespace TrainingApp.Controllers
                             .Select(name => name.UniversityName)
                             .FirstOrDefault()
                     }).ToList(),
+
             };
 
             return View(viewModel);
@@ -133,55 +135,62 @@ namespace TrainingApp.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public ActionResult AddStudent(DashboardViewModel model)
+
+        public ActionResult AddUser(DashboardViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var companyName = _context.Users
-                    .Where(u => u.Id == model.addTrainerViewModel.CompanySupervisorID)
-                    .Select(u => u.CompanyID)
-                    .FirstOrDefault();
-                var uniName = _context.Users
-                    .Where(u => u.Id == model.addTrainerViewModel.UniversitySupervisorID)
-                    .Select(u => u.UniversityID)
-                    .FirstOrDefault();
-
                 var user = new Users
                 {
-                    Name = model.addTrainerViewModel.TrainerName,
-                    Email = model.addTrainerViewModel.TrainerEmail,
-                    Password = model.addTrainerViewModel.TrainerPassword,
-                    UniversitySupervisorID = model.addTrainerViewModel.UniversitySupervisorID,
-                    CompanySupervisorID = model.addTrainerViewModel.CompanySupervisorID,
-                    CompanyID = companyName,
-                    Roles = UserRole.Trainer,
-                    UniversityID = uniName,
+                    Name = model.Name,
+                    Email = model.Email,
+                    Password = model.Password,
+                    Roles = model.UserRole,
                 };
+
+                switch (model.UserRole)
+                {
+                    case UserRole.Trainer:
+                        user.CompanyID = model.CompanyID;
+                        user.UniversityID = model.UniversityID;
+                        break;
+
+                    case UserRole.CompanySupervisor:
+                        user.CompanyID = model.CompanyID;
+                        break;
+
+                    case UserRole.UniversitySupervisor:
+                        user.UniversityID = model.UniversityID;
+                        break;
+                }
+                user.AddedBy = User.Identity.GetUserId();
 
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
-                // Uncomment if you want to send a welcome email
-                /* MailHelper.SendEmail(
-                    user.Email,
-                    "Welcome to the Training Management System",
-                    $"Dear {user.Name},\n\n" +
-                    "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
-                    "Here are your account details:\n" +
-                    $"- **User ID:** {user.Id}\n" +
-                    $"- **Password:** {user.Password}\n\n" +
-                    "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
-                    "Best regards,\n" +
-                    "The TMS Team"
-                ); */
-
                 return RedirectToAction("Dashboard");
             }
 
-            return View(model);
+            // Reload the dropdowns on error
+            model.UniversityNames = new SelectList(_context.Universities, "Id", "Name");
+            model.CompaniesNames = new SelectList(_context.Companies, "Id", "Name");
+            return View("Dashboard", model);
         }
+     // Uncomment if you want to send a welcome email
+    /* MailHelper.SendEmail(
+        user.Email,
+        "Welcome to the Training Management System",
+        $"Dear {user.Name},\n\n" +
+        "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+        "Here are your account details:\n" +
+        $"- **User ID:** {user.Id}\n" +
+        $"- **Password:** {user.Password}\n\n" +
+        "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+        "Best regards,\n" +
+        "The TMS Team"
+    ); */
 
-        [HttpPost]
+    [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult AddUniversitySupervisor(DashboardViewModel model)

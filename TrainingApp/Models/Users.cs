@@ -25,6 +25,7 @@ namespace TrainingApp.Models
         public string Password { get; set; }
 
         public int? UniversitySupervisorID { get; set; }
+        public string AddedBy { get; set; }
         public int? CompanySupervisorID { get; set; }
 
         public int UniversityID { get; set; }
@@ -32,7 +33,7 @@ namespace TrainingApp.Models
         public int CompanyID { get; set; }
 
         public UserRole Roles { get; set; }
-        public DateTime LastLogin { get; set; } 
+        public DateTime LastLogin { get; set; } = DateTime.Now;
         public string ProfilePicturePath { get; set; }
     }
 
