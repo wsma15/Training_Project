@@ -464,7 +464,7 @@ $"- **Password:** {user.Password}\n\n" +
                     TempData["SuccessMessage"] = "Company Supervisor registered successfully!";
                     return RedirectToAction("RegistrationSuccess");
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     ModelState.AddModelError("", "An error occurred while registering the company supervisor.");
                 }
@@ -520,7 +520,7 @@ $"- **Password:** {user.Password}\n\n" +
                     TempData["SuccessMessage"] = "University Supervisor registered successfully!";
                     return RedirectToAction("RegistrationSuccess");
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     ModelState.AddModelError("", "An error occurred while registering the university supervisor.");
                 }

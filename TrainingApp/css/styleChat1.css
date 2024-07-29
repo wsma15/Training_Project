@@ -2,20 +2,54 @@ body {
     background-color: #f8f9fa;
 }
 
+.container-fluid {
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
 .people-list {
     height: 100%;
     overflow-y: auto;
+    background-color: #fff;
+    padding: 0.5rem;
+    border-right: 1px solid #e9ecef;
 }
 
-.user-link:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
+.search {
+    margin-bottom: 1rem;
 }
+
+.user-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s;
+}
+
+    .user-link:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .user-link img {
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
 
 .chat {
     height: 100%;
     display: flex;
     flex-direction: column;
+    background-color: #fff;
 }
 
 .chat-header {
@@ -23,6 +57,19 @@ body {
     align-items: center;
     padding: 0.5rem;
     border-bottom: 1px solid #e9ecef;
+}
+
+    .chat-header img {
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+
+.chat-about h6 {
+    margin: 0;
+}
+
+.chat-about small {
+    color: #999;
 }
 
 .chat-history {
@@ -43,8 +90,43 @@ body {
 
 .my-message {
     text-align: right;
+    background-color: #dcf8c6;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    max-width: 80%;
+    word-wrap: break-word;
+    align-self: flex-end;
 }
 
 .other-message {
     text-align: left;
+    background-color: #f1f0f0;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    max-width: 80%;
+    word-wrap: break-word;
+    align-self: flex-start;
+}
+
+.input-group textarea {
+    resize: none;
+    height: 50px;
+}
+
+@media (max-width: 768px) {
+    .people-list {
+        display: none;
+    }
+
+    .chat {
+        height: calc(100vh - 56px);
+    }
+
+    .chat-header {
+        height: 56px;
+    }
 }

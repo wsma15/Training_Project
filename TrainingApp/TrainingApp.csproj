@@ -226,65 +226,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407122245303_Init.cs" />
-    <Compile Include="Migrations\202407122245303_Init.Designer.cs">
-      <DependentUpon>202407122245303_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407180801259_Init1.cs" />
-    <Compile Include="Migrations\202407180801259_Init1.Designer.cs">
-      <DependentUpon>202407180801259_Init1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407180815010_Init2.cs" />
-    <Compile Include="Migrations\202407180815010_Init2.Designer.cs">
-      <DependentUpon>202407180815010_Init2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407180833508_Init3.cs" />
-    <Compile Include="Migrations\202407180833508_Init3.Designer.cs">
-      <DependentUpon>202407180833508_Init3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407181007503_Init4.cs" />
-    <Compile Include="Migrations\202407181007503_Init4.Designer.cs">
-      <DependentUpon>202407181007503_Init4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407211137501_Init5.cs" />
-    <Compile Include="Migrations\202407211137501_Init5.Designer.cs">
-      <DependentUpon>202407211137501_Init5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407211221200_Init6.cs" />
-    <Compile Include="Migrations\202407211221200_Init6.Designer.cs">
-      <DependentUpon>202407211221200_Init6.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407211252411_Init7.cs" />
-    <Compile Include="Migrations\202407211252411_Init7.Designer.cs">
-      <DependentUpon>202407211252411_Init7.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407211255018_Init8.cs" />
-    <Compile Include="Migrations\202407211255018_Init8.Designer.cs">
-      <DependentUpon>202407211255018_Init8.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407211323118_Init9.cs" />
-    <Compile Include="Migrations\202407211323118_Init9.Designer.cs">
-      <DependentUpon>202407211323118_Init9.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407241235344_Init10.cs" />
-    <Compile Include="Migrations\202407241235344_Init10.Designer.cs">
-      <DependentUpon>202407241235344_Init10.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407241239461_Init11.cs" />
-    <Compile Include="Migrations\202407241239461_Init11.Designer.cs">
-      <DependentUpon>202407241239461_Init11.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407241249065_Init12.cs" />
-    <Compile Include="Migrations\202407241249065_Init12.Designer.cs">
-      <DependentUpon>202407241249065_Init12.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407251302131_Init13.cs" />
-    <Compile Include="Migrations\202407251302131_Init13.Designer.cs">
-      <DependentUpon>202407251302131_Init13.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407280706323_Init14.cs" />
-    <Compile Include="Migrations\202407280706323_Init14.Designer.cs">
-      <DependentUpon>202407280706323_Init14.cs</DependentUpon>
+    <Compile Include="Migrations\202407281204271_Init.cs" />
+    <Compile Include="Migrations\202407281204271_Init.Designer.cs">
+      <DependentUpon>202407281204271_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -334,6 +278,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\charts.js" />
     <Content Include="js\dashboard-charts.js" />
+    <Content Include="js\DashboardAdmin.js" />
     <Content Include="js\form-validator.js" />
     <Content Include="js\fullcalendar-script.js" />
     <Content Include="js\initiate-datatables.js" />
@@ -996,50 +941,8 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202407122245303_Init.resx">
-      <DependentUpon>202407122245303_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407180801259_Init1.resx">
-      <DependentUpon>202407180801259_Init1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407180815010_Init2.resx">
-      <DependentUpon>202407180815010_Init2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407180833508_Init3.resx">
-      <DependentUpon>202407180833508_Init3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407181007503_Init4.resx">
-      <DependentUpon>202407181007503_Init4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407211137501_Init5.resx">
-      <DependentUpon>202407211137501_Init5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407211221200_Init6.resx">
-      <DependentUpon>202407211221200_Init6.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407211252411_Init7.resx">
-      <DependentUpon>202407211252411_Init7.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407211255018_Init8.resx">
-      <DependentUpon>202407211255018_Init8.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407211323118_Init9.resx">
-      <DependentUpon>202407211323118_Init9.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407241235344_Init10.resx">
-      <DependentUpon>202407241235344_Init10.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407241239461_Init11.resx">
-      <DependentUpon>202407241239461_Init11.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407241249065_Init12.resx">
-      <DependentUpon>202407241249065_Init12.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407251302131_Init13.resx">
-      <DependentUpon>202407251302131_Init13.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407280706323_Init14.resx">
-      <DependentUpon>202407280706323_Init14.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407281204271_Init.resx">
+      <DependentUpon>202407281204271_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

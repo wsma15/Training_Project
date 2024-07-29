@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public string CompanySupervisorID { get; set; }
         public bool IsOnline {  get; set; }
-        public string Avatar {  get; set; }
+        public string ProfilePicturePath {  get; set; }
     }
 }

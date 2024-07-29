@@ -6,6 +6,8 @@ using TrainingApp.Models;
 using TrainingApp.ViewModels;
 using PagedList;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TrainingApp.Controllers
 {
@@ -18,27 +20,7 @@ namespace TrainingApp.Controllers
         {
             var viewModel = new DashboardViewModel
             {
-                /*         Trainers = _context.Users
-                             .Where(u => u.Roles == UserRole.Trainer)
-                             .OrderBy(u => u.Id)
-                             .ToPagedList(page, pageSize),
-
-                         UniversitySupervisors = _context.Users
-                             .Where(u => u.Roles == UserRole.UniversitySupervisor)
-                             .OrderBy(u => u.Id)
-                             .ToPagedList(page, pageSize),
-
-                         CompanySupervisors = _context.Users
-                             .Where(u => u.Roles == UserRole.CompanySupervisor)
-                             .OrderBy(u => u.Id)
-                             .ToPagedList(page, pageSize),
-
-                         NewUsers = _context.Users
-                             .Where(u => u.Roles == UserRole.NewUser)
-                             .OrderBy(u => u.Id)
-                             .ToPagedList(page, pageSize),
-         */
-                users = _context.Users.Select(x => x).ToList(),
+                users = _context.Users.ToList(),
 
                 UniversityNames = _context.Universities.Select(u => new SelectListItem
                 {
@@ -46,11 +28,22 @@ namespace TrainingApp.Controllers
                     Text = u.UniversityName + " - " + u.City
                 }).ToList(),
 
-                CompaniesNames = _context.Companies.Select(u => new SelectListItem
+                CompaniesNames = _context.Companies.Select(c => new SelectListItem
                 {
-                    Value = u.Id.ToString(),
-                    Text = u.CompanyName + " - " + u.City
+                    Value = c.Id.ToString(),
+                    Text = c.CompanyName + " - " + c.City
                 }).ToList(),
+
+                CompanySupervisors = _context.Users
+                    .Where(u => u.Roles == UserRole.CompanySupervisor)
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id.ToString(),
+                        Text = u.Name + " - " + _context.Companies
+                            .Where(c => c.Id == u.CompanyID)
+                            .Select(c => c.CompanyName)
+                            .FirstOrDefault()
+                    }).ToList(),
 
                 UniSupervisors = _context.Users
                     .Where(u => u.Roles == UserRole.UniversitySupervisor)
@@ -58,11 +51,10 @@ namespace TrainingApp.Controllers
                     {
                         Value = u.Id.ToString(),
                         Text = u.Name + " - " + _context.Universities
-                            .Where(name => name.Id == u.UniversityID)
-                            .Select(name => name.UniversityName)
+                            .Where(uni => uni.Id == u.UniversityID)
+                            .Select(uni => uni.UniversityName)
                             .FirstOrDefault()
-                    }).ToList(),
-
+                    }).ToList()
             };
 
             return View(viewModel);
@@ -163,7 +155,12 @@ namespace TrainingApp.Controllers
                         user.UniversityID = model.UniversityID;
                         break;
                 }
+
                 user.AddedBy = User.Identity.GetUserId();
+
+                // Load the default avatar image from the specified location and convert it to a byte array
+                string imagePath = Server.MapPath("~/Content/Images/default.jpg");
+                user.Avatar = System.IO.File.ReadAllBytes(imagePath);
 
                 _context.Users.Add(user);
                 _context.SaveChanges();
@@ -176,21 +173,21 @@ namespace TrainingApp.Controllers
             model.CompaniesNames = new SelectList(_context.Companies, "Id", "Name");
             return View("Dashboard", model);
         }
-     // Uncomment if you want to send a welcome email
-    /* MailHelper.SendEmail(
-        user.Email,
-        "Welcome to the Training Management System",
-        $"Dear {user.Name},\n\n" +
-        "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
-        "Here are your account details:\n" +
-        $"- **User ID:** {user.Id}\n" +
-        $"- **Password:** {user.Password}\n\n" +
-        "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
-        "Best regards,\n" +
-        "The TMS Team"
-    ); */
+        // Uncomment if you want to send a welcome email
+        /* MailHelper.SendEmail(
+            user.Email,
+            "Welcome to the Training Management System",
+            $"Dear {user.Name},\n\n" +
+            "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
+            "Here are your account details:\n" +
+            $"- **User ID:** {user.Id}\n" +
+            $"- **Password:** {user.Password}\n\n" +
+            "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+            "Best regards,\n" +
+            "The TMS Team"
+        ); */
 
-    [HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult AddUniversitySupervisor(DashboardViewModel model)

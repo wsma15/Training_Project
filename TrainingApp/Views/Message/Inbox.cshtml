@@ -19,7 +19,7 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <!-- Left Panel: List of Unique Users -->
-        <div class="col-md-4 people-list bg-light p-3 rounded-left" id="people-list">
+        <div class="col-md-4 col-lg-3 people-list bg-light p-3 rounded-left" id="people-list">
             <div class="search mb-3">
                 <div class="input-group">
                     <input type="text" id="searchInput" class="form-control" placeholder="Search users" />
@@ -30,11 +30,11 @@
                     </div>
                 </div>
             </div>
-            <ul class="list-unstyled" id="userList">
+            <ul class="list-unstyled" id="userList" style="height: 500px; overflow-y: auto;">
                 @foreach (var user in Model)
                 {
-                    <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id" data-avatar="@user.Avatar">
-                        <img src="~/images/@user.Avatar" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
+                    <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id" data-avatar="@user.ProfilePicturePath">
+                        <img src="@(string.IsNullOrEmpty(user.ProfilePicturePath) ? Url.Content("~/Content/images/default.jpg") : Url.Content("~/images/" + user.ProfilePicturePath))" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
                         <div class="about">
                             <div class="name font-weight-bold">@user.Name</div>
                             <div class="status text-muted">
@@ -47,19 +47,19 @@
         </div>
 
         <!-- Right Panel: Chat History and Message Box -->
-        <div class="col-md-8 chat bg-white p-3 rounded-right">
-            <div class="chat-header clearfix border-bottom pb-2 mb-3">
+        <div class="col-md-8 col-lg-9 chat bg-white p-3 rounded-right">
+            <div class="chat-header clearfix border-bottom pb-2 mb-3 d-flex align-items-center">
                 <img src="~/Content/Images/default.jpg" alt="avatar" id="chat-avatar" class="rounded-circle mr-2" width="50" height="50">
-
                 <div class="chat-about">
                     <h6 class="mb-0"><span id="chat-user-name" class="font-weight-bold">Select a user</span></h6>
                     <small class="text-muted">No messages yet</small>
                 </div>
             </div>
 
-            <div class="chat-history overflow-auto mb-3" id="chat-messages" style="height: 400px;">
+            <div class="chat-history overflow-auto mb-3" id="chat-messages" style="height: 400px; overflow-y: auto;">
                 <!-- Chat messages will be loaded here via AJAX -->
             </div>
+            <button class="btn btn-primary btn-block" id="loadMoreBtn" style="display: none;">Load More</button>
 
             <div class="chat-message clearfix">
                 @using (Html.BeginForm("SendNewMessage", "Message", FormMethod.Post, new { id = "messageForm" }))
@@ -79,36 +79,53 @@
 </div>
 
 <!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script>
+@section scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
 $(document).ready(function() {
     var receiverId;
+    var pageIndex = 1; // Track the page index for loading messages
 
-    // Load chat history when a user is clicked
-    $('.user-link').click(function(e) {
+    // Use event delegation to handle clicks on dynamically added .user-link elements
+    $(document).on('click', '.user-link', function(e) {
         e.preventDefault();
         receiverId = $(this).data('senderid');
         $('#receiverId').val(receiverId);
         $('#chat-user-name').text($(this).find('.name').text());
         var avatarSrc = $(this).data('avatar') ? '~/images/' + $(this).data('avatar') : '~/Content/Images/default.jpg';
         $('#chat-avatar').attr('src', avatarSrc);
-        loadChatHistory(receiverId);
-        startPolling();
+        pageIndex = 1; // Reset the page index
+        loadChatHistory(receiverId, pageIndex, true); // Load the initial messages
+    });
+
+    // Load more messages when the "Load More" button is clicked
+    $('#loadMoreBtn').click(function() {
+        pageIndex++;
+        loadChatHistory(receiverId, pageIndex, false);
     });
 
     // Function to load chat history
-    async function loadChatHistory(receiverId) {
+    async function loadChatHistory(receiverId, pageIndex, clearChat) {
         try {
-            const response = await fetch('@Url.Action("GetChatHistory", "Message")?receiverId=' + receiverId);
+            const response = await fetch(`@Url.Action("GetChatHistory", "Message")?receiverId=${receiverId}&pageIndex=${pageIndex}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             const chatMessages = $('#chat-messages');
-            chatMessages.empty();
-            data.forEach(message => {
+            if (clearChat) chatMessages.empty(); // Clear chat if loading the initial messages
+
+            data.messages.forEach(message => {
                 const formattedTime = formatTimestamp(message.Timestamp);
-                chatMessages.append(`<div class="message-item ${message.IsMine ? 'my-message' : 'other-message'}"><strong>${message.SenderName}:</strong> ${message.MessageText} <span class="text-muted small">${formattedTime}</span></div>`);
+                chatMessages.prepend(`<div class="message-item ${message.IsMine ? 'my-message' : 'other-message'}"><strong>${message.SenderName}:</strong> ${message.MessageText} <span class="text-muted small">${formattedTime}</span></div>`);
             });
-            chatMessages.scrollTop(chatMessages[0].scrollHeight);
+
+            if (data.hasMoreMessages) {
+                $('#loadMoreBtn').show(); // Show the "Load More" button if there are more messages
+            } else {
+                $('#loadMoreBtn').hide(); // Hide the "Load More" button if there are no more messages
+            }
+
+            if (clearChat) chatMessages.scrollTop(chatMessages[0].scrollHeight); // Scroll to bottom only if initial load
         } catch (error) {
             console.error('Error loading chat history:', error);
         }
@@ -128,7 +145,7 @@ $(document).ready(function() {
             });
             const result = await response.json();
             if (result.success) {
-                loadChatHistory(receiverId);
+                loadChatHistory(receiverId, 1, true); // Reload the chat history after sending a message
                 $('#messageText').val('');
             } else {
                 alert('Error sending message: ' + result.message);
@@ -149,15 +166,6 @@ $(document).ready(function() {
         } else {
             return messageTime.format('h:mm A, MMM D, YYYY');
         }
-    }
-
-    // Start polling for new messages
-    function startPolling() {
-        setInterval(function() {
-            if (receiverId) {
-                loadChatHistory(receiverId);
-            }
-        }, 5000);
     }
 
     // Search users based on input
@@ -195,4 +203,5 @@ $(document).ready(function() {
         }
     }
 });
-</script>
+    </script>
+    }

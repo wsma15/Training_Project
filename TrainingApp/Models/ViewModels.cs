@@ -55,9 +55,9 @@ namespace TrainingApp.ViewModels
         public int? UniversitySupervisorID { get; set; }
         public int? CompanySupervisorID { get; set; }
 
-        public int UniversityID { get; set; }
+        public int? UniversityID { get; set; }
 
-        public int CompanyID { get; set; }
+        public int? CompanyID { get; set; }
 
         public UserRole Roles { get; set; }
         public DateTime LastLogin { get; set; }
@@ -88,7 +88,6 @@ namespace TrainingApp.ViewModels
     [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long")]
     public string SupervisorPassword { get; set; }
 }
-
     public class AddTrainerViewModel
     {
         [Display(Name = "Trainer Name")]
@@ -144,6 +143,7 @@ namespace TrainingApp.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        [Display (Name= "Role")]
         [Required]
         public UserRole UserRole { get; set; }
 
@@ -152,11 +152,7 @@ namespace TrainingApp.ViewModels
         public int UniversityID { get; set; }
         public int CompanyID { get; set; }
         public List<Users> users { get; set; }
-
-        public IPagedList<Users> Trainers { get; set; }
-        public IPagedList<Users> UniversitySupervisors { get; set; }
-        public IPagedList<Users> CompanySupervisors { get; set; }
-        public List<Users> NewUsers { get; set; }
+        public IEnumerable<SelectListItem> CompanySupervisors { get; set; }
         public IEnumerable<SelectListItem> UniversityNames { get; set; }
         public IEnumerable<SelectListItem> CompaniesNames { get; set; }
         public IEnumerable<SelectListItem> UniSupervisors { get; set; }
@@ -164,7 +160,6 @@ namespace TrainingApp.ViewModels
 
         public AddSupervisorViewModel addSupervisorViewModel { get; set; }
         public AddCompanySupervisorViewModel addCompanySupervisorViewModel { get; set; }
-        public AddTrainerViewModel addTrainerViewModel { get; set; }
 
         private readonly TrainingAppDBContext _context;
 
@@ -179,7 +174,7 @@ namespace TrainingApp.ViewModels
                                  where name.Id == supervisorId
                                  select name.UniversityName).FirstOrDefault();
 
-            return supervisor ?? "Not Found";
+            return supervisor is null?"Not Found":supervisor;
         }
 
         public string GetCompanyName(int supervisorId)
@@ -220,7 +215,6 @@ namespace TrainingApp.ViewModels
         public string CompanyName { get; set; }
         public int UserCount { get; set; }
     }
-
     public class MessageViewModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

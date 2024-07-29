@@ -14,12 +14,18 @@ namespace TrainingApp.Controllers
         private readonly TrainingAppDBContext _context = new TrainingAppDBContext();
 
         [HttpGet]
-        public async Task<ActionResult> GetChatHistory(int receiverId)
+        public async Task<ActionResult> GetChatHistory(int receiverId, int pageIndex = 1, int pageSize = 10)
         {
             int senderId = User.Identity.GetUserId<int>();
-            var messages = await _context.ChatMessages
+
+            var messagesQuery = _context.ChatMessages
                 .Where(m => (m.SenderId == senderId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == senderId))
-                .OrderBy(m => m.Timestamp)
+                .OrderByDescending(m => m.Timestamp);
+
+            var totalMessages = await messagesQuery.CountAsync();
+            var messages = await messagesQuery
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
                 .Select(m => new
                 {
                     m.SenderName,
@@ -28,7 +34,15 @@ namespace TrainingApp.Controllers
                 })
                 .ToListAsync();
 
-            return Json(messages, JsonRequestBehavior.AllowGet);
+            bool hasMoreMessages = totalMessages > pageIndex * pageSize;
+
+            var result = new
+            {
+                messages,
+                hasMoreMessages
+            };
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         public JsonResult SearchUsers(string query)
         {
@@ -43,14 +57,14 @@ namespace TrainingApp.Controllers
                     u.Id,
                     u.Name,
                     Roles = u.Roles, // Assuming Roles is a navigation property
-                    Avatar = ""
+                    Avatar = "" // Assuming Avatar is an empty string or a property that holds the avatar URL
                 })
                 .ToList()
                 .Select(u => new
                 {
                     u.Id,
                     Name = $"{u.Name} ({string.Join(", ", u.Roles)})",
-                    IsOnline = false,
+                    IsOnline = false, // Adjust this if you have a way to determine online status
                     u.Avatar
                 })
                 .ToList();
@@ -150,12 +164,12 @@ namespace TrainingApp.Controllers
                 var supervisors =
 
                 _context.Users
-                                  .Where(user => user.Id == CompSuperId || user.Id == UniSuperId)
+                                  .Where(user => user.Id == CompSuperId || user.Id == UniSuperId|| user.Roles == UserRole.Admin)
                                   .Select(user => new UsersPanelViewModels
                                   {
                                       Id = user.Id,
                                       Name = $"({user.Name}) ({user.Roles})",
-                                      Avatar=user.ProfilePicturePath,
+                                      ProfilePicturePath=user.ProfilePicturePath,
                                   })
                                   .ToList();
                 return View(supervisors);
@@ -169,7 +183,7 @@ if (userRole == UserRole.UniversitySupervisor)
                           .ToList();
 
     var relatedUsers = _context.Users
-             .Where(user => companySupervisorIds.Contains(user.Id))
+             .Where(user => companySupervisorIds.Contains(user.Id) || user.Roles == UserRole.Admin)
              .Select(user => new
              {
                  user.Id,
@@ -182,7 +196,7 @@ if (userRole == UserRole.UniversitySupervisor)
              {
                  Id = user.Id,
                  Name = $"({user.Name}) ({user.Roles})",
-                 Avatar = user.ProfilePicturePath,
+                 ProfilePicturePath = user.ProfilePicturePath,
 
              })
              .ToList();
@@ -221,7 +235,7 @@ if (userRole == UserRole.UniversitySupervisor)
                            {
                                Id = user.Id,
                                Name = user.Name,
-                               Avatar = user.ProfilePicturePath,
+                             ProfilePicturePath   = user.ProfilePicturePath,
 
                                // CompanySupervisorID = user.CompanySupervisorID
                            })
@@ -230,12 +244,12 @@ if (userRole == UserRole.UniversitySupervisor)
 
                 var Trainers =
             _context.Users
-                              .Where(user => user.CompanySupervisorID == userId)
+                              .Where(user => user.CompanySupervisorID == userId || user.Roles == UserRole.Admin)
                               .Select(user => new UsersPanelViewModels
                               {
                                   Id = user.Id,
                                   Name = user.Name,
-                                  Avatar = user.ProfilePicturePath,
+                                  ProfilePicturePath = user.ProfilePicturePath,
 
                                   //     CompId = user.CompanySupervisorID,
                               }).ToList();
@@ -260,7 +274,7 @@ if (userRole == UserRole.UniversitySupervisor)
                     {
                         Id = user.Id,
                         Name = $"{user.Name} ({user.Roles})",
-                        Avatar = user.ProfilePicturePath,
+                        ProfilePicturePath = user.ProfilePicturePath,
 
                         // CompId = user.CompanySupervisorID,
                     }).ToList();

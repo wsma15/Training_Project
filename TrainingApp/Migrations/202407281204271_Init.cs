@@ -21,6 +21,16 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.Companies",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        CompanyName = c.String(nullable: false),
+                        City = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.Reports",
                 c => new
                     {
@@ -40,6 +50,16 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.Universities",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        UniversityName = c.String(nullable: false),
+                        City = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.Users",
                 c => new
                     {
@@ -48,10 +68,14 @@
                         Email = c.String(nullable: false, maxLength: 50),
                         Password = c.String(nullable: false, maxLength: 50),
                         UniversitySupervisorID = c.Int(),
+                        AddedBy = c.String(),
                         CompanySupervisorID = c.Int(),
-                        UniversityName = c.String(),
-                        CompanyName = c.String(),
+                        UniversityID = c.Int(),
+                        CompanyID = c.Int(),
                         Roles = c.Int(nullable: false),
+                        LastLogin = c.DateTime(nullable: false),
+                        ProfilePicturePath = c.String(),
+                        Avatar = c.Binary(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -60,7 +84,9 @@
         public override void Down()
         {
             DropTable("dbo.Users");
+            DropTable("dbo.Universities");
             DropTable("dbo.Reports");
+            DropTable("dbo.Companies");
             DropTable("dbo.Messages");
         }
     }
