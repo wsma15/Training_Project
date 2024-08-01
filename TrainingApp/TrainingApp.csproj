@@ -281,6 +281,7 @@
     <Content Include="js\DashboardAdmin.js" />
     <Content Include="js\form-validator.js" />
     <Content Include="js\fullcalendar-script.js" />
+    <Content Include="js\Inbox.js" />
     <Content Include="js\initiate-datatables.js" />
     <Content Include="js\initiate-summernote.js" />
     <Content Include="js\initiate-toast.js" />

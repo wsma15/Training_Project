@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <div class="chat-history overflow-auto mb-3" id="chat-messages" style="height: 400px; overflow-y: auto;">
+            <div class="chat-history overflow-auto mb-3" id="chat-messages" style="height: 400px;  overflow-y: auto;">
                 <!-- Chat messages will be loaded here via AJAX -->
             </div>
             <button class="btn btn-primary btn-block" id="loadMoreBtn" style="display: none;">Load More</button>
@@ -116,7 +116,7 @@ $(document).ready(function() {
 
             data.messages.forEach(message => {
                 const formattedTime = formatTimestamp(message.Timestamp);
-                chatMessages.prepend(`<div class="message-item ${message.IsMine ? 'my-message' : 'other-message'}"><strong>${message.SenderName}:</strong> ${message.MessageText} <span class="text-muted small">${formattedTime}</span></div>`);
+                chatMessages.prepend(`<div class="message-item ${message.IsMine ? 'my-message' : 'other-message'}"><strong>${message.SenderName}:</strong> ${message.MessageText} <span class="text-muted small">${formattedTime}</span></div><hr/>`);
             });
 
             if (data.hasMoreMessages) {

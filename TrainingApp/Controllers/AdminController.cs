@@ -145,6 +145,16 @@ namespace TrainingApp.Controllers
                     case UserRole.Trainer:
                         user.CompanyID = model.CompanyID;
                         user.UniversityID = model.UniversityID;
+                        user.UniversitySupervisorID= model.UniversitySupervisorID;
+                        user.CompanySupervisorID = model.CompanySupervisorID;
+                        // Assuming `model.CompanySupervisorID` is the ID of the company supervisor you want to use to get the company ID
+                        var companyId = _context.Users
+                            .Where(u => u.Id == model.CompanySupervisorID)
+                            .Select(u => u.CompanyID)
+                            .FirstOrDefault();
+
+                        // If you need to set `user.CompanyID` to this value
+                        user.CompanyID = companyId;
                         break;
 
                     case UserRole.CompanySupervisor:
