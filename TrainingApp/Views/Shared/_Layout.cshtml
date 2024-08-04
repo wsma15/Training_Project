@@ -1,7 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-
     @using Microsoft.AspNet.Identity
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
@@ -13,50 +12,91 @@
     <link href="~/vendor/fontawesome/css/solid.css" rel="stylesheet" />
     <link href="~/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
 
-    @*
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        @Styles.Render("~/Content/css")
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
-            <style>
-                /* Optional: Custom styles */
-                .nav-dropdown {
-                    position: relative;
-                }
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
 
-                .nav-link-menu {
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    z-index: 1000;
-                    display: none; /* Hide by default */
-                }
+    <style>
+        /* Custom styles for the navbar */
+        .navbar {
+            background-color: #343a40;
+        }
 
-                .nav-dropdown.show .nav-link-menu {
-                    display: block; /* Show when parent .nav-dropdown has class .show */
-                }
-            </style>
-    *@
+        .navbar-brand {
+            color: #ffffff;
+            font-weight: bold;
+        }
 
+            .navbar-brand:hover {
+                color: #f8f9fa;
+            }
+
+        .nav-link {
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+            .nav-link:hover {
+                color: #dcdcdc;
+            }
+
+        .dropdown-menu {
+            background-color: rgba(52, 58, 64, 0.8); /* Semi-transparent background */
+            border: none;
+            backdrop-filter: blur(5px); /* Optional: Adds a blur effect behind the menu */
+        }
+
+        .dropdown-item {
+            color: #ffffff;
+        }
+
+            .dropdown-item:hover {
+                background-color: rgba(73, 80, 87, 0.5); /* Semi-transparent hover background */
+            }
+
+        footer {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 1rem 0;
+        }
+
+        .footer-link {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+            .footer-link:hover {
+                text-decoration: underline;
+            }
+    </style>
 </head>
 <body>
     @if (Request.IsAuthenticated)
     {
-        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="padding-left:100px">TMS</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="padding-left:100px">
+                <img src="~/Login/images/Logo training management system-modified.png" alt="Training Management System" style="height: 40px;" />
+            </a>
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Contact", "Home")">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("About", "Home")">
+                            <i class="fas fa-info-circle"></i> About
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <div class="nav-dropdown">
-                            <a href="#" id="nav2" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" style="padding-right: 20px; padding-left:100px;">
+                            <a href="#" id="nav2" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-user"></i> <span>@User.Identity.Name</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right nav-link-menu">
@@ -93,8 +133,7 @@
     }
     else
     {
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
             <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="padding-left:100px">TMS</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,12 +143,27 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Login", "Account")" style="padding-right: 20px; padding-left:100px;">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Contact", "Home")">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("About", "Home")">
+                            <i class="fas fa-info-circle"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Login", "Account")">
                             <i class="fas fa-sign-in-alt"></i> Log In
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Register", "Account")" style="padding-right: 20px;">
+                        <a class="nav-link" href="@Url.Action("Register", "Account")">
                             <i class="fas fa-user-plus"></i> Register
                         </a>
                     </li>
@@ -120,11 +174,11 @@
 
     <div class="container body-content">
         @RenderBody()
+    </div>
         <hr />
         <footer style="text-align: center;">
-            <p style="color: silver;">&copy; @DateTime.Now.Year - Training Management System</p>
+            <p style="color: silver;">&copy; @DateTime.Now.Year - <a href="@Url.Action("Index", "Home")" class="footer-link">Training Management System</a></p>
         </footer>
-    </div>
     @RenderSection("scripts", required: false)
 
     @Scripts.Render("~/bundles/jquery")

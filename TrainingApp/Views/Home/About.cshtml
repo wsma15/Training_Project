@@ -1,20 +1,86 @@
 ﻿@{
-    ViewBag.Title = "Contact";
-    ViewBag.Message = "Get in touch with us.";
+    ViewBag.Title = "About the Project";
+    ViewBag.Message = "Learn more about the Training Management System.";
 }
 <main aria-labelledby="title" class="container mt-5">
-    <h2 id="title">@ViewBag.Title</h2>
-    <h3>@ViewBag.Message</h3>
+    <h2 id="title" class="text-primary mb-4">@ViewBag.Title</h2>
+    <h3 class="text-secondary mb-4">@ViewBag.Message</h3>
 
-    <address>
-        One University Avenue<br />
-        University Town, UT 12345<br />
-        <abbr title="Phone">P:</abbr>
-        123.456.7890
-    </address>
+    <section class="bg-light p-4 rounded">
+        <h4 class="text-dark">Project Overview</h4>
+        <p class="lead">
+            The Training Management System is a web application built with ASP.NET MVC and Entity Framework.
+            It streamlines the training process at a university by managing interactions between students,
+            university supervisors, and administrative staff. The system provides a platform for students to
+            upload reports, supervisors to review and provide feedback, and admins to manage users and oversee
+            the entire process.
+        </p>
 
-    <address>
-        <strong>Email Support:</strong>   <a href="mailto:support@example.com">support@example.com</a><br />
-        <strong>Email Marketing:</strong> <a href="mailto:marketing@example.com">marketing@example.com</a>
-    </address>
+        <h4 class="text-dark mt-4">Key Features</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>User Management:</strong> Admins can manage users (students, supervisors, trainers) and oversee the system.
+                Supervisors review and provide feedback on reports, while students submit reports and view feedback.
+            </li>
+            <li class="list-group-item">
+                <strong>Dashboards:</strong> Students and supervisors have personalized dashboards for managing reports and communication.
+            </li>
+            <li class="list-group-item">
+                <strong>Feedback System:</strong> Supervisors can approve or reject reports with optional feedback.
+            </li>
+            <li class="list-group-item">
+                <strong>Authentication:</strong> Secure login with role-based access ensures users see only relevant features.
+            </li>
+            <li class="list-group-item">
+                <strong>Validation:</strong> Includes rules for user input, such as complex passwords for supervisors.
+            </li>
+        </ul>
+
+        <p class="mt-4">
+            The system aims to enhance the efficiency and transparency of the training process, providing a user-friendly interface
+            for all involved parties.
+        </p>
+    </section>
 </main>
+
+<!-- Add some custom CSS to further enhance the look -->
+<style>
+    .container {
+        max-width: 800px;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa;
+    }
+
+    .text-primary {
+        color: #007bff;
+    }
+
+    .text-secondary {
+        color: #6c757d;
+    }
+
+    .text-dark {
+        color: #343a40;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        font-weight: 300;
+    }
+
+    .list-group-item {
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+        padding: 10px 15px;
+    }
+
+    .rounded {
+        border-radius: .25rem;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+</style>
