@@ -8,9 +8,14 @@ $(document).ready(function () {
         receiverId = $(this).data('senderid');
         $('#receiverId').val(receiverId);
         $('#chat-user-name').text($(this).find('.name').text());
-        var avatarSrc = $(this).data('avatar') || '~/images/default.jpg';
-        avatarSrc = avatarSrc.replace('~', ''); // Remove the tilde for correct path resolution
+
+        // Get the Base64 string for the avatar
+        var avatarBase64 = $(this).data('avatar');
+
+        // Set the avatar source using Base64 data
+        var avatarSrc = avatarBase64 ? "data:image/png;base64," + avatarBase64 : '~/Content/Images/default.jpg';
         $('#chat-avatar').attr('src', avatarSrc);
+
         pageIndex = 1; // Reset the page index
         loadChatHistory(receiverId, pageIndex, true); // Load the initial messages
     });

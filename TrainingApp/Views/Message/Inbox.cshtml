@@ -33,8 +33,15 @@
             <ul class="list-unstyled" id="userList" style="height: 500px; overflow-y: auto;">
                 @foreach (var user in Model)
                 {
-                    <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id" data-avatar="@user.ProfilePicturePath">
-                        <img src="@(string.IsNullOrEmpty(user.ProfilePicturePath) ? Url.Content("~/Content/images/default.jpg") : Url.Content("~/images/" + user.ProfilePicturePath))" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
+                    <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id" data-avatar="@user.AvatarBase64">
+                        @if (!string.IsNullOrEmpty(user.ProfilePicturePath))
+                        {
+                            <img src="@Url.Content(user.ProfilePicturePath)" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/default.jpg" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
+                        }
                         <div class="about">
                             <div class="name font-weight-bold">@user.Name</div>
                             <div class="status text-muted">
@@ -93,8 +100,10 @@ $(document).ready(function() {
         receiverId = $(this).data('senderid');
         $('#receiverId').val(receiverId);
         $('#chat-user-name').text($(this).find('.name').text());
-        var avatarSrc = $(this).data('avatar') ? '~/images/' + $(this).data('avatar') : '~/Content/Images/default.jpg';
+
+        var avatarSrc = $(this).data('avatar') ? '@Url.Content("~/images/")' + $(this).data('avatar') : '@Url.Content("~/Content/Images/default.jpg")';
         $('#chat-avatar').attr('src', avatarSrc);
+
         pageIndex = 1; // Reset the page index
         loadChatHistory(receiverId, pageIndex, true); // Load the initial messages
     });
@@ -189,7 +198,7 @@ $(document).ready(function() {
             userList.empty();
             users.forEach(user => {
                 userList.append(`<li class="clearfix user-link p-2 border-bottom" data-senderid="${user.Id}" data-avatar="${user.Avatar}">
-                    <img src="~/images/${user.Avatar}" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
+                    <img src="@Url.Content("~/images/")${user.Avatar}" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
                     <div class="about">
                         <div class="name font-weight-bold">${user.Name}</div>
                         <div class="status text-muted">
