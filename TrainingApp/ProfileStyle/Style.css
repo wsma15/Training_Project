@@ -1,10 +1,12 @@
-﻿body {
+﻿/* General styles for the body */
+body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
 }
 
+/* Container for the profile section */
 .profile-container {
     max-width: 800px;
     margin: 0 auto;
@@ -13,6 +15,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Header section of the profile with picture and info */
 .profile-header {
     display: flex;
     align-items: center;
@@ -21,6 +24,7 @@
     margin-bottom: 20px;
 }
 
+/* Profile picture and its container */
 .profile-picture {
     position: relative;
     display: inline-block;
@@ -38,6 +42,7 @@
         display: none;
     }
 
+/* Profile info styling */
 .profile-info h1 {
     margin: 0;
     font-size: 24px;
@@ -48,6 +53,7 @@
     color: #777;
 }
 
+/* Navigation bar styling */
 .profile-nav ul {
     list-style: none;
     padding: 0;
@@ -74,10 +80,12 @@
                 border-bottom: 2px solid #333;
             }
 
+/* Profile content styling */
 .profile-content {
     padding: 20px;
 }
 
+/* Content sections styling */
 .content-section {
     display: none;
 }
@@ -86,6 +94,7 @@
         display: block;
     }
 
+/* Form styling */
 form {
     display: flex;
     flex-direction: column;
@@ -114,3 +123,41 @@ form {
         form button:hover {
             background-color: #555;
         }
+
+/* Styling for profile picture container and icons */
+.profile-picture-container {
+    position: relative;
+    display: inline-block;
+}
+
+#profile-picture {
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Adjust size as needed */
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.icon-container {
+    position: absolute;
+    bottom: 5px; /* Adjust distance from the bottom */
+    right: 5px; /* Adjust distance from the right */
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between icons */
+}
+
+.edit-icon, .delete-icon {
+    background-color: rgba(192, 192, 192, 0.5);
+    width: 24px; /* Icon size */
+    height: 24px; /* Icon size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+    .edit-icon i, .delete-icon i {
+        font-size: 12px; /* Adjust icon size */
+        color: #fff; /* Icon color */
+    }

@@ -10,19 +10,22 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-picture">
-                <img src="@(Model.ProfilePicturePath ?? Url.Content("~/Content/Images/default.jpg"))" alt="Profile Picture" id="profile-picture">
-                <div onclick="document.getElementById('profilePictureInput').click();" style="display: inline-block;">
-                    <i class="fa fa-pencil pen-icon" style="background-color: rgba(192, 192, 192, 0.5); width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;"></i>
+                <div class="profile-picture-container">
+                    <img src="@(Model.ProfilePicturePath ?? Url.Content("~/Content/Images/default.jpg"))" alt="Profile Picture" id="profile-picture">
+                    <div class="icon-container">
+                        <div class="delete-icon" onclick="deleteProfilePicture();">
+                            <i class="fa fa-trash"></i>
+                        </div>
+                    </div>
+                    <form id="uploadForm" action="@Url.Action("UploadProfilePicture", "Profile")" method="post" enctype="multipart/form-data" style="display:none;">
+                        <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
+                    </form>
                 </div>
-                <div class="delete-icon" onclick="deleteProfilePicture();"></div>
-                <form id="uploadForm" action="@Url.Action("UploadProfilePicture", "Profile")" method="post" enctype="multipart/form-data" style="display:none;">
-                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
-                </form>
-            </div>
-            <div class="profile-info">
-                <h1>@Model.Name</h1>
-                <p>Email: @Model.Email</p>
-                <p>Role: @Model.Roles</p>
+                <div class="profile-info">
+                    <h1>@Model.Name</h1>
+                    <p>Email: @Model.Email</p>
+                    <p>Role: @Model.Roles</p>
+                </div>
             </div>
         </div>
         <div class="profile-body">
@@ -69,45 +72,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Wait for the DOM content to be fully loaded
-            const profilePicture = document.getElementById('profilePicture');
+            const profilePicture = document.getElementById('profile-picture');
+            const fileInput = document.getElementById('profilePictureInput');
+            const uploadForm = document.getElementById('uploadForm');
 
             if (profilePicture) {
-                // Check if the profilePicture element exists
-                const fileInput = document.getElementById('profilePictureInput');
-                const uploadForm = document.getElementById('uploadForm');
-
                 profilePicture.addEventListener('click', function () {
-                    // Open the file input dialog when the profile picture is clicked
                     fileInput.click();
                 });
 
                 fileInput.addEventListener('change', function () {
-                    // Submit the form when a file is selected
                     uploadForm.submit();
                 });
             } else {
                 console.error('Profile picture element not found.');
             }
 
-            // Tab switching logic
             const navLinks = document.querySelectorAll('.profile-nav ul li a');
             const contentSections = document.querySelectorAll('.content-section');
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function (event) {
                     event.preventDefault();
-
-                    // Remove active class from all links
                     navLinks.forEach(link => link.classList.remove('active'));
-
-                    // Add active class to the clicked link
                     this.classList.add('active');
-
-                    // Hide all content sections
                     contentSections.forEach(section => section.classList.remove('active'));
-
-                    // Show the target content section
                     const targetId = this.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
                     targetSection.classList.add('active');
