@@ -37,7 +37,8 @@
                     }
                     else
                     {
-                        <span>@(report.IsApproved == true ? "Approved" : "Declined")</span>
+
+                <span>@(report.ReportStatus==TrainingApp.Models.ReportStatus.Not_Decide?"Not Decide Yet":report.ReportStatus)</span>
                     }
                 </td>
                 <td>
