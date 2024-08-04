@@ -32,8 +32,15 @@ namespace TrainingApp.Models
         public string ContentType { get; set; }
         public byte[] Content { get; set; }
 
-        public bool IsApproved { get; set; }
+        public ReportStatus ReportStatus { get; set; }
         public string Feedback { get; set; }
         public bool IsFeedbackSubmitted { get; set; } // Indicates whether feedback has been submitted
     }
+    public enum ReportStatus
+    {
+        Approved,
+        Rejected,
+        Not_Decide
+    }
+
 }

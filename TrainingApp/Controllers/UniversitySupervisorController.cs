@@ -46,7 +46,7 @@ namespace TrainingApp.Controllers
             var report = db.Reports.SingleOrDefault(r => r.Id == Id);
             if (report != null && !report.IsFeedbackSubmitted)
             {
-                report.IsApproved = isApproved;
+                report.ReportStatus = isApproved?ReportStatus.Approved:ReportStatus.Rejected;
                 report.Feedback = feedback;
                 report.IsFeedbackSubmitted = true;
                 db.SaveChanges();
