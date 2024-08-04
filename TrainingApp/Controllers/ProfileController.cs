@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TrainingApp.Models;
@@ -41,6 +42,39 @@ namespace TrainingApp.Controllers
 
             return View("Profile", user);
         }
+        [HttpPost]
+        public async Task<ActionResult> UpdateProfile(string fullName, string email, string password)
+        {
+            // Retrieve the current user ID
+            var userId = User.Identity.GetUserId<int>();
+
+            // Find the user in the database
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Update the user's profile
+            user.Name = fullName;
+            user.Email = email;
+
+            if (!string.IsNullOrEmpty(password))
+            {
+                // Hash the password and set it (assuming you use ASP.NET Identity)
+                var hasher = new PasswordHasher();
+                user.Password = (password);
+            }
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Redirect back to the profile page with a query string parameter indicating success
+            return RedirectToAction("Profile", "Profile", new { userId = userId});
+        }
+
+
+
         [HttpPost]
         public ActionResult UploadProfilePicture(HttpPostedFileBase profilePicture)
         {

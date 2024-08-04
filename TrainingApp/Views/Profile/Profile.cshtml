@@ -12,12 +12,11 @@
             <div class="profile-picture">
                 <img src="@(Model.ProfilePicturePath ?? Url.Content("~/Content/Images/default.jpg"))" alt="Profile Picture" id="profile-picture">
                 <div onclick="document.getElementById('profilePictureInput').click();" style="display: inline-block;">
-                    <i class="fa pen-icon" style="background-color: rgba(192, 192, 192, 0.5); width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;"></i>
+                    <i class="fa fa-pencil pen-icon" style="background-color: rgba(192, 192, 192, 0.5); width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;"></i>
                 </div>
                 <div class="delete-icon" onclick="deleteProfilePicture();"></div>
                 <form id="uploadForm" action="@Url.Action("UploadProfilePicture", "Profile")" method="post" enctype="multipart/form-data" style="display:none;">
-                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" onchange="document.getElementById('uploadForm').submit();">
-                    <button type="submit">Upload</button>
+                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
                 </form>
             </div>
             <div class="profile-info">
@@ -51,11 +50,16 @@
                 </div>
                 <div id="settings" class="content-section">
                     <h2>Settings</h2>
-                    <form>
+                    <form id="settingsForm" action="@Url.Action("UpdateProfile", "Profile")" method="post">
+                        <label for="fullName">Full Name:</label>
+                        <input type="text" id="fullName" name="fullName" value="@Model.Name" required>
+
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" value="@Model.Email">
+                        <input type="email" id="email" name="email" value="@Model.Email" required>
+
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password">
+
                         <button type="submit">Save Changes</button>
                     </form>
                 </div>
