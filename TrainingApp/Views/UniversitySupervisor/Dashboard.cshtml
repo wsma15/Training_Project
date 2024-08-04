@@ -33,49 +33,42 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>University</th>
+                    <th>Actions</th> <!-- Add an Actions column -->
                 </tr>
             </thead>
             <tbody>
-                @foreach (var student in Model)
+                @foreach (var supervisor in Model)
                 {
                     <tr>
-                        <td>@student.Id</td>
-                        <td>@student.Name</td>
-                        <td>@student.Email</td>
+                        <td>@supervisor.Id</td>
+                        <td>@supervisor.Name</td>
+                        <td>@supervisor.Email</td>
+                        <td>@supervisor.UniversityID</td>
+                        <td>
+                            <!-- Add button to redirect to reports view -->
+                            <a href="@Url.Action("StudentReports", "UniversitySupervisor", new { supervisorId = supervisor.Id })" class="btn btn-primary">View Reports</a>
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-        </thead>
-    </table>
+    <script>
+        $(document).ready(function () {
+            'use strict';
+
+            function initializeDataTable(tableId) {
+                $(tableId).DataTable({
+                    responsive: true,
+                    pageLength: 20,
+                    lengthChange: false,
+                    searching: true,
+                    ordering: true
+                });
+            }
+
+            initializeDataTable('#universitySupervisorsTable');
+        });
+    </script>
 </body>
-<script src="~/vendor/jquery/jquery.min.js"></script>
-<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="~/vendor/datatables/datatables.min.js"></script>
-<script src="~/js/initiate-datatables.js"></script>
-@Scripts.Render("~/bundles/bootstrap")
-@Scripts.Render("~/bundles/jqueryval")
-<script>
-    $(document).ready(function () {
-        'use strict';
-
-        // Function to initialize DataTable
-        function initializeDataTable(tableId) {
-            $(tableId).DataTable({
-                responsive: true,
-                pageLength: 20,
-                lengthChange: false,
-                searching: true,
-                ordering: true
-            });
-        }
-
-        // Initialize DataTables
-        initializeDataTable('#universitySupervisorsTable');
-    });
-    
-</script>

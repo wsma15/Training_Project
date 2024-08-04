@@ -9,6 +9,7 @@
             <th>Title</th>
             <th>Date Created</th>
             <th>Actions</th>
+            <th>Status</th>
             <th>Feedback</th> <!-- New column for feedback -->
         </tr>
     </thead>
@@ -25,6 +26,7 @@
                     <button class="btn btn-danger" onclick="deleteReport(@report.Id)">Delete</button>
                     <a href="@Url.Action("DownloadFile", "Trainers", new { id = report.Id })" class="btn btn-primary">Download</a>
                 </td>
+               <td>@(report.IsApproved?"Approved": "Rejected")</td> 
                 <td>
                     @if (!string.IsNullOrEmpty(report.Feedback))
                     {
@@ -35,6 +37,7 @@
                         <p>No feedback provided yet</p>
                     }
                 </td>
+                <
             </tr>
             <tr id="content-@report.Id" style="display:none;">
                 <td colspan="5">@Html.Raw(report.ReportDescription)</td>

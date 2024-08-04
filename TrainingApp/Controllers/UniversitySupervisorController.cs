@@ -32,9 +32,9 @@ namespace TrainingApp.Controllers
         [Authorize(Roles = "UniversitySupervisor")]
 
         // GET: Supervisor/StudentReports/5
-        public ActionResult StudentReports(string id)
+        public ActionResult StudentReports(string supervisorId)
         {
-            var reports = db.Reports.Where(r => r.OwnerId == id).ToList();
+            var reports = db.Reports.Where(r=>r.OwnerId== supervisorId).ToList();
             return View(reports);
         }
 

@@ -189,28 +189,34 @@ $(document).ready(function() {
         searchUsers(query);
     });
 
-    async function searchUsers(query) {
-        try {
-            const response = await fetch('@Url.Action("SearchUsers", "Message")?query=' + encodeURIComponent(query));
-            if (!response.ok) throw new Error('Network response was not ok');
-            const users = await response.json();
-            const userList = $('#userList');
-            userList.empty();
-            users.forEach(user => {
-                userList.append(`<li class="clearfix user-link p-2 border-bottom" data-senderid="${user.Id}" data-avatar="${user.Avatar}">
-                    <img src="@Url.Content("~/images/")${user.Avatar}" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
+async function searchUsers(query) {
+    try {
+        const response = await fetch('@Url.Action("SearchUsers", "Message")?query=' + encodeURIComponent(query));
+        if (!response.ok) throw new Error('Network response was not ok');
+        const users = await response.json();
+        const userList = $('#userList');
+        userList.empty();
+
+        users.forEach(user => {
+            // Construct the full URL for avatar
+            const avatarUrl = user.Avatar ? '@Url.Content("~/images/")' + user.Avatar : '@Url.Content("~/Content/Images/default.jpg")';
+
+            userList.append(`
+                <li class="clearfix user-link p-2 border-bottom" data-senderid="${user.Id}" data-avatar="${user.Avatar}">
+                    <img src="${avatarUrl}" alt="avatar" class="rounded-circle mr-2" width="40" height="40" />
                     <div class="about">
                         <div class="name font-weight-bold">${user.Name}</div>
                         <div class="status text-muted">
                             <i class="fa fa-circle ${user.IsOnline ? "text-success" : "text-danger"}"></i> ${user.IsOnline ? "Online" : "Offline"}
                         </div>
                     </div>
-                </li>`);
-            });
-        } catch (error) {
-            console.error('Error searching users:', error);
-        }
+                </li>
+            `);
+        });
+    } catch (error) {
+        console.error('Error searching users:', error);
     }
+}
 });
     </script>
     }

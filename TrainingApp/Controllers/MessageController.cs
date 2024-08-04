@@ -155,26 +155,36 @@ namespace TrainingApp.Controllers
 
             if (userRole == UserRole.Trainer)
             {
-                int UniSuperId =
-                    (int)(from u in _context.Users where (userId == u.Id) select u.UniversitySupervisorID).FirstOrDefault();
+                // Fetch UniversitySupervisorID and CompanySupervisorID
+                var user = _context.Users
+                                    .Where(u => u.Id == userId)
+                                    .Select(u => new { u.UniversitySupervisorID, u.CompanySupervisorID })
+                                    .FirstOrDefault();
 
-                int CompSuperId =
-                    (int)(from u in _context.Users where (userId == u.Id) select u.CompanySupervisorID).FirstOrDefault();
+                if (user == null)
+                {
+                    // Handle the case where the user is not found
+                    return HttpNotFound();
+                }
 
-                var supervisors =
+                int uniSuperId = (int)user.UniversitySupervisorID;
+                int compSuperId = (int)user.CompanySupervisorID;
 
-                _context.Users
-                                  .Where(user => user.Id == CompSuperId || user.Id == UniSuperId|| user.Roles == UserRole.Admin)
-                                  .Select(user => new UsersPanelViewModels
-                                  {
-                                      Id = user.Id,
-                                      Name = $"({user.Name}) ({user.Roles})",
-                                      ProfilePicturePath=user.ProfilePicturePath,
-                                  })
-                                  .ToList();
+                // Fetch the supervisors based on IDs
+                var supervisors = _context.Users
+                                          .Where(u => u.Id == compSuperId || u.Id == uniSuperId || u.Roles == UserRole.Admin)
+                                          .ToList() // Fetch data first
+                                          .Select(u => new UsersPanelViewModels
+                                          {
+                                              Id = u.Id,
+                                              Name = $"({u.Name}) ({u.Roles})", // String formatting is now safe
+                                              ProfilePicturePath = u.ProfilePicturePath,
+                                          })
+                                          .ToList();
+
                 return View(supervisors);
             }
-if (userRole == UserRole.UniversitySupervisor)
+            if (userRole == UserRole.UniversitySupervisor)
 {
     var companySupervisorIds = _context.Users
                           .Where(user => user.UniversitySupervisorID == userId)
