@@ -59,7 +59,6 @@ namespace TrainingApp.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Email is required.")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -67,7 +66,6 @@ namespace TrainingApp.Models
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
 
-        [Required(ErrorMessage = "Please enter Valid Full Name")]
         public string FullName { get; set; }  // <-- Use get; set; instead of a semicolon
     }
 
@@ -92,7 +90,6 @@ namespace TrainingApp.Models
         [Display(Name = "Confirm password")]
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-        [Required(ErrorMessage = "The Type of user is required")]
         [Display(Name = "Type of User")]
         public string SelectedRole { get; set; }
         public IEnumerable<SelectListItem> Roles { get; set; }

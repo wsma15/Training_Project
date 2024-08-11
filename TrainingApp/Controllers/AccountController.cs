@@ -72,48 +72,70 @@ namespace TrainingApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+{
+    if (!ModelState.IsValid)
+    {
+        ModelState.AddModelError("", "Invalid login attempt.");
+        return View(model);
+    }
+
+    try
+    {
+        using (var context = new TrainingAppDBContext())
         {
+            var user = context.Users.FirstOrDefault(a => a.Id.ToString() == model.UserId && a.Password == model.Password);
 
-            try
+            if (user != null)
             {
-                using (var context = new TrainingAppDBContext())
+                user.LastLogin = DateTime.Now;
+                context.Users.AddOrUpdate(user);
+                await context.SaveChangesAsync();
+
+                switch (user.Roles)
                 {
-                    var user = context.Users.FirstOrDefault(a => a.Id.ToString() == model.UserId && a.Password == model.Password);
-                    if (user != null)
-                    {
-                        user.LastLogin = DateTime.Now;
-                        context.Users.AddOrUpdate(user);
-                        await context.SaveChangesAsync();
-                        switch (user.Roles)
-                        {
+                    case UserRole.Admin:
+                        await SignInAdmin(user, model.RememberMe);
+                        return RedirectToLocal(returnUrl, "Dashboard", "Admin");
 
-                            case UserRole.Admin: await SignInAdmin(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Admin");
-                            case UserRole.UniversitySupervisor: await SignInUniversitySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "UniversitySupervisor");
-                            case UserRole.Trainer: await SignInStudent(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "Trainers");
-                            case UserRole.CompanySupervisor: await SignInCompanySupervisor(user, model.RememberMe); return RedirectToLocal(returnUrl, "Dashboard", "CompanySupervisor");
+                    case UserRole.UniversitySupervisor:
+                        await SignInUniversitySupervisor(user, model.RememberMe);
+                        return RedirectToLocal(returnUrl, "Dashboard", "UniversitySupervisor");
 
-                        }
-                    }
+                    case UserRole.Trainer:
+                        await SignInStudent(user, model.RememberMe);
+                        return RedirectToLocal(returnUrl, "Dashboard", "Trainers");
 
+                    case UserRole.CompanySupervisor:
+                        await SignInCompanySupervisor(user, model.RememberMe);
+                        return RedirectToLocal(returnUrl, "Dashboard", "CompanySupervisor");
 
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    default:
+                        ModelState.AddModelError("", "Invalid role.");
+                        break;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                // Log the error and provide a user-friendly message
-                Trace.TraceError("Error occurred during login: {0}", ex.ToString());
-                ModelState.AddModelError("", "An error occurred while logging in. Please try again.");
+                ModelState.AddModelError("", "Invalid login attempt.");
             }
-
-            return View(model);
         }
+    }
+    catch (Exception ex)
+    {
+        // Log the error (you can replace Trace.TraceError with your preferred logging method)
+        Trace.TraceError("Error occurred during login: {0}", ex.ToString());
+        ModelState.AddModelError("", "An error occurred while logging in. Please try again.");
+    }
+
+    ViewBag.hey = "Invalid login attempt.";
+    return View(model);
+}
 
         private async Task SignInAdmin(Users admin, bool rememberMe)
         {
             var identity = new ClaimsIdentity(new[] {
-    new Claim(ClaimTypes.Role, "Admin"),
+        new Claim(ClaimTypes.Role, "Admin"),
         new Claim(ClaimTypes.Name, admin.Name),
         new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
@@ -133,7 +155,6 @@ namespace TrainingApp.Controllers
         }
         private async Task SignInCompanySupervisor(Users UniSupervisor, bool rememberMe)
         {
-
             var identity = new ClaimsIdentity(new[] {
             new Claim(ClaimTypes.Role, "CompanySupervisor"),
         new Claim(ClaimTypes.Name, UniSupervisor.Name),
@@ -306,7 +327,7 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
-           // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 TempData["SuccessMessage"] = "";
 
@@ -316,7 +337,6 @@ namespace TrainingApp.Controllers
                     if (!Enum.TryParse(model.SelectedRole, out role))
                     {
                         ModelState.AddModelError("SelectedRole", "Invalid role selected.");
-                     //   return Content("hel");//View(model);
                         
                     }
 
@@ -327,7 +347,8 @@ namespace TrainingApp.Controllers
                             Name = model.FullName,
                             Email = model.Email,
                             Password = model.Password,
-                            Roles = UserRole.NewUser // Use the parsed enum value here
+                            Roles = UserRole.NewUser, // Use the parsed enum value here
+                            AddedBy="Its Self"
                         };
                         context.Users.Add(user);
                         context.SaveChanges();

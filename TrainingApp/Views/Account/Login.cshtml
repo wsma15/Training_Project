@@ -43,11 +43,13 @@
                            placeholder = "ID",
                            type = "number"
                        })
+
                             <span class="focus-input100"></span>
                             <span class="symbol-input100">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </span>
                         </div>
+                        @Html.ValidationMessageFor(m => m.UserId)
 
                         <div class="wrap-input100 validate-input" data-validate="Password is required">
                             @Html.PasswordFor(m => m.Password, new
@@ -57,13 +59,18 @@
                            placeholder = "Password",
                            type = "password"
                        })
-
                             <span class="focus-input100"></span>
                             <span class="symbol-input100">
                                 <i class="fa fa-lock" aria-hidden="true"></i>
                             </span>
                         </div>
-
+                        <div class="has-validation">
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </div>
+                        @if (ViewBag.hey != null)
+                        {
+                            @ViewBag.hey
+                        }
                         <div class="container-login100-form-btn">
                             <button class="login100-form-btn">
                                 Login
