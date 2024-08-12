@@ -867,13 +867,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Admin\AddStudent.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Trainers\Dashboard.cshtml" />
     <Content Include="Views\Trainers\AddReport.cshtml" />
     <Content Include="Views\UniversitySupervisor\Dashboard.cshtml" />
     <Content Include="Views\UniversitySupervisor\StudentReports.cshtml" />
-    <Content Include="Views\Admin\AddCompanySupervisor.cshtml" />
     <Content Include="Views\Message\Inbox.cshtml" />
     <Content Include="Views\Message\SendMessage.cshtml" />
     <Content Include="Views\CompanySupervisor\Dashboard.cshtml" />

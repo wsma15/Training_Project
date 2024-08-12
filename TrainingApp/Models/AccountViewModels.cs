@@ -50,7 +50,6 @@ namespace TrainingApp.Models
 
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "User ID is required.")]
         [Display(Name = "User ID")]
         public string UserId { get; set; }
 
@@ -59,6 +58,7 @@ namespace TrainingApp.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Email is required.")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }

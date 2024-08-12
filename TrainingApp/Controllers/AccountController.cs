@@ -74,7 +74,10 @@ namespace TrainingApp.Controllers
         [ValidateAntiForgeryToken]
 public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
 {
-    if (!ModelState.IsValid)
+            ViewData.Clear();
+            ViewBag.InvalidLogin = null;
+
+            if (!ModelState.IsValid)
     {
         ModelState.AddModelError("", "Invalid login attempt.");
         return View(model);
@@ -84,7 +87,7 @@ public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
     {
         using (var context = new TrainingAppDBContext())
         {
-            var user = context.Users.FirstOrDefault(a => a.Id.ToString() == model.UserId && a.Password == model.Password);
+            var user = context.Users.FirstOrDefault(a => a.Email.ToUpper() == model.Email.ToUpper() && a.Password == model.Password);
 
             if (user != null)
             {
@@ -128,8 +131,8 @@ public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         ModelState.AddModelError("", "An error occurred while logging in. Please try again.");
     }
 
-    ViewBag.hey = "Invalid login attempt.";
-    return View(model);
+            ViewBag.InvalidLogin = "Invalid login attempt.";
+            return View(model);
 }
 
         private async Task SignInAdmin(Users admin, bool rememberMe)
@@ -265,22 +268,6 @@ public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         TrainingAppDBContext db = new TrainingAppDBContext();
 
         [AllowAnonymous]
-/*        public ActionResult Register()
-        {
-            var viewModel = new RegisterViewModel
-            {
-                Roles = new List<SelectListItem>
-        {
-            new SelectListItem { Value = UserRole.Trainer.ToString(), Text = "Trainer" },
-            new SelectListItem { Value = UserRole.UniversitySupervisor.ToString(), Text = "University Supervisor" },
-            new SelectListItem { Value = UserRole.CompanySupervisor.ToString(), Text = "Company Supervisor" }
-        }*//*                UniversitySupervisors = GetUniversitySupervisorsSelectList(),
-                CompanySupervisors = GetCompanySupervisorsSelectList()
-*//*
-            };
-            return View(viewModel);
-        }
-*/
         private IEnumerable<SelectListItem> GetUniversitySupervisorsSelectList()
         {
             var supervisors = db.Users
@@ -348,7 +335,8 @@ public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
                             Email = model.Email,
                             Password = model.Password,
                             Roles = UserRole.NewUser, // Use the parsed enum value here
-                            AddedBy="Its Self"
+                            AddedBy = "Its Self",
+                            ConfirmedEmail = false
                         };
                         context.Users.Add(user);
                         context.SaveChanges();
@@ -374,76 +362,6 @@ public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
                 .ToList();
 
             return string.Join("; ", errors);
-        }
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult RegisterStudent(RegisterViewModel model)
-        {
-            //    return Content(model.StudentViewModel.TrainerPassword.ToString());
-            /*            if (ModelState.IsValid)
-                        {
-                            try
-                            {
-                                using (var context = new TrainingAppDBContext())
-                                {
-                                    var companyName = context.Users
-                                        .Where(u => u.Id == model.StudentViewModel.CompanySupervisorID)
-                                        .Select(u => u.CompanyName)
-                                        .FirstOrDefault();
-                                    var uniName = context.Users
-                                        .Where(u => u.Id == model.StudentViewModel.UniversitySupervisorID)
-                                        .Select(u => u.UniversityName)
-                                        .FirstOrDefault();
-
-                                    var user = new Users
-                                    {
-                                        Name = model.StudentViewModel.TrainerName,
-                                        Email = model.StudentViewModel.TrainerEmail,
-                                        Password = model.StudentViewModel.TrainerPassword,
-                                        UniversitySupervisorID = model.StudentViewModel.UniversitySupervisorID,
-                                        CompanySupervisorID = model.StudentViewModel.CompanySupervisorID,
-                                        CompanyName = companyName,
-                                        Roles = UserRole.Trainer,
-                                        UniversityName = uniName,
-                                    };
-
-                                    context.Users.Add(user);
-                                    context.SaveChanges();
-                                    MailHelper.SendEmail(
-            user.Email,
-            "Welcome to the Training Management System",
-            $"Dear {user.Name} Trainer,\n\n" +
-            "Welcome to the Training Management System (TMS)! We are delighted to have you join us.\n\n" +
-            "Here are your account details:\n" +
-            $"- **User ID:** {user.Id}\n" +
-            $"- **Password:** {user.Password}\n\n" +
-            "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
-            "Best regards,\n" +
-            "The TMS Team"
-            );
-                                }
-
-                                TempData["SuccessMessage"] = "Student registered successfully!";
-
-                                return RedirectToAction("RegistrationSuccess");
-                            }
-                            catch (Exception ex)
-                            {
-                                ModelState.AddModelError("", "An error occurred while registering the student.");
-                            }
-                        }
-
-                        var combinedModel = new CombinedRegistrationViewModel
-                        {
-                            StudentViewModel = model.StudentViewModel,
-                            CompanySupervisorViewModel = new AddCompanySupervisorViewModel(),
-                            UniversitySupervisorViewModel = new AddSupervisorViewModel()
-                        };
-                        combinedModel.UniversitySupervisors = GetUniversitySupervisorsSelectList();
-                        combinedModel.CompanySupervisors = GetCompanySupervisorsSelectList();
-                        return View("Register", combinedModel);*/
-            return View(model);
         }
 
         [AllowAnonymous]
