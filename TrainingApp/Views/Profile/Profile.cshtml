@@ -12,14 +12,17 @@
             <div class="profile-picture">
                 <div class="profile-picture-container">
                     <img src="@(Model.ProfilePicturePath ?? Url.Content("~/Content/Images/default.jpg"))" alt="Profile Picture" id="profile-picture">
-                    <div class="icon-container">
-                        <div class="delete-icon" onclick="deleteProfilePicture();">
-                            <i class="fa fa-trash"></i>
+                    @if (Model.IsCurrentUser)
+                    {
+                        <div class="icon-container">
+                            <div class="delete-icon" onclick="deleteProfilePicture();">
+                                <i class="fa fa-trash"></i>
+                            </div>
                         </div>
-                    </div>
-                    <form id="uploadForm" action="@Url.Action("UploadProfilePicture", "Profile")" method="post" enctype="multipart/form-data" style="display:none;">
-                        <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
-                    </form>
+                        <form id="uploadForm" action="@Url.Action("UploadProfilePicture", "Profile")" method="post" enctype="multipart/form-data" style="display:none;">
+                            <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
+                        </form>
+                    }
                 </div>
                 <div class="profile-info">
                     <h1>@Model.Name</h1>
@@ -33,14 +36,17 @@
                 <ul>
                     <li><a href="#details" class="active">Details</a></li>
                     <li><a href="#activities">Recent Activities</a></li>
-                    <li><a href="#settings">Settings</a></li>
+                    @if (Model.IsCurrentUser)
+                    {
+                        <li><a href="#settings">Settings</a></li>
+                    }
                 </ul>
             </div>
             <div class="profile-content">
                 <div id="details" class="content-section active">
                     <h2>Details</h2>
                     <p>Full Name: @Model.Name</p>
-                    <p>Email: @Model.Email</p>
+                    <p>Email: <a href="mailto:@(Model.Email)">@Model.Email</a></p>
                     <p>Role: @Model.Roles</p>
                 </div>
                 <div id="activities" class="content-section">
@@ -51,21 +57,24 @@
                         <li>Last Login: @(Model.LastLogin == DateTime.MinValue ? "Never" : Model.LastLogin.ToString("f"))</li>
                     </ul>
                 </div>
-                <div id="settings" class="content-section">
-                    <h2>Settings</h2>
-                    <form id="settingsForm" action="@Url.Action("UpdateProfile", "Profile")" method="post">
-                        <label for="fullName">Full Name:</label>
-                        <input type="text" id="fullName" name="fullName" value="@Model.Name" required>
+                @if (Model.IsCurrentUser)
+                {
+                    <div id="settings" class="content-section">
+                        <h2>Settings</h2>
+                        <form id="settingsForm" action="@Url.Action("UpdateProfile", "Profile")" method="post">
+                            <label for="fullName">Full Name:</label>
+                            <input type="text" id="fullName" name="fullName" value="@Model.Name" required>
 
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" value="@Model.Email" required>
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" value="@Model.Email" required>
 
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="password">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password">
 
-                        <button type="submit">Save Changes</button>
-                    </form>
-                </div>
+                            <button type="submit">Save Changes</button>
+                        </form>
+                    </div>
+                }
             </div>
         </div>
     </div>

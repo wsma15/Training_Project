@@ -61,6 +61,7 @@ namespace TrainingApp.ViewModels
 
         public UserRole Roles { get; set; }
         public DateTime LastLogin { get; set; }
+        public bool IsCurrentUser { get; set; } // Add this property
 
     }
     public class AddSupervisorViewModel
@@ -127,6 +128,10 @@ namespace TrainingApp.ViewModels
         [Required(ErrorMessage = "Company Name is required.")]
 
         public string CompanyName { get; set; } // To hold the selected company's name
+    }
+    public class ConfirmEmailViewModel
+    {
+        public string Otp { get; set; }
     }
     public class DashboardViewModel
     {

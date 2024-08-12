@@ -15,7 +15,39 @@ namespace TrainingApp.Controllers
 
         TrainingAppDBContext _context = new TrainingAppDBContext();
         // GET: Profile
-        public ActionResult Profile()
+        [HttpGet]
+        [Route("Profile/{userId}")]
+        // Profile for a specific user by ID
+        public ActionResult UserProfile(int userId)
+        {
+            var user = _context.Users
+                               .Where(m => m.Id == userId)
+                               .Select(m => new UserViewModel
+                               {
+                                   Id = m.Id,
+                                   Name = m.Name,
+                                   Email = m.Email,
+                                   Password = m.Password,
+                                   UniversitySupervisorID = m.UniversitySupervisorID,
+                                   CompanySupervisorID = m.CompanySupervisorID,
+                                   UniversityID = (int)m.UniversityID,
+                                   CompanyID = (int)m.CompanyID,
+                                   Roles = m.Roles,
+                                   LastLogin = m.LastLogin,
+                                   ProfilePicturePath = m.ProfilePicturePath,
+                                   IsCurrentUser = false
+                               }).FirstOrDefault();
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View("Profile", user);
+        }
+
+        // Profile for the currently logged-in user
+        public ActionResult CurrentProfile()
         {
             var userId = User.Identity.GetUserId<int>();
             var user = _context.Users
@@ -31,8 +63,9 @@ namespace TrainingApp.Controllers
                                    UniversityID = (int)m.UniversityID,
                                    CompanyID = (int)m.CompanyID,
                                    Roles = m.Roles,
-                                   LastLogin=m.LastLogin,
+                                   LastLogin = m.LastLogin,
                                    ProfilePicturePath = m.ProfilePicturePath,
+                                   IsCurrentUser = true
                                }).FirstOrDefault();
 
             if (user == null)

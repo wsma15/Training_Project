@@ -93,7 +93,10 @@
                                 {
                                     <tr>
                                         <td>@user.Id</td>
-                                        <td>@user.Name</td>
+
+                                        <td>
+                                            <a href="@Url.Action("UserProfile", "Profile", new { userId = user.Id })">@user.Name</a>
+                                        </td>
                                         <td><a href="mailto:@user.Email">@user.Email</a></td>
                                         <td>@user.Roles</td>
                                         <td>@user.AddedBy</td>

@@ -123,22 +123,24 @@
                             <div class="dropdown-menu dropdown-menu-right nav-link-menu">
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "Admin")">Admin Dashboard</a>
+                             <a class="dropdown-item" href="@Url.Action("Dashboard", "Admin")">  <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
                                 }
                                 else if (User.IsInRole("UniversitySupervisor"))
                                 {
-                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "UniversitySupervisor")">Supervisor Dashboard</a>
+                            <a class="dropdown-item" href="@Url.Action("Dashboard", "UniversitySupervisor")"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
                                 }
                                 else if (User.IsInRole("CompanySupervisor"))
                                 {
-                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "CompanySupervisor")">Company Supervisor Dashboard</a>
+                            <a class="dropdown-item" href="@Url.Action("Dashboard", "CompanySupervisor")"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
                                 }
                                 else if (User.IsInRole("Trainer"))
                                 {
-                                    <a class="dropdown-item" href="@Url.Action("Dashboard", "Trainers")">Trainer Dashboard</a>
+                            <a class="dropdown-item" href="@Url.Action("Dashboard", "Trainers")"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
                                 }
-                                <a class="dropdown-item" href="@Url.Action("Profile", "Profile", new { userId = User.Identity.GetUserId() })">Profile</a>
-                                <a class="dropdown-item" href="@Url.Action("Inbox", "Message", new { userId = User.Identity.GetUserId() })">Messages</a>
+                                <a href=""></a>
+
+                                <a class="dropdown-item" href="@Url.Action("CurrentProfile", "Profile")"><i class="fa fa-address-card-o" aria-hidden="true"></i> Profile</a>
+                                <a class="dropdown-item" href="@Url.Action("Inbox", "Message", new { userId = User.Identity.GetUserId() })"><i class="fa fa-inbox" aria-hidden="true"></i> Inbox</a>
                                 <div class="dropdown-divider"></div>
                                 @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
                                 {
@@ -199,7 +201,6 @@
     <div class="container body-content">
         @RenderBody()
     </div>
-    <hr />
     <footer style="text-align: center;">
         <p style="color: silver;">&copy; @DateTime.Now.Year - <a href="@Url.Action("Index", "Home")" class="footer-link">Training Management System</a></p>
     </footer>
