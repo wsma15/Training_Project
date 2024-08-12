@@ -18,7 +18,7 @@ namespace TrainingApp.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Dashboard()
         {
-            var viewModel = new DashboardViewModel
+            DashboardViewModel viewModel = new DashboardViewModel
             {
                 users = _context.Users.ToList(),
 
@@ -44,7 +44,6 @@ namespace TrainingApp.Controllers
                             .Select(c => c.CompanyName)
                             .FirstOrDefault()
                     }).ToList(),
-
                 UniSupervisors = _context.Users
                     .Where(u => u.Roles == UserRole.UniversitySupervisor)
                     .Select(u => new SelectListItem
@@ -56,7 +55,8 @@ namespace TrainingApp.Controllers
                             .FirstOrDefault()
                     }).ToList()
             };
-
+/*            return Content(viewModel.CompaniesNames.Select(U=>U.Text).FirstOrDefault().ToString());
+*/
             return View(viewModel);
         }
 
@@ -130,7 +130,12 @@ namespace TrainingApp.Controllers
 
         public ActionResult AddUser(DashboardViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                model.UniversityNames = new SelectList(_context.Universities, "Id", "Name");
+                model.CompaniesNames = new SelectList(_context.Companies, "Id", "Name");
+                return View("Dashboard", model);
+            }
             {
                 var user = new Users
                 {
@@ -179,9 +184,6 @@ namespace TrainingApp.Controllers
             }
 
             // Reload the dropdowns on error
-            model.UniversityNames = new SelectList(_context.Universities, "Id", "Name");
-            model.CompaniesNames = new SelectList(_context.Companies, "Id", "Name");
-            return View("Dashboard", model);
         }
         // Uncomment if you want to send a welcome email
         /* MailHelper.SendEmail(
@@ -197,7 +199,7 @@ namespace TrainingApp.Controllers
             "The TMS Team"
         ); */
 
-        [HttpPost]
+/*        [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult AddUniversitySupervisor(DashboardViewModel model)
@@ -206,10 +208,10 @@ namespace TrainingApp.Controllers
             {
                 var newUser = new Users
                 {
-                    Name = model.addSupervisorViewModel.SupervisorName,
-                    Email = model.addSupervisorViewModel.SupervisorEmail,
-                    Password = model.addSupervisorViewModel.SupervisorPassword,
-                    UniversityID = model.addSupervisorViewModel.UniversityID,
+                    Name = model.Name,
+                    Email = model.Email,
+                    Password = model.Password,
+                    UniversityID = model.UniversityID,
                     Roles = UserRole.UniversitySupervisor
                 };
 
@@ -219,10 +221,10 @@ namespace TrainingApp.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            return View(model.addSupervisorViewModel);
+            return View(model);
         }
 
-        [HttpGet]
+*//*        [HttpGet]
         [Authorize(Roles = "Admin")]
         public ActionResult AddCompanySupervisor()
         {
@@ -238,10 +240,10 @@ namespace TrainingApp.Controllers
             {
                 var user = new Users
                 {
-                    CompanyID = model.addCompanySupervisorViewModel.CompanyID,
-                    Name = model.addCompanySupervisorViewModel.Name,
-                    Email = model.addCompanySupervisorViewModel.Email,
-                    Password = model.addCompanySupervisorViewModel.Password,
+                    CompanyID = model.CompanyID,
+                    Name = model.Name,
+                    Email = model.Email,
+                    Password = model.Password,
                     Roles = UserRole.CompanySupervisor
                 };
 
@@ -251,8 +253,9 @@ namespace TrainingApp.Controllers
                 return RedirectToAction("Dashboard");
             }
 
-            return View();
-        }
+            return View(model);
+    }
+*/
 
         protected override void Dispose(bool disposing)
         {

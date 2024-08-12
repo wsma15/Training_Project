@@ -8,14 +8,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!--Dashboard admin-->
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/vendor/datatables/DataTables-1.10.25/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <link href="~/vendor/datatables/DataTables-1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- jQuery must be loaded before any other scripts -->
+    <script src="~/Scripts/jquery-3.7.1.slim.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/datatables/datatables.min.js"></script>
+    <script src="~/js/initiate-datatables.js"></script>
+    <!--Dashboard admin-->
+    <!--Inbox-->
+
+    <link href="~/css/styleChat1.css" rel="stylesheet" />
+    <script src="~/Login/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/script.js"></script>
+    <!--Inbox-->
+
+
     <link href="~/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
     <link href="~/vendor/fontawesome/css/solid.css" rel="stylesheet" />
     <link href="~/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
-
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
-
+    @*    <script src="~/js/DashboardAdmin.js"></script>
+    *@    <!-- Bootstrap CSS -->
+    <link href="~/Login/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Login/fonts/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <style>
         /* Custom styles for the navbar */
         .navbar {
@@ -171,23 +192,24 @@
             </div>
         </nav>
     }
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/datatables/datatables.min.js"></script>
 
     <div class="container body-content">
         @RenderBody()
     </div>
-        <hr />
-        <footer style="text-align: center;">
-            <p style="color: silver;">&copy; @DateTime.Now.Year - <a href="@Url.Action("Index", "Home")" class="footer-link">Training Management System</a></p>
-        </footer>
-    @RenderSection("scripts", required: false)
+    <hr />
+    <footer style="text-align: center;">
+        <p style="color: silver;">&copy; @DateTime.Now.Year - <a href="@Url.Action("Index", "Home")" class="footer-link">Training Management System</a></p>
+    </footer>
 
+    @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
-            // Toggle dropdown menu on click
             $('.nav-dropdown > .nav-link').on('click', function (e) {
                 var $el = $(this).parent();
                 var $parent = $el.closest('.nav-dropdown');

@@ -144,7 +144,7 @@ namespace TrainingApp.ViewModels
         public string Password { get; set; }
 
         [Display (Name= "Role")]
-        [Required]
+        [Required(ErrorMessage ="The Role option is required")]
         public UserRole UserRole { get; set; }
 
         public int? UniversitySupervisorID { get; set; }
@@ -158,9 +158,9 @@ namespace TrainingApp.ViewModels
         public IEnumerable<SelectListItem> UniSupervisors { get; set; }
 
 
-        public AddSupervisorViewModel addSupervisorViewModel { get; set; }
+/*        public AddSupervisorViewModel addSupervisorViewModel { get; set; }
         public AddCompanySupervisorViewModel addCompanySupervisorViewModel { get; set; }
-
+*/
         private readonly TrainingAppDBContext _context;
 
         public DashboardViewModel()
