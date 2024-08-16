@@ -185,52 +185,52 @@ namespace TrainingApp.Controllers
                 return View(supervisors);
             }
             if (userRole == UserRole.UniversitySupervisor)
-{
-    var companySupervisorIds = _context.Users
-                          .Where(user => user.UniversitySupervisorID == userId)
-                          .Select(user => user.CompanySupervisorID)
-                          .Distinct()
-                          .ToList();
+            {
+                var companySupervisorIds = _context.Users
+                                      .Where(user => user.UniversitySupervisorID == userId)
+                                      .Select(user => user.CompanySupervisorID)
+                                      .Distinct()
+                                      .ToList();
 
-    var relatedUsers = _context.Users
-             .Where(user => companySupervisorIds.Contains(user.Id) || user.Roles == UserRole.Admin)
-             .Select(user => new
-             {
-                 user.Id,
-                 user.Name,
-                 user.Roles,
-                 user.ProfilePicturePath
-             })
-             .ToList() // Fetch data into memory
-             .Select(user => new UsersPanelViewModels
-             {
-                 Id = user.Id,
-                 Name = $"({user.Name}) ({user.Roles})",
-                 ProfilePicturePath = user.ProfilePicturePath,
+                var relatedUsers = _context.Users
+                         .Where(user => companySupervisorIds.Contains(user.Id) || user.Roles == UserRole.Admin)
+                         .Select(user => new
+                         {
+                             user.Id,
+                             user.Name,
+                             user.Roles,
+                             user.ProfilePicturePath
+                         })
+                         .ToList() // Fetch data into memory
+                         .Select(user => new UsersPanelViewModels
+                         {
+                             Id = user.Id,
+                             Name = $"({user.Name}) ({user.Roles})",
+                             ProfilePicturePath = user.ProfilePicturePath,
 
-             })
-             .ToList();
+                         })
+                         .ToList();
 
-    var trainers = _context.Users
-                          .Where(user => user.UniversitySupervisorID == userId)
-                          .Select(user => new
-                          {
-                              user.Id,
-                              user.Name,
-                              user.Roles
-                          })
-                          .ToList() // Fetch data into memory
-                          .Select(user => new UsersPanelViewModels
-                          {
-                              Id = user.Id,
-                              Name = $"{user.Name} - ({user.Roles})"
-                          })
-                          .ToList();
+                var trainers = _context.Users
+                                      .Where(user => user.UniversitySupervisorID == userId)
+                                      .Select(user => new
+                                      {
+                                          user.Id,
+                                          user.Name,
+                                          user.Roles
+                                      })
+                                      .ToList() // Fetch data into memory
+                                      .Select(user => new UsersPanelViewModels
+                                      {
+                                          Id = user.Id,
+                                          Name = $"{user.Name} - ({user.Roles})"
+                                      })
+                                      .ToList();
 
-    var users = trainers.Union(relatedUsers).ToList();
+                var users = trainers.Union(relatedUsers).ToList();
 
-    return View(users);
-}
+                return View(users);
+            }
             if (userRole == UserRole.CompanySupervisor)
             {
                 var UniSupervisorIds = _context.Users
@@ -245,7 +245,7 @@ namespace TrainingApp.Controllers
                            {
                                Id = user.Id,
                                Name = user.Name,
-                             ProfilePicturePath   = user.ProfilePicturePath,
+                               ProfilePicturePath = user.ProfilePicturePath,
 
                                // CompanySupervisorID = user.CompanySupervisorID
                            })

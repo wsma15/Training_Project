@@ -1,11 +1,7 @@
-﻿using Microsoft.Ajax.Utilities;
-using PagedList;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.SqlTypes;
 using System.Linq;
 using System.Web.Mvc;
 using TrainingApp.Models;
@@ -65,7 +61,7 @@ namespace TrainingApp.ViewModels
 
     }
     public class AddSupervisorViewModel
-{
+    {
         [Display(Name = "University ID")]
         [Required(ErrorMessage = "University ID is required")]
         public int UniversityID { get; set; }
@@ -81,14 +77,14 @@ namespace TrainingApp.ViewModels
         [Display(Name = "Email")]
 
         [Required(ErrorMessage = "Email is required")]
-    [EmailAddress(ErrorMessage = "Invalid email address")]
-    public string SupervisorEmail { get; set; }
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string SupervisorEmail { get; set; }
 
         [Display(Name = "Password")]
         [Required(ErrorMessage = "Password is required")]
-    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long")]
-    public string SupervisorPassword { get; set; }
-}
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long")]
+        public string SupervisorPassword { get; set; }
+    }
     public class AddTrainerViewModel
     {
         [Display(Name = "Trainer Name")]
@@ -98,7 +94,7 @@ namespace TrainingApp.ViewModels
 
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Trainer Name can only contain letters and spaces.")]
         public string TrainerName { get; set; }
-       public int UniversityID { get; set; }
+        public int UniversityID { get; set; }
 
 
 
@@ -135,21 +131,22 @@ namespace TrainingApp.ViewModels
     }
     public class DashboardViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Full Name is Required")]
         [StringLength(50)]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email is Required")]
+        [EmailAddress]
         [StringLength(50)]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is Required")]
         [StringLength(50)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Display (Name= "Role")]
-        [Required(ErrorMessage ="The Role option is required")]
+        [Display(Name = "Role")]
+        [Required(ErrorMessage = "The Role option is required")]
         public UserRole UserRole { get; set; }
 
         public int? UniversitySupervisorID { get; set; }
@@ -163,9 +160,9 @@ namespace TrainingApp.ViewModels
         public IEnumerable<SelectListItem> UniSupervisors { get; set; }
 
 
-/*        public AddSupervisorViewModel addSupervisorViewModel { get; set; }
-        public AddCompanySupervisorViewModel addCompanySupervisorViewModel { get; set; }
-*/
+        /*        public AddSupervisorViewModel addSupervisorViewModel { get; set; }
+                public AddCompanySupervisorViewModel addCompanySupervisorViewModel { get; set; }
+        */
         private readonly TrainingAppDBContext _context;
 
         public DashboardViewModel()
@@ -179,13 +176,13 @@ namespace TrainingApp.ViewModels
                                  where name.Id == supervisorId
                                  select name.UniversityName).FirstOrDefault();
 
-            return supervisor is null?"Not Found":supervisor;
+            return supervisor is null ? "Not Found" : supervisor;
         }
 
         public string GetCompanyName(int supervisorId)
         {
             string supervisor = (from name in _context.Companies
-                                 where  name.Id == supervisorId
+                                 where name.Id == supervisorId
                                  select name.CompanyName).FirstOrDefault();
 
             return supervisor ?? "Not Found";

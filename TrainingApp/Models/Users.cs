@@ -37,7 +37,7 @@ namespace TrainingApp.Models
         public string ProfilePicturePath { get; set; }
         public byte[] Avatar { get; set; } // Ensure this is defined as byte[]
 
-        public bool ConfirmedEmail {  get; set; }
+        public bool ConfirmedEmail { get; set; }
     }
 
     public enum UserRole

@@ -103,7 +103,7 @@ namespace TrainingApp.Controllers
             await _context.SaveChangesAsync();
 
             // Redirect back to the profile page with a query string parameter indicating success
-            return RedirectToAction("Profile", "Profile", new { userId = userId});
+            return RedirectToAction("Profile", "Profile", new { userId = userId });
         }
 
 

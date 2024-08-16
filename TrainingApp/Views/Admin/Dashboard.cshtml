@@ -38,7 +38,7 @@
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.Email)
                                             @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @id = "email", @autocomplete = "email" })
-                                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                            <span id="email-validation-message" class="text-danger"></span>
                                         </div>
 
                                         <div class="form-group">
@@ -89,32 +89,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var user in Model.users)
+                                @if (Model.users != null)
                                 {
-                                    <tr>
-                                        <td>@user.Id</td>
+                                    foreach (var user in Model.users)
+                                    {
+                                        <tr>
+                                            <td>@user.Id</td>
 
-                                        <td>
-                                            <a href="@Url.Action("UserProfile", "Profile", new { userId = user.Id })">@user.Name</a>
-                                        </td>
-                                        <td><a href="mailto:@user.Email">@user.Email</a></td>
-                                        <td>@user.Roles</td>
-                                        <td>@user.AddedBy</td>
-                                        <td>@(user.UniversityID != null ? Model.GetUniName((int)user.UniversityID) : "Not Found")</td>
-                                        <td>@(user.UniversitySupervisorID != null ? Model.GetSupervisorName(user.UniversitySupervisorID.Value) : "Not Found")</td>
-                                        <td>@(user.CompanyID != null ? Model.GetCompanyName((int)user.CompanyID) : "Not Found")</td>
-                                        <td>@(user.CompanySupervisorID != null ? Model.GetSupervisorName(user.CompanySupervisorID.Value) : "Not Found")</td>
-                                        <td class="text-end">
-                                            <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
-                                            <form action="@Url.Action("DeleteUser")" method="post" style="display:inline;">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="id" value="@user.Id" />
-                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                            <td>
+                                                <a href="@Url.Action("UserProfile", "Profile", new { userId = user.Id })">@user.Name</a>
+                                            </td>
+                                            <td><a href="mailto:@user.Email">@user.Email</a></td>
+                                            <td>@user.Roles</td>
+                                            <td>@user.AddedBy</td>
+                                            <td>@(user.UniversityID != null ? Model.GetUniName((int)user.UniversityID) : "Not Found")</td>
+                                            <td>@(user.UniversitySupervisorID != null ? Model.GetSupervisorName(user.UniversitySupervisorID.Value) : "Not Found")</td>
+                                            <td>@(user.CompanyID != null ? Model.GetCompanyName((int)user.CompanyID) : "Not Found")</td>
+                                            <td>@(user.CompanySupervisorID != null ? Model.GetSupervisorName(user.CompanySupervisorID.Value) : "Not Found")</td>
+                                            <td class="text-end">
+                                                <a href="" class="btn btn-outline-info btn-sm"><i class="fas fa-pen"></i></a>
+                                                <form action="@Url.Action("DeleteUser")" method="post" style="display:inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             </tbody>
                         </table>
@@ -132,63 +135,97 @@
 <script src="~/js/initiate-datatables.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('input[name="UserRole"]').change(function () {
-            var role = $(this).val();
-            var additionalFields = $('#additionalFields');
-            additionalFields.empty().show();
+$(document).ready(function () {
+    var submitButton = $('#addUserForm button[type="submit"]');
 
-            if (role === 'UniversitySupervisor') {
-                var universityOptions = '@(new HtmlString(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>"))))';
-                additionalFields.append(`
-                    <div class="form-group">
-                        <label for="UniversityID">University</label>
-                        <select class="form-control" id="UniversityID" name="UniversityID">
-                            ${universityOptions}
-                        </select>
-                        <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
-                    </div>
-                `);
-            } else if (role === 'CompanySupervisor') {
-                var companyOptions = '@(new HtmlString(string.Join("", Model.CompaniesNames.Select(c => $"<option value=\"{c.Value}\">{c.Text}</option>"))))';
-                additionalFields.append(`
-                    <div class="form-group">
-                        <label for="CompanyID">Company</label>
-                        <select class="form-control" id="CompanyID" name="CompanyID">
-                            ${companyOptions}
-                        </select>
-                        <span class="text-danger field-validation-valid" data-valmsg-for="CompanyID" data-valmsg-replace="true"></span>
-                    </div>
-                `);
-            } else if (role === 'Trainer') {
-                var universityOptions = '@(new HtmlString(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>"))))';
-                var universitySupervisorOptions = '@(new HtmlString(string.Join("", Model.UniSupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>"))))';
-                var companySupervisorOptions = '@(new HtmlString(string.Join("", Model.CompanySupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>"))))';
+    // Disable the submit button initially if there's a validation issue
+    submitButton.prop('disabled', true);
 
-                additionalFields.append(`
-                    <div class="form-group">
-                        <label for="UniversityID">University</label>
-                        <select class="form-control" id="UniversityID" name="UniversityID">
-                            ${universityOptions}
-                        </select>
-                        <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="UniversitySupervisorID">University Supervisor</label>
-                        <select class="form-control" id="UniversitySupervisorID" name="UniversitySupervisorID">
-                            ${universitySupervisorOptions}
-                        </select>
-                        <span class="text-danger field-validation-valid" data-valmsg-for="UniversitySupervisorID" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="CompanySupervisorID">Company Supervisor</label>
-                        <select class="form-control" id="CompanySupervisorID" name="CompanySupervisorID">
-                            ${companySupervisorOptions}
-                        </select>
-                        <span class="text-danger field-validation-valid" data-valmsg-for="CompanySupervisorID" data-valmsg-replace="true"></span>
-                    </div>
-                `);
-            }
-        });
+    // Real-time email validation
+    $('#email').on('blur', function () {
+        var email = $(this).val();
+        var validationMessage = $('#email-validation-message');
+
+        // Clear previous messages
+        validationMessage.text('');
+        submitButton.prop('disabled', false); // Enable the button by default
+
+        if (email) {
+            $.ajax({
+                url: '@Url.Action("IsEmailAvailable", "Admin")',
+                type: 'POST',
+                data: { email: email },
+                success: function (isAvailable) {
+                    if (!isAvailable) {
+                        validationMessage.text('A user with this email address already exists.');
+                        submitButton.prop('disabled', true); // Disable the button if email is not available
+                    }
+                },
+                error: function () {
+                    validationMessage.text('Error occurred while checking email.');
+                    submitButton.prop('disabled', true); // Disable the button on error
+                }
+            });
+        }
     });
+
+    // Handle role-specific fields
+$('input[name="UserRole"]').change(function () {
+    var role = $(this).val();
+    var additionalFields = $('#additionalFields');
+    additionalFields.empty().show();
+
+    if (role === 'UniversitySupervisor') {
+        var universityOptions = '@Html.Raw(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>")))';
+        additionalFields.append(`
+            <div class="form-group">
+                <label for="UniversityID">University</label>
+                <select class="form-control" id="UniversityID" name="UniversityID">
+                    ${universityOptions}
+                </select>
+                <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
+            </div>
+        `);
+    } else if (role === 'CompanySupervisor') {
+        var companyOptions = '@Html.Raw(string.Join("", Model.CompaniesNames.Select(c => $"<option value=\"{c.Value}\">{c.Text}</option>")))';
+        additionalFields.append(`
+            <div class="form-group">
+                <label for="CompanyID">Company</label>
+                <select class="form-control" id="CompanyID" name="CompanyID">
+                    ${companyOptions}
+                </select>
+                <span class="text-danger field-validation-valid" data-valmsg-for="CompanyID" data-valmsg-replace="true"></span>
+            </div>
+        `);
+    } else if (role === 'Trainer') {
+        var universityOptions = '@Html.Raw(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>")))';
+        var universitySupervisorOptions = '@Html.Raw(string.Join("", Model.UniSupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>")))';
+        var companySupervisorOptions = '@Html.Raw(string.Join("", Model.CompanySupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>")))';
+
+        additionalFields.append(`
+            <div class="form-group">
+                <label for="UniversityID">University</label>
+                <select class="form-control" id="UniversityID" name="UniversityID">
+                    ${universityOptions}
+                </select>
+                <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
+            </div>
+            <div class="form-group">
+                <label for="UniversitySupervisorID">University Supervisor</label>
+                <select class="form-control" id="UniversitySupervisorID" name="UniversitySupervisorID">
+                    ${universitySupervisorOptions}
+                </select>
+                <span class="text-danger field-validation-valid" data-valmsg-for="UniversitySupervisorID" data-valmsg-replace="true"></span>
+            </div>
+            <div class="form-group">
+                <label for="CompanySupervisorID">Company Supervisor</label>
+                <select class="form-control" id="CompanySupervisorID" name="CompanySupervisorID">
+                    ${companySupervisorOptions}
+                </select>
+                <span class="text-danger field-validation-valid" data-valmsg-for="CompanySupervisorID" data-valmsg-replace="true"></span>
+            </div>
+        `);
+    }
+});
+});
 </script>

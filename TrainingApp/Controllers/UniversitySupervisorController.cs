@@ -34,7 +34,7 @@ namespace TrainingApp.Controllers
         // GET: Supervisor/StudentReports/5
         public ActionResult StudentReports(string supervisorId)
         {
-            var reports = db.Reports.Where(r=>r.OwnerId== supervisorId).ToList();
+            var reports = db.Reports.Where(r => r.OwnerId == supervisorId).ToList();
             return View(reports);
         }
 
@@ -46,7 +46,7 @@ namespace TrainingApp.Controllers
             var report = db.Reports.SingleOrDefault(r => r.Id == Id);
             if (report != null && !report.IsFeedbackSubmitted)
             {
-                report.ReportStatus = isApproved?ReportStatus.Approved:ReportStatus.Rejected;
+                report.ReportStatus = isApproved ? ReportStatus.Approved : ReportStatus.Rejected;
                 report.Feedback = feedback;
                 report.IsFeedbackSubmitted = true;
                 db.SaveChanges();
