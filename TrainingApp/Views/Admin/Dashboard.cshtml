@@ -170,62 +170,63 @@ $(document).ready(function () {
     });
 
     // Handle role-specific fields
-$('input[name="UserRole"]').change(function () {
-    var role = $(this).val();
-    var additionalFields = $('#additionalFields');
-    additionalFields.empty().show();
+    $('input[name="UserRole"]').change(function () {
+        var role = $(this).val();
+        var additionalFields = $('#additionalFields');
+        additionalFields.empty().show();
 
-    if (role === 'UniversitySupervisor') {
-        var universityOptions = '@Html.Raw(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>")))';
-        additionalFields.append(`
-            <div class="form-group">
-                <label for="UniversityID">University</label>
-                <select class="form-control" id="UniversityID" name="UniversityID">
-                    ${universityOptions}
-                </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
-            </div>
-        `);
-    } else if (role === 'CompanySupervisor') {
-        var companyOptions = '@Html.Raw(string.Join("", Model.CompaniesNames.Select(c => $"<option value=\"{c.Value}\">{c.Text}</option>")))';
-        additionalFields.append(`
-            <div class="form-group">
-                <label for="CompanyID">Company</label>
-                <select class="form-control" id="CompanyID" name="CompanyID">
-                    ${companyOptions}
-                </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="CompanyID" data-valmsg-replace="true"></span>
-            </div>
-        `);
-    } else if (role === 'Trainer') {
-        var universityOptions = '@Html.Raw(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>")))';
-        var universitySupervisorOptions = '@Html.Raw(string.Join("", Model.UniSupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>")))';
-        var companySupervisorOptions = '@Html.Raw(string.Join("", Model.CompanySupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>")))';
+        if (role === 'UniversitySupervisor') {
+            var universityOptions = '@Html.Raw(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>")))';
+            additionalFields.append(`
+                <div class="form-group">
+                    <label for="UniversityID">University</label>
+                    <select class="form-control" id="UniversityID" name="UniversityID">
+                        ${universityOptions}
+                    </select>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
+                </div>
+            `);
+        }
+        else if (role === 'CompanySupervisor') {
+            var companyOptions = '@Html.Raw(string.Join("", Model.CompaniesNames.Select(c => $"<option value=\"{c.Value}\">{c.Text}</option>")))';
+            additionalFields.append(`
+                <div class="form-group">
+                    <label for="CompanyID">Company</label>
+                    <select class="form-control" id="CompanyID" name="CompanyID">
+                        ${companyOptions}
+                    </select>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="CompanyID" data-valmsg-replace="true"></span>
+                </div>
+            `);
+        } else if (role === 'Trainer') {
+            var universityOptions = '@Html.Raw(string.Join("", Model.UniversityNames.Select(u => $"<option value=\"{u.Value}\">{u.Text}</option>")))';
+            var universitySupervisorOptions = '@Html.Raw(string.Join("", Model.UniSupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>")))';
+            var companySupervisorOptions = '@Html.Raw(string.Join("", Model.CompanySupervisors.Select(s => $"<option value=\"{s.Value}\">{s.Text}</option>")))';
 
-        additionalFields.append(`
-            <div class="form-group">
-                <label for="UniversityID">University</label>
-                <select class="form-control" id="UniversityID" name="UniversityID">
-                    ${universityOptions}
-                </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
-            </div>
-            <div class="form-group">
-                <label for="UniversitySupervisorID">University Supervisor</label>
-                <select class="form-control" id="UniversitySupervisorID" name="UniversitySupervisorID">
-                    ${universitySupervisorOptions}
-                </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="UniversitySupervisorID" data-valmsg-replace="true"></span>
-            </div>
-            <div class="form-group">
-                <label for="CompanySupervisorID">Company Supervisor</label>
-                <select class="form-control" id="CompanySupervisorID" name="CompanySupervisorID">
-                    ${companySupervisorOptions}
-                </select>
-                <span class="text-danger field-validation-valid" data-valmsg-for="CompanySupervisorID" data-valmsg-replace="true"></span>
-            </div>
-        `);
-    }
-});
+            additionalFields.append(`
+                <div class="form-group">
+                    <label for="UniversityID">University</label>
+                    <select class="form-control" id="UniversityID" name="UniversityID">
+                        ${universityOptions}
+                    </select>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="UniversityID" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group">
+                    <label for="UniversitySupervisorID">University Supervisor</label>
+                    <select class="form-control" id="UniversitySupervisorID" name="UniversitySupervisorID">
+                        ${universitySupervisorOptions}
+                    </select>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="UniversitySupervisorID" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group">
+                    <label for="CompanySupervisorID">Company Supervisor</label>
+                    <select class="form-control" id="CompanySupervisorID" name="CompanySupervisorID">
+                        ${companySupervisorOptions}
+                    </select>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="CompanySupervisorID" data-valmsg-replace="true"></span>
+                </div>
+            `);
+        }
+    });
 });
 </script>
