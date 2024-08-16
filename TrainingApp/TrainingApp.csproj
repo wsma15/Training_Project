@@ -226,17 +226,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407281204271_Init.cs" />
-    <Compile Include="Migrations\202407281204271_Init.Designer.cs">
-      <DependentUpon>202407281204271_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202408040923461_Init1.cs" />
-    <Compile Include="Migrations\202408040923461_Init1.Designer.cs">
-      <DependentUpon>202408040923461_Init1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202408120817134_Init2.cs" />
-    <Compile Include="Migrations\202408120817134_Init2.Designer.cs">
-      <DependentUpon>202408120817134_Init2.cs</DependentUpon>
+    <Compile Include="Migrations\202408162135129_init.cs" />
+    <Compile Include="Migrations\202408162135129_init.Designer.cs">
+      <DependentUpon>202408162135129_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -852,7 +844,6 @@
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
@@ -915,6 +906,7 @@
     <Content Include="vendor\jquery\LICENSE.md" />
     <Content Include="vendor\mdtimepicker\LICENSE.md" />
     <Content Include="Views\Profile\Profile.cshtml" />
+    <Content Include="Views\Account\ConfirmOtp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -947,14 +939,8 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202407281204271_Init.resx">
-      <DependentUpon>202407281204271_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202408040923461_Init1.resx">
-      <DependentUpon>202408040923461_Init1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202408120817134_Init2.resx">
-      <DependentUpon>202408120817134_Init2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202408162135129_init.resx">
+      <DependentUpon>202408162135129_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

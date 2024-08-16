@@ -8,6 +8,15 @@ using TrainingApp.Models;
 
 namespace TrainingApp.ViewModels
 {
+    public class ConfirmOtpViewModel
+    {
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string OtpCode { get; set; }
+    }
+
     public class AddCompanySupervisorViewModel
     {
         [Required]

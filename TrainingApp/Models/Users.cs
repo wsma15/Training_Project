@@ -38,6 +38,8 @@ namespace TrainingApp.Models
         public byte[] Avatar { get; set; } // Ensure this is defined as byte[]
 
         public bool ConfirmedEmail { get; set; }
+        public string OtpCode { get; internal set; }
+        public DateTime OtpExpiry { get; internal set; }
     }
 
     public enum UserRole

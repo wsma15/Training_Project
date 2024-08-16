@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
@@ -20,6 +21,96 @@ namespace TrainingApp.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        TrainingAppDBContext _dbContext=new TrainingAppDBContext();
+        private string GenerateOTP()
+        {
+            var random = new Random();
+            return random.Next(100000, 999999).ToString(); // Generate a 6-digit OTP
+        }
+        [HttpGet]
+        [AllowAnonymous]
+
+        public JsonResult CheckEmailExists(string email)
+        {
+            bool emailExists = _dbContext.Users.Any(u => u.Email == email);
+            return Json(emailExists, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+
+        public ActionResult ConfirmOtp(string email)
+        {
+            var model = new ConfirmOtpViewModel { Email = email };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmOtp(ConfirmOtpViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null || user.OtpCode != model.OtpCode || user.OtpExpiry < DateTime.UtcNow)
+            {
+                ModelState.AddModelError("", "Invalid OTP or OTP has expired.");
+                return View(model);
+            }
+
+            // OTP is valid; allow the user to reset their password
+            return RedirectToAction("ResetPassword", new { email = model.Email });
+        }
+        [AllowAnonymous]
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check if the email exists in the database
+                var user = _dbContext.Users.FirstOrDefault(u => u.Email == model.Email);
+                if (user != null)
+                {
+                    // Generate a random OTP (for example, a 6-digit code)
+                    var otp = new Random().Next(100000, 999999).ToString();
+
+                    // Store the OTP and expiry time (e.g., 5 minutes from now) in the database
+                    user.OtpCode = otp;
+                    user.OtpExpiry = DateTime.UtcNow.AddMinutes(5);
+                    await _dbContext.SaveChangesAsync();
+
+                    // Send the OTP to the user's email (use your email service)
+                    // Example: await _emailService.SendOtpEmail(user.Email, otp);
+                    MailHelper.SendEmail(
+    user.Email,
+    "Password Reset OTP for Training Management System",
+    $"Dear {user.Name},\n\n" +
+    "We received a request to reset your password for the Training Management System (TMS). To proceed with the password reset, please use the following one-time password (OTP):\n\n" +
+    $"**{otp}**\n\n" +
+    "Enter this OTP on the password reset page to verify your request. Please note that the OTP is valid for a short period of time and will expire soon.\n\n" +
+    "If you did not request a password reset or if you have any questions, please contact our support team immediately.\n\n" +
+    "Best regards,\n" +
+    "The TMS Team"
+);
+                    TempData["Message"] = "An OTP has been sent to your email address.";
+                    return RedirectToAction("ConfirmOtp", new { email = model.Email });
+                }
+                else
+                {
+                    // If the email is not found, add a model error
+                    ModelState.AddModelError("", "The email address does not exist.");
+                }
+            }
+
+            return View(model);
+        }
 
         public AccountController()
         {
@@ -517,33 +608,6 @@ $"- **Password:** {user.Password}\n\n" +
             return View();
         }
 
-        //
-        // POST: /Account/ForgotPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
-                }
-
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
 
         //
         // GET: /Account/ForgotPasswordConfirmation
