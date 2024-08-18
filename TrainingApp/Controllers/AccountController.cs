@@ -57,7 +57,7 @@ namespace TrainingApp.Controllers
             }
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-            if (user == null || user.OtpCode != model.OtpCode || user.OtpExpiry < DateTime.UtcNow)
+            if (user == null || user.OtpCode != model.OtpCode || user.OtpExpiry < DateTime.Now)
             {
                 ModelState.AddModelError("", "Invalid OTP or OTP has expired.");
                 return View(model);
@@ -68,6 +68,12 @@ namespace TrainingApp.Controllers
         }
         [AllowAnonymous]
 
+        public async Task<ActionResult> ForgotPassword()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -83,7 +89,7 @@ namespace TrainingApp.Controllers
 
                     // Store the OTP and expiry time (e.g., 5 minutes from now) in the database
                     user.OtpCode = otp;
-                    user.OtpExpiry = DateTime.UtcNow.AddMinutes(5);
+                    user.OtpExpiry = DateTime.Now.AddMinutes(5);
                     await _dbContext.SaveChangesAsync();
 
                     // Send the OTP to the user's email (use your email service)
@@ -579,54 +585,14 @@ $"- **Password:** {user.Password}\n\n" +
 
 
 
-
-
-
-
-
-        //
-        //
-        // GET: /Account/ConfirmEmail
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        public ActionResult ResetPassword(string email)
         {
-            /*            if (userId == null || code == null)
-                        {
-                            return View("Error");
-                        }
-                        var result = await UserManager.ConfirmEmailAsync(userId, code);
-                        return View(result.Succeeded ? "ConfirmEmail" : "Error");
-            */
-            return View();
+            var model = new ResetPasswordViewModel { Email = email };
+            return View(model);
         }
 
-        //
-        // GET: /Account/ForgotPassword
-        [AllowAnonymous]
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-
-        //
-        // GET: /Account/ForgotPasswordConfirmation
-        [AllowAnonymous]
-        public ActionResult ForgotPasswordConfirmation()
-        {
-            return View();
-        }
-
-        //
-        // GET: /Account/ResetPassword
-        [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
-        {
-            return code == null ? View("Error") : View();
-        }
-
-        //
-        // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -636,28 +602,30 @@ $"- **Password:** {user.Password}\n\n" +
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                ModelState.AddModelError("", "Invalid email address.");
+                return View(model);
             }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            AddErrors(result);
-            return View();
+
+            // Hash the new password (you should use a password hashing mechanism like Identity or BCrypt)
+            user.Password = (model.Password);
+            user.OtpCode = null; // Clear the OTP code once the password is reset
+            
+
+            await _dbContext.SaveChangesAsync();
+
+            TempData["Message"] = "Your password has been reset successfully. You can now log in with the new password.";
+            return RedirectToAction("Login", "Account");
         }
 
+
+
+
+
         //
-        // GET: /Account/ResetPasswordConfirmation
-        [AllowAnonymous]
-        public ActionResult ResetPasswordConfirmation()
-        {
-            return View();
-        }
 
         //
         // POST: /Account/ExternalLogin

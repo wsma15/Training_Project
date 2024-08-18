@@ -25,14 +25,20 @@
                 </div>
                 @using (Html.BeginForm("ConfirmOtp", "Account", FormMethod.Post, new { role = "form" }))
                 {
+                    @Html.AntiForgeryToken()
                     <form class="login100-form validate-form">
-                        @Html.AntiForgeryToken()
                         <span class="login100-form-title">
                             Confirm OTP
                         </span>
                         <p>
-                            The OTP sent to your email
+                            The OTP sent to your email:
+                            <br />
+                            @Model.Email
                         </p>
+
+                        <!-- Hidden field to pass the email to the ConfirmOtp action -->
+                        @Html.HiddenFor(m => m.Email)
+
                         <div class="wrap-input100 validate-input" data-validate="OTP code is required">
                             @Html.TextBoxFor(m => m.OtpCode, new
                             {
@@ -45,9 +51,12 @@
                                 <i class="fa fa-key" aria-hidden="true"></i>
                             </span>
                         </div>
+
                         <div>
                             @Html.ValidationMessageFor(m => m.OtpCode)
                         </div>
+
+                        @Html.ValidationSummary()
 
                         <div class="container-login100-form-btn">
                             <button class="login100-form-btn">
