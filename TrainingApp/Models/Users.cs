@@ -36,10 +36,10 @@ namespace TrainingApp.Models
         public DateTime LastLogin { get; set; } = DateTime.Now;
         public string ProfilePicturePath { get; set; }
         public byte[] Avatar { get; set; } // Ensure this is defined as byte[]
-
+        public string EmailConfirmationToken { get; set; }
         public bool ConfirmedEmail { get; set; }
         public string OtpCode { get; internal set; }
-        public DateTime OtpExpiry { get; internal set; }
+        public DateTime OtpExpiry { get; internal set; } = DateTime.Now;
     }
 
     public enum UserRole

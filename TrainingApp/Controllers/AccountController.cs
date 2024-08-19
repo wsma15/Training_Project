@@ -19,6 +19,8 @@ namespace TrainingApp.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private TrainingAppDBContext db = new TrainingAppDBContext();
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         TrainingAppDBContext _dbContext=new TrainingAppDBContext();
@@ -29,7 +31,6 @@ namespace TrainingApp.Controllers
         }
         [HttpGet]
         [AllowAnonymous]
-
         public JsonResult CheckEmailExists(string email)
         {
             bool emailExists = _dbContext.Users.Any(u => u.Email == email);
@@ -185,6 +186,23 @@ namespace TrainingApp.Controllers
 
                     if (user != null)
                     {
+                        // Check if email is confirmed
+                        if (!user.ConfirmedEmail)
+                        {
+                            // Generate a new email confirmation token
+                            user.EmailConfirmationToken = Guid.NewGuid().ToString();
+
+                            // Resend confirmation email
+                            var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token = user.EmailConfirmationToken, email = user.Email }, Request.Url.Scheme);
+                            SendConfirmationEmail(user.Email, confirmationLink);
+
+                            context.Users.AddOrUpdate(user);
+                            await context.SaveChangesAsync();
+
+                            TempData["ErrorMessage"] = "Your email is not confirmed. A new confirmation email has been sent.";
+                            return View(model);
+                        }
+
                         user.LastLogin = DateTime.Now;
                         context.Users.AddOrUpdate(user);
                         await context.SaveChangesAsync();
@@ -220,7 +238,6 @@ namespace TrainingApp.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error (you can replace Trace.TraceError with your preferred logging method)
                 Trace.TraceError("Error occurred during login: {0}", ex.ToString());
                 ModelState.AddModelError("", "An error occurred while logging in. Please try again.");
             }
@@ -359,7 +376,6 @@ namespace TrainingApp.Controllers
 
         //
         // GET: /Account/Register
-        TrainingAppDBContext db = new TrainingAppDBContext();
 
         [AllowAnonymous]
         private IEnumerable<SelectListItem> GetUniversitySupervisorsSelectList()
@@ -414,13 +430,6 @@ namespace TrainingApp.Controllers
 
                 try
                 {
-                    /*                    UserRole role;
-                                        if (!Enum.TryParse(model.SelectedRole, out role))
-                                        {
-                                            ModelState.AddModelError("SelectedRole", "Invalid role selected.");
-
-                                        }
-                    */
                     using (var context = new TrainingAppDBContext())
                     {
                         // Check if the email already exists in the database
@@ -430,31 +439,75 @@ namespace TrainingApp.Controllers
                             ModelState.AddModelError("Email", "A user with this email address already exists.");
                             return View(model); // Return the view with validation errors
                         }
+
+                        // Generate a unique token for email confirmation
+                        var emailConfirmationToken = Guid.NewGuid().ToString();
+
                         var user = new Users
                         {
                             Name = model.FullName,
                             Email = model.Email,
                             Password = model.Password,
-                            Roles = UserRole.NewUser, // Use the parsed enum value here
+                            Roles = UserRole.NewUser, // Assign the appropriate role
                             AddedBy = "Its Self",
-                            ConfirmedEmail = false
+                            ConfirmedEmail = false,
+                            EmailConfirmationToken = emailConfirmationToken // Store the token in the database
                         };
+
                         context.Users.Add(user);
                         context.SaveChanges();
-                    }
 
-                    TempData["SuccessMessage"] = "registered successfully!";
-                    return View(model);//RedirectToAction("RegistrationSuccess");
+                        // Send confirmation email
+                        var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token = emailConfirmationToken, email = user.Email }, Request.Url.Scheme);
+                        SendConfirmationEmail(user.Email, confirmationLink); // You need to implement this method
+
+                        TempData["SuccessMessage"] = "Registered successfully! Please check your email to confirm your account.";
+                        return View(model); // Redirect to a confirmation page or return the view
+                    }
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception (use a logging library or framework here)
+                    // Log the exception
                     System.Diagnostics.Debug.WriteLine(ex.ToString());
-                    ModelState.AddModelError("", "An error occurred while processing your request.");
+                    ModelState.AddModelError("", "An error occurred while processing your request."+ex.ToString());
                 }
             }
             return View(model); // Return the view with validation errors
         }
+        private void SendConfirmationEmail(string email, string confirmationLink)
+        {
+            var subject = "Confirm your email address";
+            var body = $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>";
+
+         
+            MailHelper.SendEmail(email, subject, body);
+        }
+        [AllowAnonymous]
+
+        public ActionResult ConfirmEmail(string token, string email)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Error", "Home"); // Handle invalid tokens or missing data
+            }
+
+            using (var context = new TrainingAppDBContext())
+            {
+                var user = context.Users.FirstOrDefault(u => u.Email == email && u.EmailConfirmationToken == token);
+                if (user != null)
+                {
+                    user.ConfirmedEmail = true;
+                    user.EmailConfirmationToken = null; // Clear the token after confirmation
+                    context.SaveChanges();
+
+                    ViewBag.Message = "Your email has been confirmed. You can now log in.";
+                    return View("Login"); // Redirect to a confirmation success page
+                }
+            }
+
+            return RedirectToAction("Error", "Home"); // Handle invalid confirmation attempts
+        }
+
         private string FormatValidationErrors(ModelStateDictionary modelState)
         {
             var errors = modelState

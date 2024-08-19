@@ -226,9 +226,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202408162135129_init.cs" />
-    <Compile Include="Migrations\202408162135129_init.Designer.cs">
-      <DependentUpon>202408162135129_init.cs</DependentUpon>
+    <Compile Include="Migrations\202408190639402_Init.cs" />
+    <Compile Include="Migrations\202408190639402_Init.Designer.cs">
+      <DependentUpon>202408190639402_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202408190651089_Init1.cs" />
+    <Compile Include="Migrations\202408190651089_Init1.Designer.cs">
+      <DependentUpon>202408190651089_Init1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -907,6 +911,7 @@
     <Content Include="vendor\mdtimepicker\LICENSE.md" />
     <Content Include="Views\Profile\Profile.cshtml" />
     <Content Include="Views\Account\ConfirmOtp.cshtml" />
+    <Content Include="Views\Account\SetNewUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -939,8 +944,11 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202408162135129_init.resx">
-      <DependentUpon>202408162135129_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202408190639402_Init.resx">
+      <DependentUpon>202408190639402_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408190651089_Init1.resx">
+      <DependentUpon>202408190651089_Init1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
