@@ -67,6 +67,94 @@ namespace TrainingApp.Controllers
             // OTP is valid; allow the user to reset their password
             return RedirectToAction("ResetPassword", new { email = model.Email });
         }
+        [HttpPost]
+        [Authorize(Roles = "NewUser")]
+        public ActionResult SetNewUser(DashboardViewModel viewModel)
+        {
+            // Validate the model
+/*            if (!ModelState.IsValid)
+            {
+                // If the model state is invalid, return the view with the current model to show validation errors
+                return View(viewModel);
+            }
+*/
+            // Process the form data
+/*            return Content("hello");*/
+
+            var user = db.Users.Find(User.Identity.GetUserId<int>());
+            // Create a new user based on the selected role
+            switch (viewModel.UserRole)
+            {
+                case UserRole.UniversitySupervisor:
+                    user.UniversityID = viewModel.UniversityID;
+                    
+                    // Handle creating a University Supervisor
+                    break;
+
+                case UserRole.CompanySupervisor:
+                    user.CompanyID=viewModel.CompanyID;
+                    // Handle creating a Company Supervisor
+                    break;
+
+                case UserRole.Trainer:
+                    user.CompanySupervisorID=viewModel.CompanySupervisorID;
+                    user.CompanyID = viewModel.CompanySupervisorID;
+                    user.UniversityID=viewModel.UniversityID;
+                    user.UniversitySupervisorID=viewModel.UniversitySupervisorID;
+                    // Handle creating a Trainer
+                    break;
+                default:
+                    // Handle unknown roles or invalid input
+                    ModelState.AddModelError("", "Invalid role selected.");
+                    return View(viewModel);
+            }
+            user.Roles = viewModel.UserRole;
+            db.Users.AddOrUpdate(user);
+            db.SaveChanges();
+            LogOff();
+            // After processing, redirect to another page or return a success message
+            return RedirectToAction("Login", "Account"); // Redirect to an appropriate page
+        }
+        [Authorize(Roles = "NewUser")]
+        public ActionResult SetNewUser() {
+
+            var viewModel = new DashboardViewModel
+            {
+                users = db.Users.ToList(),
+
+                UniversityNames = db.Universities.Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.UniversityName + " - " + u.City
+                }).ToList(),
+                CompaniesNames = db.Companies.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.CompanyName + " - " + c.City
+                }).ToList(),
+
+                CompanySupervisors = db.Users
+        .Where(u => u.Roles == UserRole.CompanySupervisor)
+        .Select(u => new SelectListItem
+        {
+            Value = u.Id.ToString(),
+            Text = u.Name + " - " + db.Companies
+                .Where(c => c.Id == u.CompanyID)
+                .Select(c => c.CompanyName)
+                .FirstOrDefault()
+        }).ToList(),
+                UniSupervisors = db.Users
+        .Where(u => u.Roles == UserRole.UniversitySupervisor)
+        .Select(u => new SelectListItem
+        {
+            Value = u.Id.ToString(),
+            Text = u.Name + " - " + db.Universities
+                .Where(uni => uni.Id == u.UniversityID)
+                .Select(uni => uni.UniversityName)
+                .FirstOrDefault()
+        }).ToList()
+            };
+            return View(viewModel); }
         [AllowAnonymous]
 
         public async Task<ActionResult> ForgotPassword()
@@ -224,6 +312,9 @@ namespace TrainingApp.Controllers
                             case UserRole.CompanySupervisor:
                                 await SignInCompanySupervisor(user, model.RememberMe);
                                 return RedirectToLocal(returnUrl, "Dashboard", "CompanySupervisor");
+                            case UserRole.NewUser:
+                                await SignInNewUser(user, model.RememberMe);
+                                return RedirectToLocal(returnUrl, "SetNewUser", "Account");
 
                             default:
                                 ModelState.AddModelError("", "Invalid role.");
@@ -273,6 +364,16 @@ namespace TrainingApp.Controllers
             new Claim(ClaimTypes.Role, "CompanySupervisor"),
         new Claim(ClaimTypes.Name, UniSupervisor.Name),
         new Claim(ClaimTypes.NameIdentifier, UniSupervisor.Id.ToString())
+    }, DefaultAuthenticationTypes.ApplicationCookie);
+
+            await SignInAsync(identity, rememberMe);
+        }
+        private async Task SignInNewUser(Users newuser, bool rememberMe)
+        {
+            var identity = new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.Role, "NewUser"),
+        new Claim(ClaimTypes.Name, newuser.Name),
+        new Claim(ClaimTypes.NameIdentifier, newuser.Id.ToString())
     }, DefaultAuthenticationTypes.ApplicationCookie);
 
             await SignInAsync(identity, rememberMe);

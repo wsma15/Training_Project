@@ -22,7 +22,9 @@
                 </div>
             </div>
             <ul class="list-unstyled" id="userList" style="height: 500px; overflow-y: auto;">
-                @foreach (var user in Model)
+               @if (Model != null)
+               {
+                foreach (var user in Model)
                 {
                     <li class="clearfix user-link p-2 border-bottom" data-senderid="@user.Id" data-avatar="@user.AvatarBase64">
                         @if (!string.IsNullOrEmpty(user.ProfilePicturePath))
@@ -40,7 +42,7 @@
                             </div>
                         </div>
                     </li>
-                }
+                }}
             </ul>
         </div>
 
