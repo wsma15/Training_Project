@@ -105,18 +105,9 @@
 
                     @Html.ValidationMessageFor(m => m.ConfirmPassword)
 </p>
-                    @* Uncomment if needed *@
-                    @* <div class="wrap-input100 validate-input" data-validate="Role is required">
-                @Html.DropDownListFor(m => m.SelectedRole, Model.Roles, "Select Role", new { @class = "input100" })
-                <span class="focus-input100"></span>
-                <span class="symbol-input100">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                </span>
-            </div> *@
-
+                    <p>
                                     @Html.ValidationSummary()
-                    
-
+                        </p>
                     <div class="container-login100-form-btn">
                         <button type="submit" class="login100-form-btn">
                             Register
@@ -134,22 +125,9 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="~/Login/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="~/Login/vendor/bootstrap/js/popper.js"></script>
     <script src="~/Login/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Login/vendor/select2/select2.min.js"></script>
     <script src="~/Login/vendor/tilt/tilt.jquery.min.js"></script>
-@*    <script>
-        $('.js-tilt').tilt({
-            scale: 1.1
-        });
-
-        // Redirect to login page after 5 seconds if a success message is shown
-        if (document.querySelector('.alert-success')) {
-            setTimeout(() => {
-                window.location.href = '@Url.Action("Login", "Account")';
-            }, 3000); // 3000 ms = 3 seconds
-        }
-    </script>
-*@</body>
+</body>
