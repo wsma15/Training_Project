@@ -281,7 +281,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="js\charts.js" />
     <Content Include="js\dashboard-charts.js" />
-    <Content Include="js\DashboardAdmin.js" />
     <Content Include="js\form-validator.js" />
     <Content Include="js\fullcalendar-script.js" />
     <Content Include="js\Inbox.js" />
