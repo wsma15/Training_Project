@@ -16,13 +16,8 @@
     <link href="~/Login/fonts/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/Login/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="~/Login/images/icons/favicon.ico" />
-
 </head>
-
-
-
 <body>
-
     <div class="limiter">
         <div>
             <div class="wrap-login100">
@@ -31,7 +26,6 @@
                 </div>
                 @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
                 {
-
                     <form class="login100-form validate-form">
                         @Html.AntiForgeryToken()
                         <span class="login100-form-title">
@@ -45,7 +39,6 @@
                            placeholder = "Email",
                            type = "email"
                        })
-
                             <span class="focus-input100"></span>
                             <span class="symbol-input100">
                                 <i class="fa fa-user" aria-hidden="true"></i>
@@ -79,7 +72,6 @@
                                 Login
                             </button>
                         </div>
-
                         <div class="text-center p-t-12">
                             <span class="txt1">
                                 Forgot
@@ -88,7 +80,6 @@
                                 Password?
                             </a>
                         </div>
-
                         <div class="text-center p-t-136">
                             <a class="txt2" href="@Url.Action("Register", "Account")">
                                 Create your Account
@@ -99,10 +90,6 @@
                 } </div>
         </div>
     </div>
-
-
-
-
     <script src="~/Login/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="~/Login/vendor/bootstrap/js/popper.js"></script>
     <script src="~/Login/vendor/bootstrap/js/bootstrap.min.js"></script>

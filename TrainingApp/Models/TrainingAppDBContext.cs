@@ -4,21 +4,13 @@ namespace TrainingApp.Models
 {
     public class TrainingAppDBContext : DbContext
     {
-        public TrainingAppDBContext() : base("TrainingAppConntectionString")
+        public TrainingAppDBContext() : base("TrainingAppConnectionString")
         {
         }
-        /*
-                public DbSet<Student> Trainers { get; set; }
-                public DbSet<Supervisor> Supervisors { get; set; }
-                public DbSet<Admin> Admins { get; set; }
-
-                */
         public DbSet<Users> Users { get; set; }
         public DbSet<Reports> Reports { get; set; }
         public DbSet<Message> ChatMessages { get; set; }
         public DbSet<Universities> Universities { get; set; }
         public DbSet<Companies> Companies { get; set; }
-
-
     }
 }

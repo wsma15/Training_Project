@@ -71,40 +71,24 @@ namespace TrainingApp.Controllers
         [Authorize(Roles = "NewUser")]
         public ActionResult SetNewUser(DashboardViewModel viewModel)
         {
-            // Validate the model
-/*            if (!ModelState.IsValid)
-            {
-                // If the model state is invalid, return the view with the current model to show validation errors
-                return View(viewModel);
-            }
-*/
-            // Process the form data
-/*            return Content("hello");*/
+
 
             var user = db.Users.Find(User.Identity.GetUserId<int>());
-            // Create a new user based on the selected role
             switch (viewModel.UserRole)
             {
                 case UserRole.UniversitySupervisor:
                     user.UniversityID = viewModel.UniversityID;
-                    
-                    // Handle creating a University Supervisor
                     break;
-
                 case UserRole.CompanySupervisor:
                     user.CompanyID=viewModel.CompanyID;
-                    // Handle creating a Company Supervisor
                     break;
-
                 case UserRole.Trainer:
                     user.CompanySupervisorID=viewModel.CompanySupervisorID;
                     user.CompanyID = viewModel.CompanySupervisorID;
                     user.UniversityID=viewModel.UniversityID;
                     user.UniversitySupervisorID=viewModel.UniversitySupervisorID;
-                    // Handle creating a Trainer
                     break;
                 default:
-                    // Handle unknown roles or invalid input
                     ModelState.AddModelError("", "Invalid role selected.");
                     return View(viewModel);
             }
@@ -157,7 +141,7 @@ namespace TrainingApp.Controllers
             return View(viewModel); }
         [AllowAnonymous]
 
-        public async Task<ActionResult> ForgotPassword()
+        public ActionResult ForgotPassword()
         {
             return View();
         }
@@ -203,7 +187,6 @@ namespace TrainingApp.Controllers
                     ModelState.AddModelError("", "The email address does not exist.");
                 }
             }
-
             return View(model);
         }
 
@@ -399,10 +382,6 @@ namespace TrainingApp.Controllers
 
             await SignInAsync(identity, rememberMe);
         }
-
-
-
-
 
         private Task SignInAsync(ClaimsIdentity identity, bool rememberMe)
         {
@@ -774,14 +753,6 @@ $"- **Password:** {user.Password}\n\n" +
             TempData["Message"] = "Your password has been reset successfully. You can now log in with the new password.";
             return RedirectToAction("Login", "Account");
         }
-
-
-
-
-
-        //
-
-        //
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
@@ -792,7 +763,6 @@ $"- **Password:** {user.Password}\n\n" +
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        //
         // GET: /Account/SendCode
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
