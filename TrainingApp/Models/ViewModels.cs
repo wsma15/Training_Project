@@ -78,7 +78,7 @@ namespace TrainingApp.ViewModels
 
         public UserRole Roles { get; set; }
         public DateTime LastLogin { get; set; }
-        public bool IsCurrentUser { get; set; } // Add this property
+        public bool IsCurrentUser { get; set; }
 
     }
     public class AddSupervisorViewModel
