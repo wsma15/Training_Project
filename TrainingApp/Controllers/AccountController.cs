@@ -287,7 +287,7 @@ namespace TrainingApp.Controllers
                             context.Users.AddOrUpdate(user);
                             await context.SaveChangesAsync();
 
-                            TempData["ErrorMessage"] = "Your email is not confirmed. A new confirmation email has been sent.";
+                            ViewBag.EmailNotConfirm = "Your email is not confirmed." + "<br/>" + "A new confirmation email has been sent.";
                             return View(model);
                         }
 
